@@ -12,7 +12,16 @@ public class Game {
 	ArrayList<Player> players = new ArrayList<>();
 	int rounds;
 	boolean aiWon;
-	Card[] deck = new Card[40];
+	//Card[] deck = new Card[40];
+	ArrayList<Card> deck = new ArrayList<>();
+	
+	public void createDeck(Card c) {
+		deck.add(c);
+	}
+	
+	public void displayDeck() {
+		System.out.println(deck);
+	}
 	
 	public void shuffleDeck(Card[] unshuffled) {
 		/*
