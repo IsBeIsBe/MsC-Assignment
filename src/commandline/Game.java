@@ -1,5 +1,7 @@
 package commandline;
 
+import java.util.ArrayList;
+
 public class Game {
 	/*
 	 * Class that handles the game. This will keep track of how many
@@ -7,6 +9,7 @@ public class Game {
 	 * the stack of cards and the stack of communal cards
 	 */
 	
+	ArrayList<Player> players = new ArrayList<>();
 	int rounds;
 	boolean aiWon;
 	Card[] deck = new Card[40];
