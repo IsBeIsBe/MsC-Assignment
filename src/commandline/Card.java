@@ -31,4 +31,12 @@ public class Card {
 		return "Card [name=" + name + ", attributes=" + Arrays.toString(attributes) + "]" + "\n";
 	}
 
+	public int[] getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(int[] attributes) {
+		this.attributes = attributes;
+	}
+
 }

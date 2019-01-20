@@ -1,6 +1,7 @@
 package commandline;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Round {
 	/*
@@ -10,6 +11,12 @@ public class Round {
 	
 	ArrayList<Player> currentPlayers = new ArrayList<>();
 	
+	
+	public void firstPlayer() {
+		Random rand = new Random();
+		int playerID = rand.nextInt(4);
+		
+	}
 	
 	public void compareCards() {
 		

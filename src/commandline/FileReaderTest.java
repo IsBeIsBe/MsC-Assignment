@@ -13,7 +13,8 @@ public class FileReaderTest {
 		Game currentGame = new Game();
 
 		try {
-			String filePath = "C:\\Users\\james\\Desktop\\msc\\MsC-Assignment\\src\\commandline\\StarCitizenDeck.txt";
+			// String filePath = "C:\\Users\\james\\Desktop\\msc\\MsC-Assignment\\src\\commandline\\StarCitizenDeck.txt";
+			String filePath = "C:\\Users\\isabe\\Documents\\Southside Serpents\\src\\commandline\\StarCitizenDeck.txt";
 			fR = new FileReader(filePath);
 			Scanner s = new Scanner(fR);
 			String line = s.nextLine();
@@ -39,6 +40,7 @@ public class FileReaderTest {
 			}
 		}
 
+		
 		System.out.println("Printing deck as read...");
 		currentGame.displayDeck();
 		System.out.println("Shuffling cards...");
@@ -48,6 +50,7 @@ public class FileReaderTest {
 		currentGame.dealCards();
 		System.out.println("Dealing cards...");
 		currentGame.printPlayerCards();
+		currentGame.players.get(1).selectAttributes();
 	}
 
 }
