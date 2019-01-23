@@ -89,14 +89,16 @@ public class Game {
 		 * Round should start here?
 		 */
 		
-		
-		//Testing AI player
-		Player selectorTest = players.get(1);
-		System.out.println("Test");
-		Card testCard = selectorTest.popACard();
-		System.out.println(testCard);
-		selectorTest.selectAttribute(testCard);
-//		selectorTest.displayPlayerHand();
+		// Testing human player
+		Card testCard = players.get(0).popACard();
+		players.get(0).selectAttribute(testCard);
+//		//Testing AI player
+//		Player selectorTest = players.get(1);
+//		System.out.println("Test");
+//		Card testCard = selectorTest.popACard();
+//		System.out.println(testCard);
+//		selectorTest.selectAttribute(testCard);
+////		selectorTest.displayPlayerHand();
 			
 			
 		
