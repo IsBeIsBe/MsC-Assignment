@@ -20,6 +20,10 @@ public abstract class Player {
 	public Card popACard() {
 		return playerDeck.pop();
 	}
+	
+	public Card peekACard() {
+		return playerDeck.peek();
+	}
 	public void displayPlayerHand() {
 		
 		System.out.println("Cards in hand: " + playerDeck.size());

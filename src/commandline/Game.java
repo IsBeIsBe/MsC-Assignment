@@ -75,6 +75,9 @@ public class Game {
 		/*Start of the game
 		 * 
 		 */
+		
+		ArrayList<Card> commonPile = new ArrayList<>();
+		
 		this.players = createPlayers(4);
 		System.out.println("Printing deck as read...");
 		displayDeck();
@@ -88,39 +91,46 @@ public class Game {
 		
 		//Selecting first player by randomised method and popping their card
 		int selector = firstPlayer();
-		Card firstCard = players.get(selector).popACard();
+		Card firstCard = players.get(selector).peekACard(); // top card of hand
 		System.out.println("The player at position " + selector + " is choosing which card to play");
 		
-		int comparator = players.get(selector).selectAttribute(firstCard);
+		int comparator = players.get(selector).selectAttribute(firstCard); // position in array of highest attribute
 		
-		System.out.println("player: " + players.get(selector) + " has chosen the value at position: " + 
+		System.out.println("player: " + selector + " has chosen the value at position: " + 
 		comparator + " from " + firstCard);
+		// Card has been selected above
 		
-		ArrayList<Card> commonPile = deck;
-//		commonPile.ensureCapacity(5);
-
-		commonPile.add(selector, firstCard);
-
-		
+		// This will compare the selected card against the other player's cards
+		// playersCard will be compared to other cards. Iterate through other players cards
+		// comparing the peeked cards of each.
+		int winner = selector;
 		for (int i = 0; i < 5; i++) {
 			if (i == selector) {
 				i++;
 			} else {
-				commonPile.add(i, players.get(i).popACard());
+				Card playersCard = players.get(i).peekACard(); // card of other player(s)
+				if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) { // if other players card is higher than selectors card then
+					winner = i;
+				}				
 			}
 		}
-		
-		//Winner equals card at position 'winner' in the commonPile
-		int winner = selector;
-		for (int i = 0; i < 5; i++) {
-			if (commonPile.get(i).attributes[comparator] > commonPile.get(selector).attributes[comparator]) {
-				winner = i;
-			}
-		}
+
 		Player winnerPlayer = players.get(winner);
 		
 		System.out.println("The player at position " + winner + " has won with his card: "
-				+ commonPile.get(winner));
+				+ winnerPlayer.peekACard());
+		
+		for (int i = 0; i < 5; i++) { // adds the played cards of all the players to the common pile
+			commonPile.add(players.get(i).popACard());
+		}
+		
+		for (int i = 0; i < commonPile.size(); i++) { // pushes all of the common pile cards to the winners hand
+			players.get(winner).pushToDeck(commonPile.get(i));
+		}
+		
+		for (int i = 0; i < 5; i++) { // CHECK the correct cards in hand - troubleshooting
+			players.get(i).displayPlayerHand();
+		}
 		System.out.println("The end");
 		/*
 		 * Round should start here?
