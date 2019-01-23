@@ -2,6 +2,7 @@ package commandline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class Game {
 
@@ -85,22 +86,63 @@ public class Game {
 		System.out.println("Dealing cards...");
 		printPlayerCards();
 		
+		//Selecting first player by randomised method and popping their card
+		int selector = firstPlayer();
+		Card firstCard = players.get(selector).popACard();
+		System.out.println("The player at position " + selector + " is choosing which card to play");
+		
+		int comparator = players.get(selector).selectAttribute(firstCard);
+		
+		System.out.println("player: " + players.get(selector) + " has chosen the value at position: " + 
+		comparator + " from " + firstCard);
+		
+		ArrayList<Card> commonPile = deck;
+//		commonPile.ensureCapacity(5);
+
+		commonPile.add(selector, firstCard);
+
+		
+		for (int i = 0; i < 5; i++) {
+			if (i == selector) {
+				i++;
+			} else {
+				commonPile.add(i, players.get(i).popACard());
+			}
+		}
+		
+		//Winner equals card at position 'winner' in the commonPile
+		int winner = selector;
+		for (int i = 0; i < 5; i++) {
+			if (commonPile.get(i).attributes[comparator] > commonPile.get(selector).attributes[comparator]) {
+				winner = i;
+			}
+		}
+		Player winnerPlayer = players.get(winner);
+		
+		System.out.println("The player at position " + winner + " has won with his card: "
+				+ commonPile.get(winner));
+		System.out.println("The end");
 		/*
 		 * Round should start here?
 		 */
 		
-		// Testing human player
-		Card testCard = players.get(0).popACard();
-		players.get(0).selectAttribute(testCard);
-//		//Testing AI player
+
+
 //		Player selectorTest = players.get(1);
 //		System.out.println("Test");
 //		Card testCard = selectorTest.popACard();
 //		System.out.println(testCard);
 //		selectorTest.selectAttribute(testCard);
-////		selectorTest.displayPlayerHand();
+
 			
 			
+		
+	}
+	
+	public int firstPlayer() {
+		Random rand = new Random();
+		int playerID = rand.nextInt(4);
+		return playerID;		
 		
 	}
 
