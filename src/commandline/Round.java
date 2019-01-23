@@ -9,16 +9,13 @@ public class Round {
 	 * rounds. This will also pass variables to the database
 	 */
 	
-	ArrayList<Player> currentPlayers = new ArrayList<>();
 	
 	
-	public void firstPlayer() {
-		Random rand = new Random();
-		int playerID = rand.nextInt(4);
+	public Round( int chooser) {
 		
 	}
 	
-	public void compareCards() {
+	public void compareCards(int comparator) {
 		
 	}
 	
