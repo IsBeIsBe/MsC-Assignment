@@ -6,16 +6,10 @@ public class AIPlayer extends Player {
 	/* 
 	 * AI Player class, of which there will be up to four per game
 	 */
-	private int score;
-	private Stack<Card> playerDeck = new Stack<>();
-	
-/*	public AIPlayer(int score, Stack<Card> playerDeck) {
-		super();
-		this.score = score;
-		this.playerDeck = playerDeck;
-	}*/
 
-	public int selectAttribute(Card currentCard) {
+	
+
+	protected int selectAttribute(Card currentCard) {
 	/* 
 	 * selects highest attribute of card in play
 	 */
@@ -36,10 +30,7 @@ public class AIPlayer extends Player {
 		System.out.println(largest + " " + largestPosition);
 		return largestPosition;
 				
-//	int[] cardPlayed = new int[2]; // first int: attribute number, second int: value
-//	cardPlayed[0] = largest;
-//	cardPlayed[1] = largestPosition;
-//	System.out.println(cardPlayed[0] + ", " + cardPlayed[1]);
+
 		
 	}
 

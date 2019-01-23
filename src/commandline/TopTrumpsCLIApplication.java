@@ -50,7 +50,10 @@ public class TopTrumpsCLIApplication {
 					/*
 					 * Code for starting a game goes here
 					 */
-					System.out.println("Play game");
+						FileReaderClass fr = new FileReaderClass();
+						fr.getCardsFromFile();
+						Game theGame = new Game(fr.getDeck());
+						theGame.playGame();
 					break;
 				}
 			} catch (WrongInputException e) {
