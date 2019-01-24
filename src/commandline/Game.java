@@ -110,6 +110,8 @@ public class Game {
 			}
 		}
 		
+		
+		
 		//Winner equals card at position 'winner' in the commonPile
 		int winner = selector;
 		for (int i = 0; i < 5; i++) {
