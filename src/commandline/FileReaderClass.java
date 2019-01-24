@@ -17,7 +17,7 @@ public class FileReaderClass {
 		deck = new ArrayList();
 		try {
 			// String filePath = "C:\\Users\\james\\Desktop\\msc\\MsC-Assignment\\src\\commandline\\StarCitizenDeck.txt";
-			String filePath = "C:\\Users\\srawl\\OneDrive\\Documents\\SoftwareEngineering Back Up\\TeamProject\\MScIT_TeamProject_TemplateProject\\MsC-Assignment\\StarCitizenDeck.txt";
+			String filePath = "C:\\Users\\isabe\\Documents\\Southside Serpents\\StarCitizenDeck.txt";
 			fR = new FileReader(filePath);
 			Scanner s = new Scanner(fR);
 			String line = s.nextLine();
