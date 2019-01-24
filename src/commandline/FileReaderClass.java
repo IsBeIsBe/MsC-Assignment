@@ -1,5 +1,6 @@
 package commandline;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,8 +17,22 @@ public class FileReaderClass {
 //		Game currentGame = new Game();
 		deck = new ArrayList();
 		try {
-			// String filePath = "C:\\Users\\james\\Desktop\\msc\\MsC-Assignment\\src\\commandline\\StarCitizenDeck.txt";
-			String filePath = "C:\\Users\\isabe\\Documents\\Southside Serpents\\StarCitizenDeck.txt";
+			String fileName = "StarCitizenDeck";
+			
+			String strFilePath = fileName + ".txt";
+	        
+	        //file object
+	        File file = new File(strFilePath);
+	        
+	        /*
+	         * Use getAbsolutePath method of the File class
+	         * to get file's absolute path in file system.
+	         */
+//	        System.out.println( file.getAbsolutePath() );
+	        
+			String filePath = file.getAbsolutePath();
+			
+			
 			fR = new FileReader(filePath);
 			Scanner s = new Scanner(fR);
 			String line = s.nextLine();
