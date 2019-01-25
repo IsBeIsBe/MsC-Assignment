@@ -124,8 +124,10 @@ public class Game {
 	 */
 	public void playARound(int roundSelector) {
 		
+		
+		
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
-		System.out.println("The player at position " + roundSelector + " is choosing which card to play");
+		System.out.println(players.get(roundSelector).getPlayerName() + " is choosing which card to play");
 		
 		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position in array of highest attribute
 		
@@ -154,18 +156,21 @@ public class Game {
 		
 		Player winnerPlayer = players.get(winner);
 		
-		System.out.println("The player at position " + winner + " has won with his card: "
+		System.out.println(players.get(winner).getPlayerName() + " has won with his card: "
 				+ winnerPlayer.peekACard());
 		
 		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 			commonPile.add(players.get(i).popACard());
 		}
 		
-		for (int i = 0; i < commonPile.size(); i++) { // pushes all of the common pile cards to the winners hand
-			players.get(winner).pushToDeck(commonPile.remove(i));
+		System.out.print("Common Pile: " + commonPile);
+		int commonSize = commonPile.size();
+		for (int i = 0; i != 5; i++) { // pushes all of the common pile cards to the winners hand
+			players.get(winner).pushToDeck(commonPile.remove(0));
 		}
 		
 		for (int i = 0; i < players.size(); i++) { // CHECK the correct cards in hand - troubleshooting
+			System.out.println(players.get(i).getPlayerName()); 
 			players.get(i).displayPlayerHand();
 		}
 		
@@ -202,7 +207,9 @@ public class Game {
 	 */
 	public boolean everyoneHasAStack() {
 		boolean everyoneHasAStack = true;
-		
+		if (players.size() == 1) {
+			everyoneHasAStack = false;
+		}
 		
 		return everyoneHasAStack;
 	}
