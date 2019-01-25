@@ -135,17 +135,7 @@ public class Game {
 		System.out.println("The end");
 		/*
 		 * Round should start here?
-		 */
-		
-
-
-//		Player selectorTest = players.get(1);
-//		System.out.println("Test");
-//		Card testCard = selectorTest.popACard();
-//		System.out.println(testCard);
-//		selectorTest.selectAttribute(testCard);
-
-			
+		 */			
 			
 		
 	}
