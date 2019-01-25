@@ -137,7 +137,7 @@ public class Game {
 		// playersCard will be compared to other cards. Iterate through other players cards
 		// comparing the peeked cards of each.
 		int winner = roundSelector;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < players.size(); i++) {
 			if (i == roundSelector) {
 				i++;
 			} else {
@@ -157,7 +157,7 @@ public class Game {
 		System.out.println("The player at position " + winner + " has won with his card: "
 				+ winnerPlayer.peekACard());
 		
-		for (int i = 0; i < 5; i++) { // adds the played cards of all the players to the common pile
+		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 			commonPile.add(players.get(i).popACard());
 		}
 		
@@ -165,7 +165,7 @@ public class Game {
 			players.get(winner).pushToDeck(commonPile.remove(i));
 		}
 		
-		for (int i = 0; i < 5; i++) { // CHECK the correct cards in hand - troubleshooting
+		for (int i = 0; i < players.size(); i++) { // CHECK the correct cards in hand - troubleshooting
 			players.get(i).displayPlayerHand();
 		}
 		
