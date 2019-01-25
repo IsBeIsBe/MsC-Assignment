@@ -8,8 +8,12 @@ public class Game {
 
 	int rounds;
 	boolean aiWon;
+	int selector;
+	
 	ArrayList<Card> deck = new ArrayList<>();
 	ArrayList<Player> players = new ArrayList<>();
+	ArrayList<Card> commonPile = new ArrayList<>();
+	int[] gameStats = new int[6];
 	
 	public Game(ArrayList<Card> inputDeck) {
 		this.deck = inputDeck;
@@ -76,7 +80,6 @@ public class Game {
 		 * 
 		 */
 		
-		ArrayList<Card> commonPile = new ArrayList<>();
 		
 		this.players = createPlayers(4);
 		System.out.println("Printing deck as read...");
@@ -90,28 +93,51 @@ public class Game {
 		printPlayerCards();
 		
 		//Selecting first player by randomised method and popping their card
-		int selector = firstPlayer();
-		Card firstCard = players.get(selector).peekACard(); // top card of hand
-		System.out.println("The player at position " + selector + " is choosing which card to play");
+		selector = firstPlayer();
 		
-		int comparator = players.get(selector).selectAttribute(firstCard); // position in array of highest attribute
 		
-		System.out.println("player: " + selector + " has chosen the value at position: " + 
+		/*
+		 * While loop for going through rounds until only one person has a stack left.
+		 */
+		while (everyoneHasAStack()) {
+			playARound(selector);
+		} 
+		
+		endOfGame(gameStats);
+
+		
+		System.out.println("The end");	
+			
+		
+	}
+	
+	/*
+	 * Code for running a round -- is fed the player who chooses the attributes for the round, known as 'selector'.
+	 */
+	public void playARound(int roundSelector) {
+		
+		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
+		System.out.println("The player at position " + roundSelector + " is choosing which card to play");
+		
+		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position in array of highest attribute
+		
+		System.out.println("player: " + roundSelector + " has chosen the value at position: " + 
 		comparator + " from " + firstCard);
 		// Card has been selected above
 		
 		// This will compare the selected card against the other player's cards
 		// playersCard will be compared to other cards. Iterate through other players cards
 		// comparing the peeked cards of each.
-		int winner = selector;
+		int winner = roundSelector;
 		for (int i = 0; i < 5; i++) {
-			if (i == selector) {
+			if (i == roundSelector) {
 				i++;
 			} else {
 
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
 				if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) { // if other players card is higher than selectors card then
 					winner = i;
+					selector = i;
 				}				
 			}
 		}
@@ -132,12 +158,6 @@ public class Game {
 		for (int i = 0; i < 5; i++) { // CHECK the correct cards in hand - troubleshooting
 			players.get(i).displayPlayerHand();
 		}
-		System.out.println("The end");
-		/*
-		 * Round should start here?
-		 */			
-			
-		
 	}
 	
 	public int firstPlayer() {
@@ -145,6 +165,23 @@ public class Game {
 		int playerID = rand.nextInt(4);
 		return playerID;		
 		
+	}
+	
+	/*
+	 * Need to write a method here that essentially checks if there has been a winner by looking at the player stacks. 
+	 */
+	public boolean everyoneHasAStack() {
+		boolean everyoneHasAStack = true;
+		
+		
+		return everyoneHasAStack;
+	}
+	
+	/*
+	 * This method shoulld maybe include the print statements as well but def needs to send the game stats to the Database.
+	 */
+	public void endOfGame(int[] gameStats) {
+		DatabaseInteraction.insertGameStats(gameStats);
 	}
 
 }
