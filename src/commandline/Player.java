@@ -10,6 +10,7 @@ public abstract class Player {
 	private Stack<Card> playerDeck = new Stack<>();
 //	abstract int selectAttribute();
 	private String playerName;
+	private boolean hasCards = true;
 	
 	
 	
@@ -57,7 +58,13 @@ public abstract class Player {
 		return deckIsEmpty;
 		
 	}
+	public boolean checkCards() {
+		return hasCards;
+	}
 	
+	public void hasNoCards() {
+		this.hasCards = false;
+	}
 	
 	public Card peekACard() {
 		return playerDeck.peek();

@@ -142,6 +142,8 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 			if (i == roundSelector) {
 				i++;
+			} else if (!players.get(i).checkCards()){
+				i++;
 			} else {
 				
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
@@ -160,12 +162,15 @@ public class Game {
 				+ winnerPlayer.peekACard());
 		
 		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
+			if (players.get(i).checkCards()) {
+				
 			commonPile.add(players.get(i).popACard());
+			}
 		}
 		
 		System.out.print("Common Pile: " + commonPile);
 		int commonSize = commonPile.size();
-		for (int i = 0; i != 5; i++) { // pushes all of the common pile cards to the winners hand
+		for (int i = 0; i != commonSize - 1; i++) { // pushes all of the common pile cards to the winners hand
 			players.get(winner).pushToDeck(commonPile.remove(0));
 		}
 		
@@ -174,6 +179,7 @@ public class Game {
 			players.get(i).displayPlayerHand();
 		}
 		
+		System.out.println("----------------------------ROUND END----------------------------");
 		kickPlayerOut();
 
 		
@@ -186,7 +192,7 @@ public class Game {
 			
 			if (players.get(i).deckEmptyCheck()) {
 				
-				players.remove(i);
+				players.get(i).hasNoCards();
 				
 			}
 			
@@ -207,7 +213,13 @@ public class Game {
 	 */
 	public boolean everyoneHasAStack() {
 		boolean everyoneHasAStack = true;
-		if (players.size() == 1) {
+		int emptyDecks = 0;
+		for (int i = 0; i < players.size(); i++) {
+			if (!players.get(i).checkCards()) {
+				emptyDecks++;
+			}
+		}
+		if (emptyDecks == (players.size()-1)) {
 			everyoneHasAStack = false;
 		}
 		
