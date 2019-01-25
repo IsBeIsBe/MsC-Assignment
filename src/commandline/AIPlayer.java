@@ -7,7 +7,7 @@ public class AIPlayer extends Player {
 	 * AI Player class, of which there will be up to four per game
 	 */
 
-	
+
 
 	protected int selectAttribute(Card currentCard) {
 	/* 
@@ -32,6 +32,11 @@ public class AIPlayer extends Player {
 				
 
 		
+	}
+
+	public AIPlayer(String playerName) {
+		super(playerName);
+		// TODO Auto-generated constructor stub
 	}
 
 	

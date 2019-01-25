@@ -8,9 +8,32 @@ public abstract class Player {
 	private int score = 0; // tracks the score
 //	private ArrayList<Card> hand = new ArrayList<>(); // current hand
 	private Stack<Card> playerDeck = new Stack<>();
-
 //	abstract int selectAttribute();
+	private String playerName;
 	
+	
+	
+	
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+	}
+
+	public Player(String playerName) {
+	this.playerName = playerName;
+}
+
 	public void pushToDeck(Card card) {
 		
 		playerDeck.push(card);	
@@ -20,6 +43,21 @@ public abstract class Player {
 	public Card popACard() {
 		return playerDeck.pop();
 	}
+	
+	public boolean deckEmptyCheck() {
+		
+		boolean deckIsEmpty = false;
+		
+		if (playerDeck.isEmpty()) {
+			
+			deckIsEmpty = true;
+			
+		}
+		
+		return deckIsEmpty;
+		
+	}
+	
 	
 	public Card peekACard() {
 		return playerDeck.peek();

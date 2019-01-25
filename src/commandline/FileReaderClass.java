@@ -17,7 +17,7 @@ public class FileReaderClass {
 //		Game currentGame = new Game();
 		deck = new ArrayList();
 		try {
-			String fileName = "StarCitizenDeck";
+			String fileName = "CatDeck";
 			
 			String strFilePath = fileName + ".txt";
 	        

@@ -9,6 +9,17 @@ public class HumanPlayer extends Player{
 	 */
 	
 	private Stack<Card> playerDeck = new Stack<>();
+	
+	
+	
+
+	public HumanPlayer(String playerName) {
+		super(playerName);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 
 	@Override
 	protected int selectAttribute(Card testCard) {

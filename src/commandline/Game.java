@@ -25,12 +25,13 @@ public class Game {
 	}
 
 	public ArrayList<Player> createPlayers(int numberOfAIPlayers) {
-
-		players.add(new HumanPlayer());
+		
+		players.add(new HumanPlayer("Human Player"));
+		
 
 		for (int i = 0; i < numberOfAIPlayers; i++) {
-
-			players.add(new AIPlayer());
+			String nameTemp = "AI Player" + (i + 1);
+			players.add(new AIPlayer(nameTemp));
 		}
 		return players;
 	}
@@ -82,6 +83,13 @@ public class Game {
 		
 		
 		this.players = createPlayers(4);
+		
+		for (int i = 0; i < players.size(); i++) {
+		System.out.println(players.get(i).getPlayerName());
+		System.out.println();
+		}
+		
+		
 		System.out.println("Printing deck as read...");
 		displayDeck();
 		System.out.println("Shuffling cards...");
@@ -133,7 +141,7 @@ public class Game {
 			if (i == roundSelector) {
 				i++;
 			} else {
-
+				
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
 				if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) { // if other players card is higher than selectors card then
 					winner = i;
@@ -142,6 +150,8 @@ public class Game {
 			}
 		}
 
+
+		
 		Player winnerPlayer = players.get(winner);
 		
 		System.out.println("The player at position " + winner + " has won with his card: "
@@ -152,13 +162,33 @@ public class Game {
 		}
 		
 		for (int i = 0; i < commonPile.size(); i++) { // pushes all of the common pile cards to the winners hand
-			players.get(winner).pushToDeck(commonPile.get(i));
+			players.get(winner).pushToDeck(commonPile.remove(i));
 		}
 		
 		for (int i = 0; i < 5; i++) { // CHECK the correct cards in hand - troubleshooting
 			players.get(i).displayPlayerHand();
 		}
+		
+		kickPlayerOut();
+
+		
+		
 	}
+	
+	public void kickPlayerOut() {
+		
+		for (int i = 0; i < players.size(); i++) {
+			
+			if (players.get(i).deckEmptyCheck()) {
+				
+				players.remove(i);
+				
+			}
+			
+		}
+		
+	}
+	
 	
 	public int firstPlayer() {
 		Random rand = new Random();
