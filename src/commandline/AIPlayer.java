@@ -37,7 +37,7 @@ public class AIPlayer extends Player {
 	public AIPlayer(String playerName) {
 		super(playerName);
 		// TODO Auto-generated constructor stub
-	}
+	}	
 
 	
 	

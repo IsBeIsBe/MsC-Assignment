@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Game {
-
+	
+	TestLogWriter thisLogWriter = new TestLogWriter(null); 
+	
 	int rounds;
 	boolean aiWon;
 	int selector;
@@ -92,10 +94,14 @@ public class Game {
 		
 		System.out.println("Printing deck as read...");
 		displayDeck();
+		String deckContentsLog = deck.toString();  
+		thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" + deckContentsLog);
 		System.out.println("Shuffling cards...");
 		shuffleDeck();
 		System.out.println("Printing shuffled deck...");
 		displayDeck();
+		String postSuffleDeckContentsLog = deck.toString(); 
+		thisLogWriter.WriteLogFile("\n This is the shuffled deck contents: " + "\n" + postSuffleDeckContentsLog);
 		dealCards();
 		System.out.println("Dealing cards...");
 		printPlayerCards();
