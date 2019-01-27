@@ -17,7 +17,7 @@ Persian 4 2 5 2 7
 Ocicat 3 7 4 1 7
 Ragdoll 4 5 5 2 8
 Ragamuffin 5 6 4 2 8
-Russian_Blue 2 8 3 18 7
+Russian_Blue 2 8 3 8 7
 Savannah 3 9 3 1 8
 Scottish_Fold 2 8 5 2 9
 Selkirk_Rex 3 6 4 2 8

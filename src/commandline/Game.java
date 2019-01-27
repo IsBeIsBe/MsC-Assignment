@@ -29,6 +29,7 @@ public class Game {
 	int[] gameStats = new int[7];
 	boolean hasSomeoneWon = false;
 	int drawCounter;
+	String[] attributeNames;
 	
 	
 	/**
@@ -36,8 +37,9 @@ public class Game {
 	 * potentially selecting from a choice of available decks. 
 	 * @param inputDeck
 	 */
-	public Game(ArrayList<Card> inputDeck) {
+	public Game(ArrayList<Card> inputDeck, String[] names) {
 		this.deck = inputDeck;
+		this.attributeNames = names;
 	}
 
 	/**
@@ -63,7 +65,7 @@ public class Game {
 		players.add(new HumanPlayer("Human Player"));
 
 		for (int i = 0; i < numberOfAIPlayers; i++) {
-			String nameTemp = "AI Player" + (i + 1);
+			String nameTemp = "AI Player " + (i + 1);
 			players.add(new AIPlayer(nameTemp));
 		}
 		return players;
@@ -132,30 +134,30 @@ public class Game {
 			System.out.println(players.get(i).getPlayerName());
 			System.out.println();
 		}
+		
+		/*
+		*	The following section will be shuffluing and dealing cards, with the future
+		*	log functionality commented out
+		*/
 
-		System.out.println("Printing deck as read...");
-		displayDeck();
-		String deckContentsLog = deck.toString();
+		// String deckContentsLog = deck.toString();
 		// thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" +
 		// deckContentsLog);
-		System.out.println("Shuffling cards...");
 		shuffleDeck();
-		System.out.println("Printing shuffled deck...");
-		displayDeck();
-		String postSuffleDeckContentsLog = deck.toString();
+		// String postSuffleDeckContentsLog = deck.toString();
 		// thisLogWriter.WriteLogFile("\n This is the shuffled deck contents: " + "\n" +
 		// postSuffleDeckContentsLog);
 		dealCards();
-		System.out.println("Dealing cards...");
-		printPlayerCards();
 
-		// Selecting first player by randomised method and popping their card
+		// Selecting first player by a randomised method and popping their card
 		selector = firstPlayer();
 
 		rounds = 0;
 		/*
 		 * While loop for going through rounds until only one person has a stack left.
 		 */
+
+		System.out.println("Game start");
 		while (everyoneHasAStack()) {
 			rounds++;
 			playARound(selector);
@@ -169,7 +171,7 @@ public class Game {
 
 		}
 
-		//THe final scores of the game are printed for the user to examine. 
+		//The final scores of the game are printed for the user to examine. 
 		System.out.println("Final scores: ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
@@ -196,7 +198,9 @@ public class Game {
 
 	}
 
-	/**
+
+	public void playARound(int roundSelector) {
+	/*
 	 * This method handles playing each round of the game -- is takes the player who chooses the attributes for
 	 * the round, known as 'selector'. This is assigned randomly at first, and then the position is taken by 
 	 * whoever wins the round. 
@@ -211,21 +215,24 @@ public class Game {
 	 * The method checks how many cards each player has and breaks the loop 'playARound' is contained in when only one player 
 	 * has any cards remaining. 
 	 */
-	public void playARound(int roundSelector) {
-
+		System.out.println("Round " + rounds); 
+		if (!players.get(0).deckEmptyCheck()) {
+		System.out.println("You drew " + players.get(0).peekACard().getName() + ":\r\n" + 
+							"> " + attributeNames[1] + " " + players.get(0).peekACard().getAttributes()[0] + "\r\n" +
+							"> " + attributeNames[2] + " " +  players.get(0).peekACard().getAttributes()[1] + "\r\n" +
+							"> " + attributeNames[3] + " " +  players.get(0).peekACard().getAttributes()[2] + "\r\n" +
+							"> " + attributeNames[4] + " " +  players.get(0).peekACard().getAttributes()[3] + "\r\n" +
+							"> " + attributeNames[5] + " " +  players.get(0).peekACard().getAttributes()[4]);
+		System.out.println("There are " + players.get(0).getHand().size() + " cards in your hand");
+		}
+		
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
-		System.out.println(players.get(roundSelector).getPlayerName() + " is choosing which card to play");
+		
+		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
 
-		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position in array of highest
-																				// attribute
-
-		System.out.println(
-				"player: " + roundSelector + " has chosen the value at position: " + comparator + " from " + firstCard);
+		System.out.println("player: " + roundSelector + " has chosen the value at position: " + comparator + " from " + firstCard);
 		// Card has been selected above
 
-		// This will compare the selected card against the other player's cards
-		// playersCard will be compared to other cards. It then iterates through other players
-		// cards comparing the 'peeked' cards of each player.
 		int winner = roundSelector;
 		
 		//These variables help determine if there has been a draw, and adjusts the flow of the game accordingly. 
@@ -252,18 +259,14 @@ public class Game {
 						if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
 							winner = j;
 						} else {
-
 							ifTheresADraw = true;
 						}
 					}
-					
-					System.out.println("There was a draw!");
+					System.out.print("This round was a draw,");
 					drawCounter++;
 					break;
-					
-					/*
-					 * Finally, if any outright winner is found, their position in the players list is recorded. 
-					 */
+					 // Finally, if any outright winner is found, their position in the players list is recorded. 
+
 				} else if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
 					winner = i;
 				}
@@ -279,12 +282,10 @@ public class Game {
 			Player winnerPlayer = players.get(winner);
 			players.get(winner).winsRound();
 
-			System.out.println(
-					players.get(winner).getPlayerName() + " has won with his card: " + winnerPlayer.peekACard());
+			System.out.println(players.get(winner).getPlayerName() + " has won with his card: " + winnerPlayer.peekACard());
 
 			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 				if (players.get(i).checkCards()) {
-
 					commonPile.add(players.get(i).popACard());
 				}
 			}
@@ -302,28 +303,17 @@ public class Game {
 		} else {
 			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 				if (players.get(i).checkCards()) {
-
 					commonPile.add(players.get(i).popACard());
 				}
 			}
-
+			System.out.println(" common pile now has " + commonPile.size() + " cards.");
 		}
-
-		for (int i = 0; i < players.size(); i++) { // CHECK the correct cards in hand - troubleshooting
-			System.out.println(players.get(i).getPlayerName());
-			players.get(i).displayPlayerHand();
-		}
-		if (commonPile.size() > 0) {
-			System.out.println("Common Pile: ");
-			for (int i = 0; i < commonPile.size(); i++) {
-				System.out.println(commonPile.get(i));
-			}
-		}
+		
 		selector = winner;
 		
 		//Next few lines are Test Log/troubleshooting related. 
 		System.out.println("----------------------------END OF ROUND " + rounds + "----------------------------");
-		System.out.println("There has been " + drawCounter + "draws");
+		System.out.println("There has been " + drawCounter + " draws");
 		System.out.println("Scores after Round " + rounds + ": ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());

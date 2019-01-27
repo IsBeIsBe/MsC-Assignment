@@ -52,7 +52,7 @@ public class TopTrumpsCLIApplication {
 					 */
 						FileReaderClass fr = new FileReaderClass();
 						fr.getCardsFromFile();
-						Game theGame = new Game(fr.getDeck());
+						Game theGame = new Game(fr.getDeck(), fr.getAttributeNames());
 						theGame.playGame();
 //					break;
 				}

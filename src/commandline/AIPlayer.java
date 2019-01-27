@@ -12,6 +12,7 @@ public class AIPlayer extends Player {
 	 */
 	protected int selectAttribute(Card currentCard) {
 		
+		System.out.println(playerName + " is choosing which card to play");
 		int largest = 0;
 		int largestPosition = 0;
 		for (int i = 0; i < 5; i++) {

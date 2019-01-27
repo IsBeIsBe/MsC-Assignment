@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class FileReaderClass {
 	
 	ArrayList<Card> deck;
-
+	String[] attributeNames;
 	public void getCardsFromFile() {
 
 		FileReader fR = null;
@@ -36,6 +36,7 @@ public class FileReaderClass {
 			fR = new FileReader(filePath);
 			Scanner s = new Scanner(fR);
 			String line = s.nextLine();
+			attributeNames = line.split(" ");
 
 			while (s.hasNextLine()) {
 				line = s.nextLine();
@@ -64,5 +65,9 @@ public class FileReaderClass {
 	}
 	public ArrayList getDeck() {
 		return deck;
+	}
+
+	public String[] getAttributeNames(){
+		return attributeNames;
 	}
 }

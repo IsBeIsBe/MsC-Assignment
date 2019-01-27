@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 /**
  * This is the Card class, which will be stored within a static array of 40 cards per deck.
- * 
  * The name and attributes are separated to make identifying each card easier. 
  */
 public class Card {
@@ -34,6 +33,10 @@ public class Card {
 
 	public int[] getAttributes() {
 		return attributes;
+	}
+
+	public String getName(){
+		return name;
 	}
 
 	public void setAttributes(int[] attributes) {

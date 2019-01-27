@@ -10,11 +10,11 @@ import java.util.Stack;
 public abstract class Player {
 
 	
-	private int score = 0; // tracks the score
+	protected int score = 0; // tracks the score
 //	private ArrayList<Card> hand = new ArrayList<>(); // current hand
 	private Stack<Card> playerDeck = new Stack<>();
 //	abstract int selectAttribute();
-	private String playerName;
+	protected String playerName;
 	private boolean hasCards = true;
 	
 	
@@ -103,6 +103,10 @@ public abstract class Player {
 		System.out.println("Cards in hand: " + playerDeck.size());
 		System.out.println("Printing player hand...");
 		System.out.println(playerDeck);		
+	}
+
+	public Stack<Card> getHand(){
+		return playerDeck;
 	}
 	
 	/**
