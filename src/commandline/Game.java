@@ -6,28 +6,31 @@ import java.util.Random;
 
 public class Game {
 
+	// TestLogWriter thisLogWriter = new TestLogWriter(null);
+
 	int rounds;
 	boolean aiWon;
 	int selector;
-	
+
 	ArrayList<Card> deck = new ArrayList<>();
 	ArrayList<Player> players = new ArrayList<>();
 	ArrayList<Card> commonPile = new ArrayList<>();
-	int[] gameStats = new int[6];
-	
+	int[] gameStats = new int[7];
+	boolean hasSomeoneWon = false;
+	int drawCounter;
+
 	public Game(ArrayList<Card> inputDeck) {
 		this.deck = inputDeck;
 	}
 
 	public void displayDeck() {
-		
+
 		System.out.println(deck);
 	}
 
 	public ArrayList<Player> createPlayers(int numberOfAIPlayers) {
-		
+
 		players.add(new HumanPlayer("Human Player"));
-		
 
 		for (int i = 0; i < numberOfAIPlayers; i++) {
 			String nameTemp = "AI Player" + (i + 1);
@@ -48,7 +51,7 @@ public class Game {
 		int i = 0;
 		int j = 0;
 		int k = (deck.size() / players.size() - 1);
-		
+
 		for (i = 0; i < deck.size(); i++) {
 
 			players.get(j).pushToDeck(deck.get(i));
@@ -75,141 +78,209 @@ public class Game {
 			players.get(i).displayPlayerHand();
 		}
 	}
-	
+
 	public void playGame() {
-		/*Start of the game
+		/*
+		 * Start of the game
 		 * 
 		 */
-		
-		
+
 		this.players = createPlayers(4);
-		
+		drawCounter = 0;
+
 		for (int i = 0; i < players.size(); i++) {
-		System.out.println(players.get(i).getPlayerName());
-		System.out.println();
+			System.out.println(players.get(i).getPlayerName());
+			System.out.println();
 		}
-		
-		
+
 		System.out.println("Printing deck as read...");
 		displayDeck();
+		String deckContentsLog = deck.toString();
+		// thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" +
+		// deckContentsLog);
 		System.out.println("Shuffling cards...");
 		shuffleDeck();
 		System.out.println("Printing shuffled deck...");
 		displayDeck();
+		String postSuffleDeckContentsLog = deck.toString();
+		// thisLogWriter.WriteLogFile("\n This is the shuffled deck contents: " + "\n" +
+		// postSuffleDeckContentsLog);
 		dealCards();
 		System.out.println("Dealing cards...");
 		printPlayerCards();
-		
-		//Selecting first player by randomised method and popping their card
+
+		// Selecting first player by randomised method and popping their card
 		selector = firstPlayer();
-		
-		
+
+		rounds = 0;
 		/*
 		 * While loop for going through rounds until only one person has a stack left.
 		 */
 		while (everyoneHasAStack()) {
+			rounds++;
 			playARound(selector);
-		} 
-		
-		endOfGame(gameStats);
+		}
+		for (int i = 0; i < players.size(); i++) {
+			if (!players.get(i).deckEmptyCheck()) {
+				System.out.println(players.get(i).getPlayerName() + " has won after " + rounds + " rounds");
+			}
 
+		}
+
+		System.out.println("Final scores: ");
+		for (int i = 0; i < players.size(); i++) {
+			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
+		}
 		
-		System.out.println("The end");	
-			
+		int scoreOne = players.get(0).getScore();
+		int scoreTwo = players.get(1).getScore();
+		int scoreThree = players.get(2).getScore();
+		int scoreFour = players.get(3).getScore();
+		int scoreFive = players.get(4).getScore();
 		
+		gameStats[0] = scoreOne;
+		gameStats[1] = scoreTwo;
+		gameStats[2] = scoreThree;
+		gameStats[3] = scoreFour;
+		gameStats[4] = scoreFive;
+		gameStats[5] = rounds;
+		gameStats[6] = drawCounter;
+		
+		// endOfGame(gameStats);
+
+		System.out.println("The end");
+
 	}
-	
+
 	/*
-	 * Code for running a round -- is fed the player who chooses the attributes for the round, known as 'selector'.
+	 * Code for running a round -- is fed the player who chooses the attributes for
+	 * the round, known as 'selector'.
 	 */
 	public void playARound(int roundSelector) {
-		
-		
-		
+
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
 		System.out.println(players.get(roundSelector).getPlayerName() + " is choosing which card to play");
-		
-		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position in array of highest attribute
-		
-		System.out.println("player: " + roundSelector + " has chosen the value at position: " + 
-		comparator + " from " + firstCard);
+
+		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position in array of highest
+																				// attribute
+
+		System.out.println(
+				"player: " + roundSelector + " has chosen the value at position: " + comparator + " from " + firstCard);
 		// Card has been selected above
-		
+
 		// This will compare the selected card against the other player's cards
-		// playersCard will be compared to other cards. Iterate through other players cards
+		// playersCard will be compared to other cards. Iterate through other players
+		// cards
 		// comparing the peeked cards of each.
 		int winner = roundSelector;
+		boolean ifTheresADraw = false;
+		int drawingPlayer;
 		for (int i = 0; i < players.size(); i++) {
 			if (i == roundSelector) {
 				i++;
-			} else if (!players.get(i).checkCards()){
+			} else if (!players.get(i).checkCards()) {
 				i++;
 			} else {
-				
+
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
-				if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) { // if other players card is higher than selectors card then
+				if (playersCard.attributes[comparator] == firstCard.attributes[comparator]) {
+					drawingPlayer = i;
+					for (int j = i + 1; j < players.size(); j++) {
+						if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
+							winner = j;
+						} else {
+
+							ifTheresADraw = true;
+						}
+					}
+					
+					System.out.println("There was a draw!");
+					drawCounter++;
+					break;
+				} else if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) { // if other players
+																									// card is higher
+																									// than selectors
+																									// card then
 					winner = i;
-					selector = i;
-				}				
+				}
 			}
 		}
 
+		if (!ifTheresADraw) {
 
-		
-		Player winnerPlayer = players.get(winner);
-		
-		System.out.println(players.get(winner).getPlayerName() + " has won with his card: "
-				+ winnerPlayer.peekACard());
-		
-		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
-			if (players.get(i).checkCards()) {
-				
-			commonPile.add(players.get(i).popACard());
+			Player winnerPlayer = players.get(winner);
+			players.get(winner).winsRound();
+
+			System.out.println(
+					players.get(winner).getPlayerName() + " has won with his card: " + winnerPlayer.peekACard());
+
+			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
+				if (players.get(i).checkCards()) {
+
+					commonPile.add(players.get(i).popACard());
+				}
 			}
+
+			System.out.print("Common Pile: " + commonPile);
+			int commonSize = commonPile.size();
+			for (int i = 0; i < commonSize; i++) { // pushes all of the common pile cards to the winners hand
+				players.get(winner).pushToDeck(commonPile.remove(0));
+			}
+		} else {
+			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
+				if (players.get(i).checkCards()) {
+
+					commonPile.add(players.get(i).popACard());
+				}
+			}
+
 		}
-		
-		System.out.print("Common Pile: " + commonPile);
-		int commonSize = commonPile.size();
-		for (int i = 0; i != commonSize - 1; i++) { // pushes all of the common pile cards to the winners hand
-			players.get(winner).pushToDeck(commonPile.remove(0));
-		}
-		
+
 		for (int i = 0; i < players.size(); i++) { // CHECK the correct cards in hand - troubleshooting
-			System.out.println(players.get(i).getPlayerName()); 
+			System.out.println(players.get(i).getPlayerName());
 			players.get(i).displayPlayerHand();
 		}
-		
-		System.out.println("----------------------------ROUND END----------------------------");
+		if (commonPile.size() > 0) {
+			System.out.println("Common Pile: ");
+			for (int i = 0; i < commonPile.size(); i++) {
+				System.out.println(commonPile.get(i));
+			}
+		}
+		selector = winner;
+		System.out.println("----------------------------END OF ROUND " + rounds + "----------------------------");
+		System.out.println("There has been " + drawCounter + "draws");
+		System.out.println("Scores after Round " + rounds + ": ");
+		for (int i = 0; i < players.size(); i++) {
+			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
+		}
 		kickPlayerOut();
 
-		
-		
 	}
-	
+
 	public void kickPlayerOut() {
-		
+
 		for (int i = 0; i < players.size(); i++) {
-			
+
 			if (players.get(i).deckEmptyCheck()) {
-				
+
 				players.get(i).hasNoCards();
-				
+
 			}
-			
+
 		}
-		
+
 	}
-	
-	
+
 	public int firstPlayer() {
 		Random rand = new Random();
 		int playerID = rand.nextInt(4);
-		return playerID;		
-		
+		return playerID;
+
 	}
-	
+
 	/*
-	 * Need to write a method here that essentially checks if there has been a winner by looking at the player stacks. 
+	 * Need to write a method here that essentially checks if there has been a
+	 * winner by looking at the player stacks.
 	 */
 	public boolean everyoneHasAStack() {
 		boolean everyoneHasAStack = true;
@@ -219,15 +290,18 @@ public class Game {
 				emptyDecks++;
 			}
 		}
-		if (emptyDecks == (players.size()-1)) {
+		if (emptyDecks == (players.size() - 1)) {
 			everyoneHasAStack = false;
+			hasSomeoneWon = true;
+
 		}
-		
+
 		return everyoneHasAStack;
 	}
-	
+
 	/*
-	 * This method shoulld maybe include the print statements as well but def needs to send the game stats to the Database.
+	 * This method shoulld maybe include the print statements as well but def needs
+	 * to send the game stats to the Database.
 	 */
 	public void endOfGame(int[] gameStats) {
 		DatabaseInteraction.insertGameStats(gameStats);

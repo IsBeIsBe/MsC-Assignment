@@ -29,10 +29,36 @@ public class HumanPlayer extends Player{
 		 * between 1 and 5. Returns selected attribute.
 		 */
 		
-		System.out.println("Please select an attribute\n");
-		testCard.toString(); // Displays topmost card
-		Scanner s = new Scanner(System.in);
-		int selectedAttribute = s.nextInt();
-		return selectedAttribute;
+		System.out.println("Please select an attribute from the Card\n");
+		System.out.println(testCard);		
+		while(true) {
+			try {
+				int selection = askUserForInputSelection();
+				selection --;
+				return selection;
+				} catch (WrongInputException e) {
+					System.out.println("User must enter a number between 1 and 5!");
+				}
+			}
+		
+	
+	}
+	
+	public static int askUserForInputSelection() throws WrongInputException{
+		Scanner scanner = new Scanner(System.in);
+		String inputString = scanner.next();
+		int input = 0;
+		try {
+			input = Integer.parseInt(inputString);
+		} catch(NumberFormatException e) {
+			throw new WrongInputException();
+		}
+		if (input > 0 && input < 6) {
+			return input;
+		} else {
+			throw new WrongInputException();
+		}
+		
+		
 	}
 }

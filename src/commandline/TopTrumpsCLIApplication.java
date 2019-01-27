@@ -29,15 +29,15 @@ public class TopTrumpsCLIApplication {
 			// ----------------------------------------------------
 			
 			
-			System.out.println("--------------------\r\n" + 
-					"--- Top Trumps   ---\r\n" + 
-					"--------------------\r\n" + 
-					"Do you want to see past results or play a game?\r\n" + 
-					"   1: Print Game Statistics\r\n" + 
-					"   2: Play game\r\n" + 
-					"Enter the number for your selection: ");
 			while (true) {
 				try {
+					System.out.println("--------------------\r\n" + 
+							"--- Top Trumps   ---\r\n" + 
+							"--------------------\r\n" + 
+							"Do you want to see past results or play a game?\r\n" + 
+							"   1: Print Game Statistics\r\n" + 
+							"   2: Play game\r\n" + 
+							"Enter the number for your selection: ");
 					
 					int selection = askUserForInputSelection();
 			
@@ -54,7 +54,7 @@ public class TopTrumpsCLIApplication {
 						fr.getCardsFromFile();
 						Game theGame = new Game(fr.getDeck());
 						theGame.playGame();
-					break;
+//					break;
 				}
 			} catch (WrongInputException e) {
 				System.out.println("User must enter a 1 or a 2! Please try again: ");
