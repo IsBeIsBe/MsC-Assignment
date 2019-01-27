@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Game {
-
+	
+	TestLogWriter thisLogWriter = new TestLogWriter(null); 
+	
 	int rounds;
 	boolean aiWon;
 	int selector;
@@ -92,10 +94,14 @@ public class Game {
 		
 		System.out.println("Printing deck as read...");
 		displayDeck();
+		String deckContentsLog = deck.toString();  
+		thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" + deckContentsLog);
 		System.out.println("Shuffling cards...");
 		shuffleDeck();
 		System.out.println("Printing shuffled deck...");
 		displayDeck();
+		String postSuffleDeckContentsLog = deck.toString(); 
+		thisLogWriter.WriteLogFile("\n This is the shuffled deck contents: " + "\n" + postSuffleDeckContentsLog);
 		dealCards();
 		System.out.println("Dealing cards...");
 		printPlayerCards();
@@ -124,8 +130,10 @@ public class Game {
 	 */
 	public void playARound(int roundSelector) {
 		
+		
+		
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
-		System.out.println("The player at position " + roundSelector + " is choosing which card to play");
+		System.out.println(players.get(roundSelector).getPlayerName() + " is choosing which card to play");
 		
 		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position in array of highest attribute
 		
@@ -139,6 +147,8 @@ public class Game {
 		int winner = roundSelector;
 		for (int i = 0; i < players.size(); i++) {
 			if (i == roundSelector) {
+				i++;
+			} else if (!players.get(i).checkCards()){
 				i++;
 			} else {
 				
@@ -154,21 +164,28 @@ public class Game {
 		
 		Player winnerPlayer = players.get(winner);
 		
-		System.out.println("The player at position " + winner + " has won with his card: "
+		System.out.println(players.get(winner).getPlayerName() + " has won with his card: "
 				+ winnerPlayer.peekACard());
 		
 		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
+			if (players.get(i).checkCards()) {
+				
 			commonPile.add(players.get(i).popACard());
+			}
 		}
 		
-		for (int i = 0; i < commonPile.size(); i++) { // pushes all of the common pile cards to the winners hand
-			players.get(winner).pushToDeck(commonPile.remove(i));
+		System.out.print("Common Pile: " + commonPile);
+		int commonSize = commonPile.size();
+		for (int i = 0; i != commonSize - 1; i++) { // pushes all of the common pile cards to the winners hand
+			players.get(winner).pushToDeck(commonPile.remove(0));
 		}
 		
 		for (int i = 0; i < players.size(); i++) { // CHECK the correct cards in hand - troubleshooting
+			System.out.println(players.get(i).getPlayerName()); 
 			players.get(i).displayPlayerHand();
 		}
 		
+		System.out.println("----------------------------ROUND END----------------------------");
 		kickPlayerOut();
 
 		
@@ -181,7 +198,7 @@ public class Game {
 			
 			if (players.get(i).deckEmptyCheck()) {
 				
-				players.remove(i);
+				players.get(i).hasNoCards();
 				
 			}
 			
@@ -202,7 +219,15 @@ public class Game {
 	 */
 	public boolean everyoneHasAStack() {
 		boolean everyoneHasAStack = true;
-		
+		int emptyDecks = 0;
+		for (int i = 0; i < players.size(); i++) {
+			if (!players.get(i).checkCards()) {
+				emptyDecks++;
+			}
+		}
+		if (emptyDecks == (players.size()-1)) {
+			everyoneHasAStack = false;
+		}
 		
 		return everyoneHasAStack;
 	}
