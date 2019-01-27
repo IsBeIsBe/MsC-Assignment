@@ -86,6 +86,10 @@ public class TopTrumpsCLIApplication {
 		
 	}
 	
+	/**
+	 * This method retrieves the data from the database and then uses the DatabaseInteraction class's getters 
+	 * for constructing a statement to print. 
+	 */
 	public static void printGameStatistics() {
 		  DatabaseInteraction db = new DatabaseInteraction();
 

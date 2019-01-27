@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * The Game class uses the Player and Card classes to play a complete game of Top Trumps. The relevant data from each 
+ * game is then sent to the database via the static insertGameStats method from the DatabaseInteraction class. 
+ * 
+ * ArrayLists were used form the list of players (to accommodate potentially allowing the user to select how 
+ * many opponents they would like to play against) as well as the 'commonPile' - a deck used to collect each player's 
+ * cards at before redistributing them to the winner and a temporary hold for played cards in the event of a draw. 
+ * 
+ * The boolean 'hasSomeoneWon' is used to break the loop of game playing. Int variables such as roundCounter and drawCOunter
+ * are used to gather the relevant information for the database elements of the system. 
+ */
 public class Game {
 
 	// TestLogWriter thisLogWriter = new TestLogWriter(null);
@@ -18,16 +29,35 @@ public class Game {
 	int[] gameStats = new int[7];
 	boolean hasSomeoneWon = false;
 	int drawCounter;
-
+	
+	
+	/**
+	 * The Game class takes the deck of cards being used as an argument in the constructor in order to allow for 
+	 * potentially selecting from a choice of available decks. 
+	 * @param inputDeck
+	 */
 	public Game(ArrayList<Card> inputDeck) {
 		this.deck = inputDeck;
 	}
 
+	/**
+	 * This functionality is included in a method in order to make writing and reading the Test Log easier. 
+	 */
 	public void displayDeck() {
 
 		System.out.println(deck);
 	}
 
+	/**
+	 * The createPlayers method establishes an ArrayList of players for the game. The human player controlled by the
+	 * user is always the first element in the structure. 
+	 * 
+	 * The number of players is currently hard-coded in during the 'playGame' method, with the intention that this 
+	 * might be changed to allow the user to change the number of players later in development. 
+	 * 
+	 * @param numberOfAIPlayers
+	 * @return an array list of the players of each game.
+	 */
 	public ArrayList<Player> createPlayers(int numberOfAIPlayers) {
 
 		players.add(new HumanPlayer("Human Player"));
@@ -39,14 +69,19 @@ public class Game {
 		return players;
 	}
 
+	/**
+	 * Again, containing this functionality in a method helped keep the system design easier to follow. 
+	 */
 	public void shuffleDeck() {
 
 		Collections.shuffle(deck);
 	}
 
+	/**
+	 * This method deals the cards in the original 'deck' list evenly, accommodating for a number of players that 
+	 * does not divide the number of Cards evenly. 
+	 */
 	public void dealCards() {
-
-//		createPlayers(3);
 
 		int i = 0;
 		int j = 0;
@@ -71,6 +106,9 @@ public class Game {
 		}
 	}
 
+	/**
+	 * This method utilises the 'displayPlayerHand' methods associated with each Player to print each deck. 
+	 */
 	public void printPlayerCards() {
 
 		for (int i = 0; i < players.size(); i++) {
@@ -79,11 +117,13 @@ public class Game {
 		}
 	}
 
+	/**
+	 * This method starts the process of playing a game. It creates the selected number of players, retrieves the deck of Cards
+	 * and sets the relevant 'counters' to zero. It then shuffles and distributes the cards amongst the players. 
+	 * The first player of the game is assigned randomly using the 'firstPlayer' method described below. The game then enters a 
+	 * while(true) loop to contain a repeating 'playARound' method - this is broken when 'hasSomeoneWon' is found to be true.
+	 */
 	public void playGame() {
-		/*
-		 * Start of the game
-		 * 
-		 */
 
 		this.players = createPlayers(4);
 		drawCounter = 0;
@@ -120,6 +160,8 @@ public class Game {
 			rounds++;
 			playARound(selector);
 		}
+		
+		//This loop finds the winner    --------------------------It might be already written to 'winner' though?
 		for (int i = 0; i < players.size(); i++) {
 			if (!players.get(i).deckEmptyCheck()) {
 				System.out.println(players.get(i).getPlayerName() + " has won after " + rounds + " rounds");
@@ -127,11 +169,13 @@ public class Game {
 
 		}
 
+		//THe final scores of the game are printed for the user to examine. 
 		System.out.println("Final scores: ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
 		}
 		
+		//The next lines collect the data required for the databse. 
 		int scoreOne = players.get(0).getScore();
 		int scoreTwo = players.get(1).getScore();
 		int scoreThree = players.get(2).getScore();
@@ -152,9 +196,20 @@ public class Game {
 
 	}
 
-	/*
-	 * Code for running a round -- is fed the player who chooses the attributes for
-	 * the round, known as 'selector'.
+	/**
+	 * This method handles playing each round of the game -- is takes the player who chooses the attributes for
+	 * the round, known as 'selector'. This is assigned randomly at first, and then the position is taken by 
+	 * whoever wins the round. 
+	 * 
+	 * The 'selector' is asked to choose an attribute from the first card in their stack (playerDeck). If an AI
+	 * player is currently the 'selector', it simply chooses the highest value. 
+	 * 
+	 * The selected value is then compared against the other top cards in each player's stack to find a winner. The cards 
+	 * are then collected together and gifted to the winner. In the event of a draw, the cards remain in the commonPile stack
+	 * to be won in the next round - the previous winner remains the 'selector' for this next round. 
+	 * 
+	 * The method checks how many cards each player has and breaks the loop 'playARound' is contained in when only one player 
+	 * has any cards remaining. 
 	 */
 	public void playARound(int roundSelector) {
 
@@ -169,12 +224,20 @@ public class Game {
 		// Card has been selected above
 
 		// This will compare the selected card against the other player's cards
-		// playersCard will be compared to other cards. Iterate through other players
-		// cards
-		// comparing the peeked cards of each.
+		// playersCard will be compared to other cards. It then iterates through other players
+		// cards comparing the 'peeked' cards of each player.
 		int winner = roundSelector;
+		
+		//These variables help determine if there has been a draw, and adjusts the flow of the game accordingly. 
 		boolean ifTheresADraw = false;
 		int drawingPlayer;
+		
+		/*
+		 * This for loop is where the cards are compared. Firstly, the system skips over the 'selector' player. It then 
+		 * skips any players in the players list who have no cards left. If a draw is found, the system first completes the 
+		 * loop to ensure no outright winner can be found, and only then changes ifTheresADraw to 'true' in order to change 
+		 * how the round plays out. 
+		 */
 		for (int i = 0; i < players.size(); i++) {
 			if (i == roundSelector) {
 				i++;
@@ -197,15 +260,20 @@ public class Game {
 					System.out.println("There was a draw!");
 					drawCounter++;
 					break;
-				} else if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) { // if other players
-																									// card is higher
-																									// than selectors
-																									// card then
+					
+					/*
+					 * Finally, if any outright winner is found, their position in the players list is recorded. 
+					 */
+				} else if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
 					winner = i;
 				}
 			}
 		}
 
+		/*
+		 * If there is no draw, the game continues as normal, declaring the winner, establishing them as the next 
+		 * 'selector', and awarding them the cards associated with the round. 
+		 */
 		if (!ifTheresADraw) {
 
 			Player winnerPlayer = players.get(winner);
@@ -226,6 +294,11 @@ public class Game {
 			for (int i = 0; i < commonSize; i++) { // pushes all of the common pile cards to the winners hand
 				players.get(winner).pushToDeck(commonPile.remove(0));
 			}
+			
+			/*
+			 *If there IS a draw, the commonPile is given all player cards from the round. These are then carried 
+			 * over to be won in the next round. 
+			 */
 		} else {
 			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 				if (players.get(i).checkCards()) {
@@ -247,16 +320,25 @@ public class Game {
 			}
 		}
 		selector = winner;
+		
+		//Next few lines are Test Log/troubleshooting related. 
 		System.out.println("----------------------------END OF ROUND " + rounds + "----------------------------");
 		System.out.println("There has been " + drawCounter + "draws");
 		System.out.println("Scores after Round " + rounds + ": ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
 		}
+		
+		//This method checks which players are still in the game by checking their stacks and changing their 'hasADeck' status. 
+		// If only one player is found to be left in the game, the while loop is exited. 
 		kickPlayerOut();
 
 	}
 
+	/**
+	 * This method cycles through the players ArrayList, and checks if they have any cards left in their stack 
+	 * in order to determine which Players are still in the game. 
+	 */
 	public void kickPlayerOut() {
 
 		for (int i = 0; i < players.size(); i++) {
@@ -271,6 +353,12 @@ public class Game {
 
 	}
 
+	/**
+	 * This method randonly generates an int between 0 and 4 to determine the first player. In the event of 
+	 * the user being able to select how many players they would like to face, this code will need to be 
+	 * adjusted. 
+	 * @return the int associated with the first player. 
+	 */
 	public int firstPlayer() {
 		Random rand = new Random();
 		int playerID = rand.nextInt(4);
@@ -278,9 +366,11 @@ public class Game {
 
 	}
 
-	/*
-	 * Need to write a method here that essentially checks if there has been a
-	 * winner by looking at the player stacks.
+	/**
+	 * This method checks all Player stacks to determine if their is a winner of the game. If their is, it returns 'false' 
+	 * and exits the while loop associated with the playARound method. 
+	 * 
+	 * @return Whether or not someone has won the game. 
 	 */
 	public boolean everyoneHasAStack() {
 		boolean everyoneHasAStack = true;
@@ -299,9 +389,8 @@ public class Game {
 		return everyoneHasAStack;
 	}
 
-	/*
-	 * This method shoulld maybe include the print statements as well but def needs
-	 * to send the game stats to the Database.
+	/**
+	 * This method sends the results of the game to the database after they have been collected into an Array. 
 	 */
 	public void endOfGame(int[] gameStats) {
 		DatabaseInteraction.insertGameStats(gameStats);

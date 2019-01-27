@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * The DatabaseInteraction class handles submitting and recalling information from the Database. It is sent the relevant data 
+ * from the Game class in the first instance, and stores the relevant information as private variables in the latter.  
+ */
 public class DatabaseInteraction {
     private int gamesPlayed;
     private int playerWins;
@@ -27,6 +31,12 @@ public class DatabaseInteraction {
 
         }
 
+        /**
+         * Using the results of each game, a static method is used to update the database with the relevant data. 
+         * It uses the individuals scores to determine the overall winner of the game. 
+         *  
+         * @param gameResults
+         */
         public static void insertGameStats(int[] gameResults){
              //load JDBC Driver
 
@@ -81,7 +91,14 @@ public class DatabaseInteraction {
 
         }
                 
-                
+        /**
+         * The getGameStats method returns the required information outlined in the requirements. 
+         * 
+         * Number of games is calculated by returning a count of the tuples in the table. 
+         * Number of AI wins is calculated by searching the 'overall winner column for entries not including 
+         * the word 'human'. This number is subtracted from the number of games to find the number of human wins. 
+         * The average number of draws and largest number of rounds are calculated using SQL queries. 
+         */
         public void getGameStats(){
         //load JDBC Driver
         	int game_number;
@@ -161,6 +178,11 @@ public class DatabaseInteraction {
             return this.longestRound;
         }
 
+        /**
+         * This method calculates the overall winner of the game through finding the highest individual round score. 
+         * @param gameResults
+         * @return winnerResult
+         */
         public static String calculateOverallWinner(int[] gameResults){
             int winner = 0;
             String winnerResult = "";

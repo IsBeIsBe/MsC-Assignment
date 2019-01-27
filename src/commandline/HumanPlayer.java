@@ -3,10 +3,12 @@ package commandline;
 import java.util.Scanner;
 import java.util.Stack;
 
+/** 
+ * Class for the Human Player. Only one will exist per game and they will always be held in the first position
+ * of the ArrayList of players, no matter how many AI players there are. 
+ */
 public class HumanPlayer extends Player{
-	/* 
-	 * Class for the Human Player, of which one will exist per game
-	 */
+
 	
 	private Stack<Card> playerDeck = new Stack<>();
 	
@@ -22,12 +24,18 @@ public class HumanPlayer extends Player{
 
 
 	@Override
+	
+	/**
+	 * This method displays card taken as a parameter and asks the user to input an attribute
+	 * between 1 and 5, based on the displayed results. It then returns selected attribute.
+	 * 
+	 * It uses a while loop in the same format as that found in TopTrumpsCLIApplication to gather the input
+	 * from the user. 
+	 * 
+	 *    --------maybe a chance to use an interface?
+	 */
 	protected int selectAttribute(Card testCard) {
-		
-		/*
-		 * Displays the topmost card and asks the user to input an attribute
-		 * between 1 and 5. Returns selected attribute.
-		 */
+
 		
 		System.out.println("Please select an attribute from the Card\n");
 		System.out.println(testCard);		
@@ -43,8 +51,17 @@ public class HumanPlayer extends Player{
 		
 	
 	}
-	
+
+	/**
+	 * This is the method utilising the code from TopTrumpsCLIAppliaction. With different acceptance criteria, 
+	 * if follows the same pattern of throwing WrongInputExceptions in the event of an incorrect entry and/or
+	 * a NumberFormatException. 
+	 * 
+	 * We felt that it would be better to have the user choose from numbers 1-5, rather than 0-4, as that would 
+	 * be more intuitive for the average user. 
+	 */
 	public static int askUserForInputSelection() throws WrongInputException{
+
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
 		int input = 0;
