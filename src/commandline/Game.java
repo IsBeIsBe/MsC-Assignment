@@ -5,15 +5,19 @@ import java.util.Collections;
 import java.util.Random;
 
 /**
- * The Game class uses the Player and Card classes to play a complete game of Top Trumps. The relevant data from each 
- * game is then sent to the database via the static insertGameStats method from the DatabaseInteraction class. 
+ * The Game class uses the Player and Card classes to play a complete game of
+ * Top Trumps. The relevant data from each game is then sent to the database via
+ * the static insertGameStats method from the DatabaseInteraction class.
  * 
- * ArrayLists were used form the list of players (to accommodate potentially allowing the user to select how 
- * many opponents they would like to play against) as well as the 'commonPile' - a deck used to collect each player's 
- * cards at before redistributing them to the winner and a temporary hold for played cards in the event of a draw. 
+ * ArrayLists were used form the list of players (to accommodate potentially
+ * allowing the user to select how many opponents they would like to play
+ * against) as well as the 'commonPile' - a deck used to collect each player's
+ * cards at before redistributing them to the winner and a temporary hold for
+ * played cards in the event of a draw.
  * 
- * The boolean 'hasSomeoneWon' is used to break the loop of game playing. Int variables such as roundCounter and drawCOunter
- * are used to gather the relevant information for the database elements of the system. 
+ * The boolean 'hasSomeoneWon' is used to break the loop of game playing. Int
+ * variables such as roundCounter and drawCOunter are used to gather the
+ * relevant information for the database elements of the system.
  */
 public class Game {
 
@@ -30,11 +34,12 @@ public class Game {
 	boolean hasSomeoneWon = false;
 	int drawCounter;
 	String[] attributeNames;
-	
-	
+
 	/**
-	 * The Game class takes the deck of cards being used as an argument in the constructor in order to allow for 
-	 * potentially selecting from a choice of available decks. 
+	 * The Game class takes the deck of cards being used as an argument in the
+	 * constructor in order to allow for potentially selecting from a choice of
+	 * available decks.
+	 * 
 	 * @param inputDeck
 	 */
 	public Game(ArrayList<Card> inputDeck, String[] names) {
@@ -43,7 +48,8 @@ public class Game {
 	}
 
 	/**
-	 * This functionality is included in a method in order to make writing and reading the Test Log easier. 
+	 * This functionality is included in a method in order to make writing and
+	 * reading the Test Log easier.
 	 */
 	public void displayDeck() {
 
@@ -51,11 +57,13 @@ public class Game {
 	}
 
 	/**
-	 * The createPlayers method establishes an ArrayList of players for the game. The human player controlled by the
-	 * user is always the first element in the structure. 
+	 * The createPlayers method establishes an ArrayList of players for the game.
+	 * The human player controlled by the user is always the first element in the
+	 * structure.
 	 * 
-	 * The number of players is currently hard-coded in during the 'playGame' method, with the intention that this 
-	 * might be changed to allow the user to change the number of players later in development. 
+	 * The number of players is currently hard-coded in during the 'playGame'
+	 * method, with the intention that this might be changed to allow the user to
+	 * change the number of players later in development.
 	 * 
 	 * @param numberOfAIPlayers
 	 * @return an array list of the players of each game.
@@ -72,7 +80,8 @@ public class Game {
 	}
 
 	/**
-	 * Again, containing this functionality in a method helped keep the system design easier to follow. 
+	 * Again, containing this functionality in a method helped keep the system
+	 * design easier to follow.
 	 */
 	public void shuffleDeck() {
 
@@ -80,8 +89,8 @@ public class Game {
 	}
 
 	/**
-	 * This method deals the cards in the original 'deck' list evenly, accommodating for a number of players that 
-	 * does not divide the number of Cards evenly. 
+	 * This method deals the cards in the original 'deck' list evenly, accommodating
+	 * for a number of players that does not divide the number of Cards evenly.
 	 */
 	public void dealCards() {
 
@@ -109,7 +118,8 @@ public class Game {
 	}
 
 	/**
-	 * This method utilises the 'displayPlayerHand' methods associated with each Player to print each deck. 
+	 * This method utilises the 'displayPlayerHand' methods associated with each
+	 * Player to print each deck.
 	 */
 	public void printPlayerCards() {
 
@@ -120,10 +130,13 @@ public class Game {
 	}
 
 	/**
-	 * This method starts the process of playing a game. It creates the selected number of players, retrieves the deck of Cards
-	 * and sets the relevant 'counters' to zero. It then shuffles and distributes the cards amongst the players. 
-	 * The first player of the game is assigned randomly using the 'firstPlayer' method described below. The game then enters a 
-	 * while(true) loop to contain a repeating 'playARound' method - this is broken when 'hasSomeoneWon' is found to be true.
+	 * This method starts the process of playing a game. It creates the selected
+	 * number of players, retrieves the deck of Cards and sets the relevant
+	 * 'counters' to zero. It then shuffles and distributes the cards amongst the
+	 * players. The first player of the game is assigned randomly using the
+	 * 'firstPlayer' method described below. The game then enters a while(true) loop
+	 * to contain a repeating 'playARound' method - this is broken when
+	 * 'hasSomeoneWon' is found to be true.
 	 */
 	public void playGame() {
 
@@ -134,11 +147,11 @@ public class Game {
 			System.out.println(players.get(i).getPlayerName());
 			System.out.println();
 		}
-		
+
 		/*
-		*	The following section will be shuffluing and dealing cards, with the future
-		*	log functionality commented out
-		*/
+		 * The following section will be shuffluing and dealing cards, with the future
+		 * log functionality commented out
+		 */
 
 		// String deckContentsLog = deck.toString();
 		// thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" +
@@ -162,8 +175,9 @@ public class Game {
 			rounds++;
 			playARound(selector);
 		}
-		
-		//This loop finds the winner    --------------------------It might be already written to 'winner' though?
+
+		// This loop finds the winner --------------------------It might be already
+		// written to 'winner' though?
 		for (int i = 0; i < players.size(); i++) {
 			if (!players.get(i).deckEmptyCheck()) {
 				System.out.println(players.get(i).getPlayerName() + " has won after " + rounds + " rounds\r\n");
@@ -171,19 +185,19 @@ public class Game {
 
 		}
 
-		//The final scores of the game are printed for the user to examine. 
+		// The final scores of the game are printed for the user to examine.
 		System.out.println("Final scores: ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
 		}
-		
-		//The next lines collect the data required for the databse. 
+
+		// The next lines collect the data required for the databse.
 		int scoreOne = players.get(0).getScore();
 		int scoreTwo = players.get(1).getScore();
 		int scoreThree = players.get(2).getScore();
 		int scoreFour = players.get(3).getScore();
 		int scoreFive = players.get(4).getScore();
-		
+
 		gameStats[0] = scoreOne;
 		gameStats[1] = scoreTwo;
 		gameStats[2] = scoreThree;
@@ -191,30 +205,32 @@ public class Game {
 		gameStats[4] = scoreFive;
 		gameStats[5] = rounds;
 		gameStats[6] = drawCounter;
-		
+
 		// endOfGame(gameStats);
 
 		System.out.println("The end");
 
 	}
 
-
 	public void playARound(int roundSelector) {
-	/*
-	 * This method handles playing each round of the game -- is takes the player who chooses the attributes for
-	 * the round, known as 'selector'. This is assigned randomly at first, and then the position is taken by 
-	 * whoever wins the round. 
-	 * 
-	 * The 'selector' is asked to choose an attribute from the first card in their stack (playerDeck). If an AI
-	 * player is currently the 'selector', it simply chooses the highest value. 
-	 * 
-	 * The selected value is then compared against the other top cards in each player's stack to find a winner. The cards 
-	 * are then collected together and gifted to the winner. In the event of a draw, the cards remain in the commonPile stack
-	 * to be won in the next round - the previous winner remains the 'selector' for this next round. 
-	 * 
-	 * The method checks how many cards each player has and breaks the loop 'playARound' is contained in when only one player 
-	 * has any cards remaining. 
-	 */
+		/*
+		 * This method handles playing each round of the game -- is takes the player who
+		 * chooses the attributes for the round, known as 'selector'. This is assigned
+		 * randomly at first, and then the position is taken by whoever wins the round.
+		 * 
+		 * The 'selector' is asked to choose an attribute from the first card in their
+		 * stack (playerDeck). If an AI player is currently the 'selector', it simply
+		 * chooses the highest value.
+		 * 
+		 * The selected value is then compared against the other top cards in each
+		 * player's stack to find a winner. The cards are then collected together and
+		 * gifted to the winner. In the event of a draw, the cards remain in the
+		 * commonPile stack to be won in the next round - the previous winner remains
+		 * the 'selector' for this next round.
+		 * 
+		 * The method checks how many cards each player has and breaks the loop
+		 * 'playARound' is contained in when only one player has any cards remaining.
+		 */
 		displayRoundStartInfo();
 
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
@@ -222,7 +238,8 @@ public class Game {
 		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
 
 		System.out.println(
-				players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from " + firstCard.getName() +  " with a value of " + firstCard.getAttributes()[comparator]);
+				players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "
+						+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n");
 		// Card has been selected above
 
 		int winner = roundSelector;
@@ -278,8 +295,8 @@ public class Game {
 			Player winnerPlayer = players.get(winner);
 			players.get(winner).winsRound();
 
-			System.out.println(
-					players.get(winner).getPlayerName() + " has won with his card: " + winnerPlayer.peekACard().getName());
+			System.out.println(players.get(winner).getPlayerName() + " has won with his card: "
+					+ winnerPlayer.peekACard().getName());
 
 			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 				if (players.get(i).checkCards()) {
@@ -325,37 +342,39 @@ public class Game {
 
 	// private void compareCards(int roundSelector){
 
-	// 	Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
-	// 	int comparator = players.get(roundSelector).selectAttribute(firstCard);
+	// Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
+	// int comparator = players.get(roundSelector).selectAttribute(firstCard);
 
-	// 	for (int i = 0; i < players.size(); i++) {
-	// 		if (i == roundSelector) {
-	// 			i++;
-	// 		} else if (!players.get(i).checkCards()) {
-	// 			i++;
-	// 		} else {
+	// for (int i = 0; i < players.size(); i++) {
+	// if (i == roundSelector) {
+	// i++;
+	// } else if (!players.get(i).checkCards()) {
+	// i++;
+	// } else {
 
-	// 			Card playersCard = players.get(i).peekACard(); // card of other player(s)
-	// 			if (playersCard.attributes[comparator] == firstCard.attributes[comparator]) {
-	// 				drawingPlayer = i;
-	// 				for (int j = i + 1; j < players.size(); j++) {
-	// 					if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
-	// 						winner = j;
-	// 					} else {
-	// 						ifTheresADraw = true;
-	// 					}
-	// 				}
-	// 				System.out.print("This round was a draw,");
-	// 				drawCounter++;
-	// 				break;
-	// 				// Finally, if any outright winner is found, their position in the players list
-	// 				// is recorded.
+	// Card playersCard = players.get(i).peekACard(); // card of other player(s)
+	// if (playersCard.attributes[comparator] == firstCard.attributes[comparator]) {
+	// drawingPlayer = i;
+	// for (int j = i + 1; j < players.size(); j++) {
+	// if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
+	// winner = j;
+	// } else {
+	// ifTheresADraw = true;
+	// }
+	// }
+	// System.out.print("This round was a draw,");
+	// drawCounter++;
+	// break;
+	// // Finally, if any outright winner is found, their position in the players
+	// list
+	// // is recorded.
 
-	// 			} else if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
-	// 				winner = i;
-	// 			}
-	// 		}
-	// 	}
+	// } else if (playersCard.attributes[comparator] >
+	// firstCard.attributes[comparator]) {
+	// winner = i;
+	// }
+	// }
+	// }
 	// }
 
 	private void displayRoundStartInfo() {
@@ -372,8 +391,9 @@ public class Game {
 	}
 
 	/**
-	 * This method cycles through the players ArrayList, and checks if they have any cards left in their stack 
-	 * in order to determine which Players are still in the game. 
+	 * This method cycles through the players ArrayList, and checks if they have any
+	 * cards left in their stack in order to determine which Players are still in
+	 * the game.
 	 */
 	public void kickPlayerOut() {
 
@@ -390,10 +410,11 @@ public class Game {
 	}
 
 	/**
-	 * This method randonly generates an int between 0 and 4 to determine the first player. In the event of 
-	 * the user being able to select how many players they would like to face, this code will need to be 
-	 * adjusted. 
-	 * @return the int associated with the first player. 
+	 * This method randonly generates an int between 0 and 4 to determine the first
+	 * player. In the event of the user being able to select how many players they
+	 * would like to face, this code will need to be adjusted.
+	 * 
+	 * @return the int associated with the first player.
 	 */
 	public int firstPlayer() {
 		Random rand = new Random();
@@ -403,10 +424,11 @@ public class Game {
 	}
 
 	/**
-	 * This method checks all Player stacks to determine if their is a winner of the game. If their is, it returns 'false' 
-	 * and exits the while loop associated with the playARound method. 
+	 * This method checks all Player stacks to determine if their is a winner of the
+	 * game. If their is, it returns 'false' and exits the while loop associated
+	 * with the playARound method.
 	 * 
-	 * @return Whether or not someone has won the game. 
+	 * @return Whether or not someone has won the game.
 	 */
 	public boolean everyoneHasAStack() {
 		boolean everyoneHasAStack = true;
@@ -426,7 +448,8 @@ public class Game {
 	}
 
 	/**
-	 * This method sends the results of the game to the database after they have been collected into an Array. 
+	 * This method sends the results of the game to the database after they have
+	 * been collected into an Array.
 	 */
 	public void endOfGame(int[] gameStats) {
 		DatabaseInteraction.insertGameStats(gameStats);
