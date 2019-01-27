@@ -22,6 +22,10 @@ public abstract class Player {
 	public void setScore(int score) {
 		this.score = score;
 	}
+	
+	public void winsRound() {
+		this.score ++;
+	}
 
 	public String getPlayerName() {
 		return playerName;
