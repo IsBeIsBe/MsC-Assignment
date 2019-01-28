@@ -12,10 +12,10 @@ public abstract class Player {
 	
 	protected int score = 0; // tracks the score
 //	private ArrayList<Card> hand = new ArrayList<>(); // current hand
-	private Stack<Card> playerDeck = new Stack<>();
+	protected Stack<Card> playerDeck = new Stack<>();
 //	abstract int selectAttribute();
 	protected String playerName;
-	private boolean hasCards = true;
+	protected boolean hasCards = true;
 	
 	
 	
