@@ -15,20 +15,21 @@ public class TestLogWriter {
 	
 	public TestLogWriter(String x) {
 		this.fileLogInput = x; 
+		WriteLogFile(fileLogInput);
 	}
 
 	public void WriteLogFile(String fileLogInput) {
 		try {
-			File testLog = new File("Test.txt");
-			logWriter = new FileWriter(testLog, true);
+			File testLog = new File("TestLog.txt");
+		//	logWriter = new FileWriter(testLog, true);
+			logWriter = new FileWriter(testLog);
 			BufferedWriter thisBufWriter = new BufferedWriter(logWriter);
-			System.out.println("this text here " + testLog);
 			thisBufWriter.write(fileLogInput);
 			thisBufWriter.newLine();
-			thisBufWriter.write("-------------------------------------------------------------------------------------------");
+			thisBufWriter.write("------------------------------THANK YOU FOR LOGGING------------------------------");
 			thisBufWriter.newLine(); 
 			thisBufWriter.close(); 
-			System.out.println("\n " + thisBufWriter.toString());
+			//System.out.println("\n " + thisBufWriter.toString());
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

@@ -34,6 +34,9 @@ public class Game {
 	boolean hasSomeoneWon = false;
 	int drawCounter;
 	String[] attributeNames;
+	
+	boolean logMode = true;
+	String log = "";
 
 	/**
 	 * The Game class takes the deck of cards being used as an argument in the
@@ -45,6 +48,13 @@ public class Game {
 	public Game(ArrayList<Card> inputDeck, String[] names) {
 		this.deck = inputDeck;
 		this.attributeNames = names;
+		
+		if (logMode) {
+			
+			log += "----------DECK AS READ----------\n" + deck;
+			log += "\n----------DECK AS READ END----------\n";
+			
+		}
 	}
 
 	/**
@@ -86,6 +96,12 @@ public class Game {
 	public void shuffleDeck() {
 
 		Collections.shuffle(deck);
+		if (logMode) {
+
+			log += "----------SHUFFLE----------" + deck;
+			log += "\n----------END OF SHUFFLE----------";
+
+		}
 	}
 
 	/**
@@ -115,7 +131,10 @@ public class Game {
 				j++;
 			}
 		}
+		
+		
 	}
+	
 
 	/**
 	 * This method utilises the 'displayPlayerHand' methods associated with each
@@ -126,6 +145,10 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 
 			players.get(i).displayPlayerHand();
+			
+			if (logMode) {
+				log += players.get(i).displayPlayerHand();
+			}
 		}
 	}
 
@@ -152,7 +175,6 @@ public class Game {
 		 * The following section will be shuffluing and dealing cards, with the future
 		 * log functionality commented out
 		 */
-
 		// String deckContentsLog = deck.toString();
 		// thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" +
 		// deckContentsLog);
@@ -162,6 +184,9 @@ public class Game {
 		// postSuffleDeckContentsLog);
 		dealCards();
 
+		// log mode printing player cards
+		printPlayerCards();
+		
 		// Selecting first player by a randomised method and popping their card
 		selector = firstPlayer();
 
@@ -180,7 +205,12 @@ public class Game {
 		// written to 'winner' though?
 		for (int i = 0; i < players.size(); i++) {
 			if (!players.get(i).deckEmptyCheck()) {
+				
 				System.out.println(players.get(i).getPlayerName() + " has won after " + rounds + " rounds\r\n");
+				if (logMode) {
+					
+					log += "\n------WINNER LOG-----\n" + players.get(i).getPlayerName() + " has won after " + rounds + " rounds\r\n";
+				}
 			}
 
 		}
@@ -191,7 +221,7 @@ public class Game {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
 		}
 
-		// The next lines collect the data required for the databse.
+		// The next lines collect the data required for the database.
 		int scoreOne = players.get(0).getScore();
 		int scoreTwo = players.get(1).getScore();
 		int scoreThree = players.get(2).getScore();
@@ -208,8 +238,9 @@ public class Game {
 
 		// endOfGame(gameStats);
 
-		System.out.println("The end");
-
+		System.out.println("----------GAME END-----------");
+		System.out.println("----------LOG-----------");
+		TestLogWriter tlw = new TestLogWriter(log);
 	}
 
 	public void playARound(int roundSelector) {
@@ -237,9 +268,13 @@ public class Game {
 
 		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
 
-		System.out.println(
-				players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "
-						+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n");
+		String selectionValues = players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "
+				+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n";
+		
+		System.out.println(selectionValues);
+		if (logMode) {
+			log += "\n------CATEGORY SELECTION LOG-----\n" + selectionValues;
+		}
 		// Card has been selected above
 
 		int winner = roundSelector;
@@ -258,12 +293,20 @@ public class Game {
 		 */
 		for (int i = 0; i < players.size(); i++) {
 			if (i == roundSelector) {
+				if (logMode) {
+					log += players.get(i).getPlayerName() + "'s card-in-play: " + "\n";
+					log += players.get(i).peekACard();
+				}
 				i++;
 			} else if (!players.get(i).checkCards()) {
 				i++;
 			} else {
 
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
+				if (logMode) {
+					log += "\n" + players.get(i).getPlayerName() + "'s card-in-play: " + "\n";
+					log+= playersCard;
+				}
 				if (playersCard.attributes[comparator] == firstCard.attributes[comparator]) {
 					drawingPlayer = i;
 					for (int j = i + 1; j < players.size(); j++) {
@@ -324,7 +367,14 @@ public class Game {
 		}
 
 		selector = winner;
-
+		
+		printPlayerCards();
+		if(logMode && !commonPile.isEmpty()) {
+			log += "----------COMMON PILE----------";
+		log += commonPile;
+		log += "----------COMMON PILE END----------";
+		}
+		
 		// Next few lines are Test Log/troubleshooting related.
 		System.out.println("----------------------------END OF ROUND " + rounds + "----------------------------");
 		System.out.println("There has been " + drawCounter + " draws");

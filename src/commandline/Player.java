@@ -99,10 +99,15 @@ public abstract class Player {
 	/**
 	 * This is a modified toString, simply detailing the contents of a player's deck for the Test Log and troubleshooting. 
 	 */
-	public void displayPlayerHand() {
-		System.out.println("Cards in hand: " + playerDeck.size());
-		System.out.println("Printing player hand...");
-		System.out.println(playerDeck);		
+	public String displayPlayerHand() {
+
+		String getLogging = "\nThis is " + playerName + ". \nNumber of cards in their hand: " + playerDeck.size() + "\nPrinting " + this.playerName
+				+ "'s hand...\n" + playerDeck + "\n------------";
+		
+		System.out.println("Number of cards in the hand: " + playerDeck.size());
+		System.out.println("Printing " + this.playerName + "'s hand...");
+		System.out.println(playerDeck);
+		return getLogging;	
 	}
 
 	public Stack<Card> getHand(){
