@@ -206,7 +206,7 @@ public class Game {
 		gameStats[5] = rounds;
 		gameStats[6] = drawCounter;
 
-		// endOfGame(gameStats);
+		endOfGame(gameStats);
 
 		System.out.println("The end");
 

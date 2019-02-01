@@ -99,17 +99,26 @@ public class DatabaseInteraction {
          * The average number of draws and largest number of rounds are calculated using SQL queries. 
          */
         public void getGameStats(){
-        //load JDBC Driver
-        	int game_number;
+      
+//        	int humanRoundWins = gameResults[0]; 
+//            int aiOneWins = gameResults[1];
+//            int aiTwoWins = gameResults[2];
+//            int aiThreeWins = gameResults[3];
+//            int aiFourWins = gameResults[4];
+//            int numOfRounds = gameResults[5];
+//            int drawsNumber = gameResults[6];
+//            String overallGameWinner = calculateOverallWinner(gameResults);
+            
             try{
+           
             Class.forName(JDBC_DRIVER);
             } catch (ClassNotFoundException e){
-                System.out.println("Could not find JDBC Driver");
+                System.out.println("Game stats - Could not find JDBC Driver");
                 e.printStackTrace();
                 return;
                 }
                 
-                System.out.println("Driver found");
+                System.out.println("Game stats - Driver found");
                 
                 Connection connection = null;
                 Statement stmt = null;
@@ -117,40 +126,52 @@ public class DatabaseInteraction {
                 
                 
                 try {
+                System.out.println("Game stats - Connecting to database...");
                 connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+                System.out.println("Game stats - Succesfully connected\n");
                 } catch(SQLException e){
-                System.out.println("Connection Failed");
+                System.out.println("Game stats - Connection Failed");
                 e.printStackTrace();
                 return;
                 }
                 
+               
                 if (connection != null){
                 
                 try{
+                	
                 Statement statement = connection.createStatement();
-                
-                //First query
-                ResultSet rs = statement.executeQuery("SELECT COUNT(game_number) AS count" +
-                " FROM game");
+                String q1 = "SELECT COUNT (humanroundwins) AS count FROM game";                
+                ResultSet  rs = statement.executeQuery(q1);
+              
+                while (rs.next()) {
                 this.game_number = rs.getInt("count");
+                      
+				//First query
+//                rs = statement.executeQuery("SELECT COUNT (humanroundwins) AS 'count'" +
+//                " FROM game");
+//                this.game_number = rs.getInt("count");
 
-                //second query
-                rs = statement.executeQuery("SELECT COUNT (overall_winner) AS AIWins"
-               + " FROM game" +
-                " WHERE overall_winner <> 'human'");
-                this.compWins = rs.getInt("AIWins");
-                this.playerWins = gamesPlayed - compWins;
-
-                //Getting averages   
-                rs = statement.executeQuery("SELECT AVG (total_draws) AS numDraws" + 
-                " FROM game");
-                this.avgDraws = rs.getInt("numDraws");
-
-                //Longest Round
-                rs = statement.executeQuery("SELECT MAX (total_rounds) AS biggstRound" +
-                " FROM game");
-                this.longestRound = rs.getInt("biggstRound");
-
+//                //second query
+//                rs = statement.executeQuery("SELECT COUNT (overallGameWinner) AS AIWins"
+//               + " FROM game" +
+//                " WHERE 'overallGameWinner' <> 'humanRoundWins'");
+//                this.compWins = rs.getInt("AIWins");
+//                this.playerWins = gamesPlayed - compWins;
+//
+//                //Getting averages   
+//                rs = statement.executeQuery("SELECT AVG (drawsNumber) AS numDraws" + 
+//                " FROM game");
+//                this.avgDraws = rs.getInt("numDraws");
+//
+//                //Longest Round
+//                rs = statement.executeQuery("SELECT MAX (numOfRounds) AS biggestRound" +
+//                " FROM game");
+//                this.longestRound = rs.getInt("biggestRound");
+                	
+               
+                }
+                rs.close();
                 }catch (SQLException e ){
                 e.printStackTrace();
                 }
