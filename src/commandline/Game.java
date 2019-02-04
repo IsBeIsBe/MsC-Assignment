@@ -11,7 +11,7 @@ import java.util.Random;
  * 
  * ArrayLists were used form the list of players (to accommodate potentially
  * allowing the user to select how many opponents they would like to play
- * against) as well as the 'commonPile' - a deck used to collect each player's
+ * against) as well as the 'commonPile'; a deck used to collect each player's
  * cards at before redistributing them to the winner and a temporary hold for
  * played cards in the event of a draw.
  * 
@@ -34,7 +34,7 @@ public class Game {
 	boolean hasSomeoneWon = false;
 	int drawCounter;
 	String[] attributeNames;
-	
+
 	boolean logMode = true;
 	String log = "";
 
@@ -48,12 +48,12 @@ public class Game {
 	public Game(ArrayList<Card> inputDeck, String[] names) {
 		this.deck = inputDeck;
 		this.attributeNames = names;
-		
+
 		if (logMode) {
-			
+
 			log += "----------DECK AS READ----------\n" + deck;
 			log += "\n----------DECK AS READ END----------\n";
-			
+
 		}
 	}
 
@@ -131,10 +131,8 @@ public class Game {
 				j++;
 			}
 		}
-		
-		
+
 	}
-	
 
 	/**
 	 * This method utilises the 'displayPlayerHand' methods associated with each
@@ -145,7 +143,7 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 
 			players.get(i).displayPlayerHand();
-			
+
 			if (logMode) {
 				log += players.get(i).displayPlayerHand();
 			}
@@ -186,7 +184,7 @@ public class Game {
 
 		// log mode printing player cards
 		printPlayerCards();
-		
+
 		// Selecting first player by a randomised method and popping their card
 		selector = firstPlayer();
 
@@ -205,11 +203,12 @@ public class Game {
 		// written to 'winner' though?
 		for (int i = 0; i < players.size(); i++) {
 			if (!players.get(i).deckEmptyCheck()) {
-				
+
 				System.out.println(players.get(i).getPlayerName() + " has won after " + rounds + " rounds\r\n");
 				if (logMode) {
-					
-					log += "\n------WINNER LOG-----\n" + players.get(i).getPlayerName() + " has won after " + rounds + " rounds\r\n";
+
+					log += "\n------WINNER LOG-----\n" + players.get(i).getPlayerName() + " has won after " + rounds
+							+ " rounds\r\n";
 				}
 			}
 
@@ -227,7 +226,6 @@ public class Game {
 		int scoreThree = players.get(2).getScore();
 		int scoreFour = players.get(3).getScore();
 		int scoreFive = players.get(4).getScore();
-
 		gameStats[0] = scoreOne;
 		gameStats[1] = scoreTwo;
 		gameStats[2] = scoreThree;
@@ -237,10 +235,8 @@ public class Game {
 		gameStats[6] = drawCounter;
 
 		// endOfGame(gameStats);
-
 		System.out.println("----------GAME END-----------");
-		System.out.println("----------LOG-----------");
-		TestLogWriter tlw = new TestLogWriter(log);
+		TestLogWriter testLogWriter = new TestLogWriter(log);
 	}
 
 	public void playARound(int roundSelector) {
@@ -268,12 +264,13 @@ public class Game {
 
 		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
 
-		String selectionValues = players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "
-				+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n";
-		
+		String selectionValues = players.get(roundSelector).getPlayerName() + " has chosen "
+				+ attributeNames[comparator + 1] + " from " + firstCard.getName() + " with a value of "
+				+ firstCard.getAttributes()[comparator] + "\r\n";
+
 		System.out.println(selectionValues);
 		if (logMode) {
-			log += "\n------CATEGORY SELECTION LOG-----\n" + selectionValues;
+			log += "\n------CATEGORY SELECTION-----\n" + selectionValues;
 		}
 		// Card has been selected above
 
@@ -305,7 +302,7 @@ public class Game {
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
 				if (logMode) {
 					log += "\n" + players.get(i).getPlayerName() + "'s card-in-play: " + "\n";
-					log+= playersCard;
+					log += playersCard;
 				}
 				if (playersCard.attributes[comparator] == firstCard.attributes[comparator]) {
 					drawingPlayer = i;
@@ -316,7 +313,7 @@ public class Game {
 							ifTheresADraw = true;
 						}
 					}
-					System.out.print("This round was a draw,");
+					System.out.print("This round was a draw.");
 					drawCounter++;
 					break;
 					// Finally, if any outright winner is found, their position in the players list
@@ -338,7 +335,7 @@ public class Game {
 			Player winnerPlayer = players.get(winner);
 			players.get(winner).winsRound();
 
-			System.out.println(players.get(winner).getPlayerName() + " has won with his card: "
+			System.out.println(players.get(winner).getPlayerName() + " has won with their card: "
 					+ winnerPlayer.peekACard().getName());
 
 			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
@@ -367,17 +364,17 @@ public class Game {
 		}
 
 		selector = winner;
-		
+
 		printPlayerCards();
-		if(logMode && !commonPile.isEmpty()) {
+		if (logMode && !commonPile.isEmpty()) {
 			log += "----------COMMON PILE----------";
-		log += commonPile;
-		log += "----------COMMON PILE END----------";
+			log += commonPile;
+			log += "----------COMMON PILE END----------";
 		}
-		
+
 		// Next few lines are Test Log/troubleshooting related.
 		System.out.println("----------------------------END OF ROUND " + rounds + "----------------------------");
-		System.out.println("There has been " + drawCounter + " draws");
+		System.out.println("There have been " + drawCounter + " draw(s).");
 		System.out.println("Scores after Round " + rounds + ": ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
