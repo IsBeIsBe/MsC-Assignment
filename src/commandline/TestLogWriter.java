@@ -13,22 +13,18 @@ public class TestLogWriter {
 	BufferedWriter thisBufWriter; 
 	String fileLogInput = "";
 	
-	public TestLogWriter(String x) {
-		this.fileLogInput = x; 
+	public TestLogWriter(String log) {
+		this.fileLogInput = log; 
 	}
 
-	public void WriteLogFile(String fileLogInput) {
+	public void WriteLogFile() {
 		try {
-			File testLog = new File("Test.txt");
-			logWriter = new FileWriter(testLog, true);
+			File testLog = new File("Log.txt");
+			logWriter = new FileWriter(testLog);
 			BufferedWriter thisBufWriter = new BufferedWriter(logWriter);
-			System.out.println("this text here " + testLog);
 			thisBufWriter.write(fileLogInput);
 			thisBufWriter.newLine();
-			thisBufWriter.write("-------------------------------------------------------------------------------------------");
-			thisBufWriter.newLine(); 
 			thisBufWriter.close(); 
-			System.out.println("\n " + thisBufWriter.toString());
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

@@ -22,6 +22,8 @@ import java.util.Random;
 public class Game {
 
 	// TestLogWriter thisLogWriter = new TestLogWriter(null);
+	boolean test = false;
+	String log = "\n----------WELCOME TO LOG MODE----------\n";
 
 	int rounds;
 	boolean aiWon;
@@ -42,9 +44,10 @@ public class Game {
 	 * 
 	 * @param inputDeck
 	 */
-	public Game(ArrayList<Card> inputDeck, String[] names) {
+	public Game(ArrayList<Card> inputDeck, String[] names, boolean logMode) {
 		this.deck = inputDeck;
 		this.attributeNames = names;
+		this.test = logMode;
 	}
 
 	/**
@@ -86,6 +89,12 @@ public class Game {
 	public void shuffleDeck() {
 
 		Collections.shuffle(deck);
+		
+		// logging shuffled deck
+		
+		if (test) {
+			log += "\n----------SHUFFLING DECK----------\n" + deck + "\n-----------END OF SHUFFLING DECK----------";
+		}
 	}
 
 	/**
@@ -121,12 +130,15 @@ public class Game {
 	 * This method utilises the 'displayPlayerHand' methods associated with each
 	 * Player to print each deck.
 	 */
-	public void printPlayerCards() {
+	public String printPlayerCards() {
 
+		String playerCardsLog = "";
+		
 		for (int i = 0; i < players.size(); i++) {
 
-			players.get(i).displayPlayerHand();
+			playerCardsLog += players.get(i).displayPlayerHand();
 		}
+		return playerCardsLog;
 	}
 
 	/**
@@ -140,6 +152,12 @@ public class Game {
 	 */
 	public void playGame() {
 
+		// logging deck as read
+		
+		if (test) {
+			log += "\n----------DECK AS READ----------\n" + deck + "\n-----------END OF DECK AS READ----------";
+		}
+		
 		this.players = createPlayers(4);
 		drawCounter = 0;
 
@@ -149,7 +167,7 @@ public class Game {
 		}
 
 		/*
-		 * The following section will be shuffluing and dealing cards, with the future
+		 * The following section will be shuffling and dealing cards, with the future
 		 * log functionality commented out
 		 */
 
@@ -157,6 +175,7 @@ public class Game {
 		// thisLogWriter.WriteLogFile("This is the pre-shuffle deck contents: " + "\n" +
 		// deckContentsLog);
 		shuffleDeck();
+
 		// String postSuffleDeckContentsLog = deck.toString();
 		// thisLogWriter.WriteLogFile("\n This is the shuffled deck contents: " + "\n" +
 		// postSuffleDeckContentsLog);
@@ -181,8 +200,13 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 			if (!players.get(i).deckEmptyCheck()) {
 				System.out.println(players.get(i).getPlayerName() + " has won after " + rounds + " rounds\r\n");
+				
+				if (test) {
+					log += "\n----------WINNER DECLARED----------\n" + players.get(i).getPlayerName() + " has won after " + rounds
+							+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
+				}
 			}
-
+			
 		}
 
 		// The final scores of the game are printed for the user to examine.
@@ -191,7 +215,7 @@ public class Game {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
 		}
 
-		// The next lines collect the data required for the databse.
+		// The next lines collect the data required for the database.
 		int scoreOne = players.get(0).getScore();
 		int scoreTwo = players.get(1).getScore();
 		int scoreThree = players.get(2).getScore();
@@ -208,7 +232,11 @@ public class Game {
 
 		// endOfGame(gameStats);
 
-		System.out.println("The end");
+		System.out.println("GAME OVER");
+		if (test) {
+			TestLogWriter thisLogWriter = new TestLogWriter(log);
+			thisLogWriter.WriteLogFile();
+		}
 
 	}
 
@@ -231,24 +259,42 @@ public class Game {
 		 * The method checks how many cards each player has and breaks the loop
 		 * 'playARound' is contained in when only one player has any cards remaining.
 		 */
+		
+		if (test) {
+
+			log += "\n----------START OF ROUND " + rounds + "----------\n";
+		}
+		
+		if (test && rounds == 1) {
+			
+			
+			
+			log += "\n----------CARD ALLOCATION----------" + loggingCardAllocation() + "----------END OF CARD ALLOCATION----------\n";
+		}
+		
 		displayRoundStartInfo();
 
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
 
 		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
 
-		System.out.println(
+		String attributeSelection = 
 				players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "
-						+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n");
+						+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n";
+		
+		System.out.println(attributeSelection);
 		// Card has been selected above
 
+		if (test) {
+			log += "\n-----------CARDS IN PLAY-----\n" + logCardsInPlay() + "\n-----------CARDS IN PLAY END----------\n";
+			log += "\n-----------ATTRIBUTE SELECTION-----\n" + attributeSelection + "\n-----------ATTRIBUTE SELECTION END----------\n";
+		}
+		
 		int winner = roundSelector;
 
 		// These variables help determine if there has been a draw, and adjusts the flow
 		// of the game accordingly.
 		boolean ifTheresADraw = false;
-		int drawingPlayer;
-
 		/*
 		 * This for loop is where the cards are compared. Firstly, the system skips over
 		 * the 'selector' player. It then skips any players in the players list who have
@@ -256,31 +302,41 @@ public class Game {
 		 * ensure no outright winner can be found, and only then changes ifTheresADraw
 		 * to 'true' in order to change how the round plays out.
 		 */
+		
+		//int drawingPlayer;
+		int chosenAttribute = firstCard.attributes[comparator];
+		
 		for (int i = 0; i < players.size(); i++) {
-			if (i == roundSelector) {
-				i++;
-			} else if (!players.get(i).checkCards()) {
+			
+			if (i == roundSelector || !players.get(i).checkCards()) {
 				i++;
 			} else {
 
 				Card playersCard = players.get(i).peekACard(); // card of other player(s)
-				if (playersCard.attributes[comparator] == firstCard.attributes[comparator]) {
-					drawingPlayer = i;
+				
+				if (playersCard.attributes[comparator] == chosenAttribute) {
+					//drawingPlayer = i;
 					for (int j = i + 1; j < players.size(); j++) {
-						if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
+						if (playersCard.attributes[comparator] > chosenAttribute) {
 							winner = j;
+							chosenAttribute = playersCard.attributes[comparator];
 						} else {
 							ifTheresADraw = true;
 						}
 					}
-					System.out.print("This round was a draw,");
+					
+					System.out.print("This round was a draw.");
 					drawCounter++;
 					break;
 					// Finally, if any outright winner is found, their position in the players list
 					// is recorded.
 
-				} else if (playersCard.attributes[comparator] > firstCard.attributes[comparator]) {
+				} else if (playersCard.attributes[comparator] > chosenAttribute) {
 					winner = i;
+					chosenAttribute = playersCard.attributes[comparator];
+				} else {
+
+					winner = roundSelector;
 				}
 			}
 		}
@@ -304,7 +360,8 @@ public class Game {
 				}
 			}
 
-			System.out.print("Common Pile: " + commonPile);
+			// System.out.print("Common Pile: " + commonPile);
+			
 			int commonSize = commonPile.size();
 			for (int i = 0; i < commonSize; i++) { // pushes all of the common pile cards to the winners hand
 				players.get(winner).pushToDeck(commonPile.remove(0));
@@ -321,13 +378,22 @@ public class Game {
 				}
 			}
 			System.out.println(" common pile now has " + commonPile.size() + " cards.\r\n");
+			
+			if (test) {
+				log += "\n----------COMMON PILE----------\n" + commonPile + "\n----------COMMON PILE END----------\n";
+			}
+			
 		}
 
 		selector = winner;
+		
+		if (test) {
+			log += printPlayerCards();
+		}
 
 		// Next few lines are Test Log/troubleshooting related.
-		System.out.println("----------------------------END OF ROUND " + rounds + "----------------------------");
-		System.out.println("There has been " + drawCounter + " draws");
+		System.out.println("\n----------END OF ROUND " + rounds + "----------\n");
+		System.out.println("There have been " + drawCounter + " draws.");
 		System.out.println("Scores after Round " + rounds + ": ");
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
@@ -377,15 +443,51 @@ public class Game {
 	// }
 	// }
 
-	private void displayRoundStartInfo() {
+	
+	public String loggingCardAllocation() {
+
+		String loggingCardAllocation = "";
+
+		for (int i = 0; i < players.size(); i++) {
+
+			loggingCardAllocation += "\n" + players.get(i).getPlayerName() + ": \n" + players.get(i).getHand();
+
+		}
+
+		return loggingCardAllocation;
+
+	}
+	
+	public String logCardsInPlay() {
+		String logInfo = "";
+		for (int i = 0; i < players.size(); i++) {
+			if (!players.get(i).deckEmptyCheck()) {
+				 logInfo += "\nCard in play for " + players.get(i).getPlayerName() + ": " + players.get(i).peekACard() + "\n";
+			}
+		}
+		return logInfo;
+	}
+	
+	public void displayRoundStartInfo() {
+		
 		System.out.println("Round " + rounds + "\r\n");
+		
 		if (!players.get(0).deckEmptyCheck()) {
-			System.out.println("You drew " + players.get(0).peekACard().getName() + ":\r\n" + "> " + attributeNames[1]
+			
+			String roundStartInfo = "You drew " + players.get(0).peekACard().getName() + ":\r\n" + "> " + attributeNames[1]
 					+ " " + players.get(0).peekACard().getAttributes()[0] + "\r\n" + "> " + attributeNames[2] + " "
 					+ players.get(0).peekACard().getAttributes()[1] + "\r\n" + "> " + attributeNames[3] + " "
 					+ players.get(0).peekACard().getAttributes()[2] + "\r\n" + "> " + attributeNames[4] + " "
 					+ players.get(0).peekACard().getAttributes()[3] + "\r\n" + "> " + attributeNames[5] + " "
-					+ players.get(0).peekACard().getAttributes()[4]);
+					+ players.get(0).peekACard().getAttributes()[4];
+			
+			System.out.println(roundStartInfo);
+			
+/*			if (test && rounds == 1) {
+				
+				log += "\n----------CARD ALLOCATION----------" + roundStartInfo + "----------END OF CARD ALLOCATION----------\n";
+			}*/
+			
 			System.out.println("\r\nThere are " + players.get(0).getHand().size() + " cards in your hand\r\n");
 		}
 	}
@@ -410,7 +512,7 @@ public class Game {
 	}
 
 	/**
-	 * This method randonly generates an int between 0 and 4 to determine the first
+	 * This method randomly generates an int between 0 and 4 to determine the first
 	 * player. In the event of the user being able to select how many players they
 	 * would like to face, this code will need to be adjusted.
 	 * 

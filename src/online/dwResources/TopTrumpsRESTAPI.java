@@ -16,6 +16,9 @@ import online.configuration.TopTrumpsJSONConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import commandline.FileReaderClass;
+import commandline.Game;
+
 @Path("/toptrumps") // Resources specified here should be hosted at http://localhost:7777/toptrumps
 @Produces(MediaType.APPLICATION_JSON) // This resource returns JSON content
 @Consumes(MediaType.APPLICATION_JSON) // This resource can take JSON content as input
@@ -60,6 +63,14 @@ public class TopTrumpsRESTAPI {
 	 * @throws IOException
 	 */
 	public String helloJSONList() throws IOException {
+		
+		
+		//Added in just now
+		FileReaderClass fr = new FileReaderClass();
+		fr.getCardsFromFile();
+		//Game theGame = new Game(fr.getDeck(), fr.getAttributeNames());
+		//theGame.playGame();
+		
 		
 		List<String> listOfWords = new ArrayList<String>();
 		listOfWords.add("Hello");

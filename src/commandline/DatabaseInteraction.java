@@ -1,10 +1,6 @@
 package commandline;
 
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * The DatabaseInteraction class handles submitting and recalling information from the Database. It is sent the relevant data 
@@ -24,7 +20,8 @@ public class DatabaseInteraction {
                 
     //jdbc driver name and database url
     static final String JDBC_DRIVER = "org.postgresql.Driver";
-    static final String DB_URL = "jdbc:postgresql://yacata.dcs.gla.ac.uk:5432/";
+    static final String DB_URL = "jdbc:postgresql://yacata.dcs.gla.ac.uk:5432/m_18_2208247s";
+    //tried updating with username in URL as indicated in lecture slides...didn't work
 
 
         public DatabaseInteraction(){
@@ -47,7 +44,6 @@ public class DatabaseInteraction {
              int aiFourWins = gameResults[4];
              int numOfRounds = gameResults[5];
              int drawsNumber = gameResults[6];
-
              String overallGameWinner = calculateOverallWinner(gameResults);
 
              try{
@@ -66,7 +62,9 @@ public class DatabaseInteraction {
                     
                     
                     try {
+                    System.out.println("Connecting to database...");
                     connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+                    System.out.println("Succesfully connected!");
                     } catch(SQLException e){
                     System.out.println("Connection Failed");
                     e.printStackTrace();
@@ -76,13 +74,14 @@ public class DatabaseInteraction {
                     if (connection != null){
                     
                     try{
+                    System.out.println("Inserting info into table...");
                     stmt = connection.createStatement();
                     //First query
-                    ResultSet rs = stmt.executeQuery("INSERT INTO game(human_round_win, ai_one_round_win, ai_two_round_win, ai_three_round_win, ai_four_round_win, total_rounds, total_draws, overall_winner) " + 
-                    "VALUES (humanRoundWins, aiOneWins, aiTwoWins, aiThreeWins, aiFourWins, numOfRounds, drawsNumber, overallGameWinner)");
-    
+                    String insert = "INSERT INTO game(humanRoundWins, aiOneWins, aiTwoWins, aiThreeWins, aiFourWins, numOfRounds, drawsNumber, overallGameWinner) VALUES(" + humanRoundWins + ","  +  aiOneWins+ "," + aiTwoWins+ "," + aiThreeWins+ "," + aiFourWins+ "," + numOfRounds+ "," + drawsNumber+ "," + overallGameWinner + ")";
+                    stmt.executeUpdate(insert);
+                    
                 
-    
+                    
                     }catch (SQLException e){
                     e.printStackTrace();
                     }
@@ -129,6 +128,7 @@ public class DatabaseInteraction {
                 
                 try{
                 Statement statement = connection.createStatement();
+                
                 //First query
                 ResultSet rs = statement.executeQuery("SELECT COUNT(game_number) AS count" +
                 " FROM game");
@@ -151,7 +151,7 @@ public class DatabaseInteraction {
                 " FROM game");
                 this.longestRound = rs.getInt("biggstRound");
 
-                }catch (SQLException e){
+                }catch (SQLException e ){
                 e.printStackTrace();
                 }
             }
@@ -193,19 +193,19 @@ public class DatabaseInteraction {
             }
 
             if (winner == 0){
-                winnerResult = "Human";
+                winnerResult = "'Human'";
             }
             if (winner == 1){
-                winnerResult = "AI player One";
+                winnerResult = "'AI player One'";
             }
             if (winner == 2){
-                winnerResult = "AI player Two";
+                winnerResult = "'AI player Two'";
             }
             if (winner == 3){
-                winnerResult = "AI player Three";
+                winnerResult = "'AI player Three'";
             }
             if (winner == 4){
-                winnerResult = "AI player Four";
+                winnerResult = "'AI player Four'";
             }
             return winnerResult;
         }
