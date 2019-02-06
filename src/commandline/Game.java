@@ -36,6 +36,7 @@ public class Game {
 	boolean hasSomeoneWon = false;
 	int drawCounter;
 	String[] attributeNames;
+	boolean logMode;
 
 	/**
 	 * The Game class takes the deck of cards being used as an argument in the
@@ -44,9 +45,10 @@ public class Game {
 	 * 
 	 * @param inputDeck
 	 */
-	public Game(ArrayList<Card> inputDeck, String[] names) {
+	public Game(ArrayList<Card> inputDeck, String[] names, boolean logMode) {
 		this.deck = inputDeck;
 		this.attributeNames = names;
+		this.logMode = logMode;
 	}
 
 	/**
