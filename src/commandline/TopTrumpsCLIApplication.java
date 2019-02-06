@@ -15,66 +15,62 @@ public class TopTrumpsCLIApplication {
 	 */
 	public static void main(String[] args) {
 
-	//	boolean writeGameLogsToFile = false; // Should we write game logs to file?
-//		if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
-		
+		//	boolean writeGameLogsToFile = false; // Should we write game logs to file?
+		// if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
 		// State
-		boolean userWantsToQuit = false; // flag to check whether the user wants to quit the application
+		// flag to check whether the user wants to quit the application
 		
+		boolean userWantsToQuit = false;
+
 		// Loop until the user wants to exit the game
+		// ----------------------------------------------------
+		// Add your game logic here based on the requirements
+		// ----------------------------------------------------
+		
 		while (!userWantsToQuit) {
 
-			// ----------------------------------------------------
-			// Add your game logic here based on the requirements
-			// ----------------------------------------------------
-			
-			
-			while (true) {
 				try {
-					System.out.println("--------------------\r\n" + 
-							"--- Top Trumps   ---\r\n" + 
-							"--------------------\r\n" + 
-							"Do you want to see past results or play a game?\r\n" + 
-							"   1: Print Game Statistics\r\n" + 
-							"   2: Play game\r\n" + 
-							"Enter the number for your selection: ");
-					
+					System.out.println("--------------------\r\n" + "--- Top Trumps   ---\r\n"
+							+ "--------------------\r\n" + "Do you want to see past results or play a game?\r\n"
+							+ "   1: Print Game Statistics\r\n" + "   2: Play game\r\n"
+							+ "Enter the number for your selection: ");
+
 					int selection = askUserForInputSelection();
-			
+
 					if (selection == 1) {
-//						printGameStatistics();
+						
 						System.out.print("Print Game Stats");
 						break;
-				
+
 					} else if (selection == 2) {
-					/*
-					 * Code for starting a game goes here
-					 */
+
 						FileReaderClass fr = new FileReaderClass();
 						fr.getCardsFromFile();
 						Game theGame = new Game(fr.getDeck(), fr.getAttributeNames());
 						theGame.playGame();
-//					break;
+					}
+				} catch (WrongInputException e) {
+										
+					System.out.println("User must enter a 1 or a 2! Please try again: ");
 				}
-			} catch (WrongInputException e) {
-				System.out.println("User must enter a 1 or a 2! Please try again: ");
-			} 
-
 			}
-			userWantsToQuit=true; // use this when the user wants to exit the game
-			
 		}
-
-
-	}
 	
-	public static int askUserForInputSelection() throws WrongInputException{
+	public static int askUserForInputSelection() throws WrongInputException {
+
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
+		String quitQ = "Q";
+		String quitq = "q";
 		int input = 0;
+
+		if (inputString.contains(quitQ) || inputString.contains(quitq)) {
+			System.out.println("Quitting...");
+			System.exit(0);
+		}
 		try {
 			input = Integer.parseInt(inputString);
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			throw new WrongInputException();
 		}
 		if (input == 1 || input == 2) {
@@ -82,8 +78,6 @@ public class TopTrumpsCLIApplication {
 		} else {
 			throw new WrongInputException();
 		}
-		
-		
 	}
 	
 	/**

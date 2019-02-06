@@ -3,71 +3,73 @@ package commandline;
 import java.util.Scanner;
 import java.util.Stack;
 
-/** 
- * Class for the Human Player. Only one will exist per game and they will always be held in the first position
- * of the ArrayList of players, no matter how many AI players there are. 
+/**
+ * Class for the Human Player. Only one will exist per game and they will always
+ * be held in the first position of the ArrayList of players, no matter how many
+ * AI players there are.
  */
-public class HumanPlayer extends Player{
+public class HumanPlayer extends Player {
 
-	
 	private Stack<Card> playerDeck = new Stack<>();
-	
-	
-	
 
 	public HumanPlayer(String playerName) {
 		super(playerName);
 		// TODO Auto-generated constructor stub
 	}
 
-
-
-
 	@Override
-	
+
 	/**
-	 * This method displays card taken as a parameter and asks the user to input an attribute
-	 * between 1 and 5, based on the displayed results. It then returns selected attribute.
+	 * This method displays card taken as a parameter and asks the user to input an
+	 * attribute between 1 and 5, based on the displayed results. It then returns
+	 * selected attribute.
 	 * 
-	 * It uses a while loop in the same format as that found in TopTrumpsCLIApplication to gather the input
-	 * from the user. 
+	 * It uses a while loop in the same format as that found in
+	 * TopTrumpsCLIApplication to gather the input from the user.
 	 * 
-	 *    --------maybe a chance to use an interface?
+	 * --------maybe a chance to use an interface?
 	 */
 	protected int selectAttribute(Card testCard) {
 
-		
 		System.out.println("Please select an attribute from the Card\n");
-		System.out.println(testCard);		
-		while(true) {
+		System.out.println(testCard);
+		while (true) {
 			try {
 				int selection = askUserForInputSelection();
-				selection --;
+				selection--;
 				return selection;
-				} catch (WrongInputException e) {
-					System.out.println("User must enter a number between 1 and 5!");
-				}
+			} catch (WrongInputException e) {
+				System.out.println("You must enter a number between 1 and 5!");
 			}
-		
-	
+		}
+
 	}
 
 	/**
-	 * This is the method utilising the code from TopTrumpsCLIAppliaction. With different acceptance criteria, 
-	 * if follows the same pattern of throwing WrongInputExceptions in the event of an incorrect entry and/or
-	 * a NumberFormatException. 
+	 * This is the method utilising the code from TopTrumpsCLIAppliaction. With
+	 * different acceptance criteria, if follows the same pattern of throwing
+	 * WrongInputExceptions in the event of an incorrect entry and/or a
+	 * NumberFormatException.
 	 * 
-	 * We felt that it would be better to have the user choose from numbers 1-5, rather than 0-4, as that would 
-	 * be more intuitive for the average user. 
+	 * We felt that it would be better to have the user choose from numbers 1-5,
+	 * rather than 0-4, as that would be more intuitive for the average user.
 	 */
-	public static int askUserForInputSelection() throws WrongInputException{
+	public static int askUserForInputSelection() throws WrongInputException {
 
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
+		String quitQ = "Q";
+		String quitq = "q";
 		int input = 0;
+
+		if (inputString.contains(quitQ) || inputString.contains(quitq)) {
+			System.out.println("Quitting...");
+			System.exit(0);
+		}
+
 		try {
 			input = Integer.parseInt(inputString);
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			throw new WrongInputException();
 		}
 		if (input > 0 && input < 6) {
@@ -75,7 +77,5 @@ public class HumanPlayer extends Player{
 		} else {
 			throw new WrongInputException();
 		}
-		
-		
 	}
 }
