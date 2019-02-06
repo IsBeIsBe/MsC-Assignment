@@ -43,8 +43,8 @@ public class TopTrumpsCLIApplication {
 					int selection = askUserForInputSelection();
 			
 					if (selection == 1) {
-//						printGameStatistics();
-						System.out.print("Print Game Stats");
+						printGameStatistics();
+//						System.out.print("Print Game Stats");
 						break;
 				
 					} else if (selection == 2) {
@@ -98,7 +98,7 @@ public class TopTrumpsCLIApplication {
 
 		    System.out.println("Game Statistics: /n" +
 		    "Number of Games: " + db.getGamesPlayed() + "/n" +
-		    "Number of Human Wins: " + db.getPlayerWins() + "/n" +
+		    "Number of Human Wins: " + db.getHumanWins() + "/n" +
 		    "Number of AI Wins: " + db.getCompWins() + "/n" +
 		    "Average Number of Draws: " + db.getAvgDraws() + "/n" +
 		    "Longest Game: " + db.getLongestRound());
