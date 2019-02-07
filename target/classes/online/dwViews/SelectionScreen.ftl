@@ -25,6 +25,13 @@
     	<div class="container">
 
 			<!-- Add your HTML Here -->
+			Welcome to Top Trumps as made by Southside Serpents!
+
+			Would what you like to do?
+
+			<a href="Statistics.ftl">View Game Stats</a>
+
+			<a href="GameScreen.ftl">Pay a Game</a>
 		
 		</div>
 		
@@ -38,8 +45,8 @@
 				// --------------------------------------------------------------------------
 				
 				// For example, lets call our sample methods
-				helloJSONList();
-				helloWord("Student");
+				//helloJSONList();
+				//helloWord("Student");
 				
 			}
 			
