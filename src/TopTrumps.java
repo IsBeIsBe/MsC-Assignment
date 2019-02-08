@@ -18,20 +18,25 @@ public class TopTrumps {
 		boolean commandLineMode = false;
 		boolean printTestLog = false;
 		
-		// check the command line for what switches are active
-		for (String arg : args) {
-			
-			if (arg.equalsIgnoreCase("-t")) printTestLog=true;
-			if (arg.equalsIgnoreCase("-c")) commandLineMode=true;
-			if (arg.equalsIgnoreCase("-o")) onlineMode=true;
-			
-		}
+		/**
+		 * Commented out for working on online mode in eclipse 07/02
+		 */
+//		// check the command line for what switches are active
+//		for (String arg : args) {
+//			
+//			if (arg.equalsIgnoreCase("-t")) printTestLog=true;
+//			if (arg.equalsIgnoreCase("-c")) commandLineMode=true;
+//			if (arg.equalsIgnoreCase("-o")) onlineMode=true;
+//			
+//		}
 		
 		// We cannot run online and command line mode simultaniously
 		if (onlineMode && commandLineMode) {
 			System.out.println("ERROR: Both online and command line mode selected, select one or the other!");
 			System.exit(0);
 		}
+		
+		onlineMode = true; // for developing in eclipse
 		
 		// Start the appropriate application
 		if (onlineMode) {

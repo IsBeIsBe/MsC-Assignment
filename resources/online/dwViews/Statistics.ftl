@@ -37,7 +37,9 @@
 			<p id="stats"></p>
 			</div>
 
-		
+			<div>
+			Update update 
+			</div>
 
 
 
@@ -129,7 +131,6 @@
 
 					document.getElementById("stats").innerHTML = gameStats;
 				}
-				xhr.send();
 			}
 
 			<#--  // This calls the helloJSONList REST method from TopTrumpsRESTAPI

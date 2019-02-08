@@ -13,9 +13,11 @@ import javax.ws.rs.core.MediaType;
 
 import online.configuration.TopTrumpsJSONConfiguration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import commandline.DatabaseInteraction;
 import commandline.FileReaderClass;
 import commandline.Game;
 
@@ -55,6 +57,18 @@ public class TopTrumpsRESTAPI {
 	// ----------------------------------------------------
 	
 	@GET
+	@Path("/printGameStats")
+	public String printGameStatsOnline() throws JsonProcessingException {
+		String results = "";
+		DatabaseInteraction db = new DatabaseInteraction();
+		
+		results += db.onlineTest();		
+		String resultsAsJSON = oWriter.writeValueAsString(results);
+		
+		return resultsAsJSON;
+	}
+	
+	@GET
 	@Path("/helloJSONList")
 	/**
 	 * Here is an example of a simple REST get request that returns a String.
@@ -65,16 +79,10 @@ public class TopTrumpsRESTAPI {
 	public String helloJSONList() throws IOException {
 		
 		
-		//Added in just now
-		FileReaderClass fr = new FileReaderClass();
-		fr.getCardsFromFile();
-		//Game theGame = new Game(fr.getDeck(), fr.getAttributeNames());
-		//theGame.playGame();
-		
-		
 		List<String> listOfWords = new ArrayList<String>();
 		listOfWords.add("Hello");
 		listOfWords.add("World!");
+		String blah = "blah blah blah";
 		
 		// We can turn arbatory Java objects directly into JSON strings using
 		// Jackson seralization, assuming that the Java objects are not too complex.
