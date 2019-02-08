@@ -25,7 +25,9 @@
     	<div class="container">
 
 			<!-- Add your HTML Here -->
-		
+			You made it to the Game Screen!
+
+			<a href="http://localhost:7777/toptrumps/">Go Back</a>
 		</div>
 		
 		<script type="text/javascript">
@@ -38,8 +40,8 @@
 				// --------------------------------------------------------------------------
 				
 				// For example, lets call our sample methods
-				helloJSONList();
-				helloWord("Student");
+				//helloJSONList();
+				//helloWord("Student");
 				
 			}
 			

@@ -25,6 +25,23 @@
     	<div class="container">
 
 			<!-- Add your HTML Here -->
+			<h2>You made it to the Stats Screen!</h2>
+
+			<a href="http://localhost:7777/toptrumps/">Go Back</a>
+
+			<div>
+			Here are your game Stats:
+			</div>
+
+			<div>
+			<p id="stats"></p>
+			</div>
+
+		
+
+
+
+			
 		
 		</div>
 		
@@ -38,8 +55,9 @@
 				// --------------------------------------------------------------------------
 				
 				// For example, lets call our sample methods
-				helloJSONList();
-				helloWord("Student");
+				//helloJSONList();
+				//helloWord("Student");
+				printGameStats();
 				
 			}
 			
@@ -92,14 +110,29 @@
 				// to do when the response arrives 
 				xhr.onload = function(e) {
  					var responseText = xhr.response; // the text of the response
-					alert(responseText); // lets produce an alert
+					//alert(responseText); // lets produce an alert
 				};
 				
 				// We have done everything we need to prepare the CORS request, so send it
 				xhr.send();		
-			}
+			} 
 			
-			// This calls the helloJSONList REST method from TopTrumpsRESTAPI
+			function printGameStats() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/printGameStats");
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					gameStats = JSON.parse(responseText);
+
+					document.getElementById("stats").innerHTML = gameStats;
+				}
+				xhr.send();
+			}
+
+			<#--  // This calls the helloJSONList REST method from TopTrumpsRESTAPI
 			function helloWord(word) {
 			
 				// First create a CORS request, this is the message we are going to send (a get request in this case)
@@ -114,12 +147,12 @@
 				// to do when the response arrives 
 				xhr.onload = function(e) {
  					var responseText = xhr.response; // the text of the response
-					alert(responseText); // lets produce an alert
+					//alert(responseText); // lets produce an alert
 				};
 				
 				// We have done everything we need to prepare the CORS request, so send it
 				xhr.send();		
-			}
+			}  -->
 
 		</script>
 		

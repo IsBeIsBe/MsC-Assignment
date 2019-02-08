@@ -25,7 +25,21 @@
     	<div class="container">
 
 			<!-- Add your HTML Here -->
-		
+			Welcome to Top Trumps as made by Southside Serpents!
+
+
+			<div>
+			Would what you like to do?
+			</div>
+
+			<div>
+			<a href="http://localhost:7777/toptrumps/stats">View Game Stats</a>
+			
+			</div>
+
+			<div>
+			<a href="http://localhost:7777/toptrumps/game">Pay a Game</a> 
+			</div>
 		</div>
 		
 		<script type="text/javascript">
@@ -38,8 +52,8 @@
 				// --------------------------------------------------------------------------
 				
 				// For example, lets call our sample methods
-				helloJSONList();
-				helloWord("Student");
+				//helloJSONList();
+				//helloWord("Student");
 				
 			}
 			
@@ -74,7 +88,7 @@
 		
 		</script>
 		
-		<!-- Here are examples of how to call REST API Methods -->
+		<#--  <!-- Here are examples of how to call REST API Methods -->
 		<script type="text/javascript">
 		
 			// This calls the helloJSONList REST method from TopTrumpsRESTAPI
@@ -119,7 +133,7 @@
 				
 				// We have done everything we need to prepare the CORS request, so send it
 				xhr.send();		
-			}
+			}  -->
 
 		</script>
 		
