@@ -274,13 +274,13 @@ public class Game {
 		
 		displayRoundStartInfo();
 
-		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
+		Card activePlayersCard = players.get(roundSelector).peekACard(); // top card of hand
 
-		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
+		int comparator = players.get(roundSelector).selectAttribute(activePlayersCard); // position of highest attribute
 
 		String attributeSelection = 
 				players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "
-						+ firstCard.getName() + " with a value of " + firstCard.getAttributes()[comparator] + "\r\n";
+						+ activePlayersCard.getName() + " with a value of " + activePlayersCard.getAttributes()[comparator] + "\r\n";
 		
 		System.out.println(attributeSelection);
 		// Card has been selected above
@@ -298,47 +298,42 @@ public class Game {
 		/*
 		 * This for loop is where the cards are compared. Firstly, the system skips over
 		 * the 'selector' player. It then skips any players in the players list who have
-		 * no cards left. If a draw is found, the system first completes the loop to
-		 * ensure no outright winner can be found, and only then changes ifTheresADraw
-		 * to 'true' in order to change how the round plays out.
+		 * no cards left. Then it's a simple comparative 
 		 */
 		
 		//int drawingPlayer;
-		int chosenAttribute = firstCard.attributes[comparator];
-		
+		// int chosenAttribute = activePlayersCard.attributes[comparator];
+
+		Card highestCard = activePlayersCard; // placeholder for highest card, assuming that the activePlayer has the defacto highest card
+
 		for (int i = 0; i < players.size(); i++) {
+			// loops to find the highest card by comparing the defacto highest card (that of the active player) with
+			// the card of player[i]
 			
+			Card otherPlayersCard = players.get(i).peekACard(); // card of other player(s)			
+
 			if (i == roundSelector || !players.get(i).checkCards()) {
 				i++;
-			} else {
-
-				Card playersCard = players.get(i).peekACard(); // card of other player(s)
+			} else if (highestCard.getAttributes()[comparator] < otherPlayersCard.getAttributes()[comparator]) {				
+				highestCard = otherPlayersCard;
+				winner = i;
 				
-				if (playersCard.attributes[comparator] == chosenAttribute) {
-					//drawingPlayer = i;
-					for (int j = i + 1; j < players.size(); j++) {
-						if (playersCard.attributes[comparator] > chosenAttribute) {
-							winner = j;
-							chosenAttribute = playersCard.attributes[comparator];
-						} else {
-							ifTheresADraw = true;
-						}
-					}
-					
-					System.out.print("This round was a draw.");
-					drawCounter++;
-					break;
-					// Finally, if any outright winner is found, their position in the players list
-					// is recorded.
-
-				} else if (playersCard.attributes[comparator] > chosenAttribute) {
-					winner = i;
-					chosenAttribute = playersCard.attributes[comparator];
-				} else {
-
-					winner = roundSelector;
-				}
 			}
+		}
+		
+		for (int i = 0; i < players.size(); i++) {
+			// compares the highest card chosen above with all of the players cards again
+			// in order to see if there's a draw.
+			
+			Card otherPlayersCard = players.get(i).peekACard(); // card of other player(s)	
+		
+			if (i == roundSelector || !players.get(i).checkCards()) {
+				i++;
+			} else if (highestCard.getAttributes()[comparator] == otherPlayersCard.getAttributes()[comparator]) {				
+				ifTheresADraw = true;
+				winner = roundSelector;
+			}
+			
 		}
 
 		/*
@@ -346,26 +341,30 @@ public class Game {
 		 * establishing them as the next 'selector', and awarding them the cards
 		 * associated with the round.
 		 */
+		
+
+		
 		if (!ifTheresADraw) {
 
-			Player winnerPlayer = players.get(winner);
 			players.get(winner).winsRound();
 
 			System.out.println(players.get(winner).getPlayerName() + " has won with his card: "
-					+ winnerPlayer.peekACard().getName());
+					+ players.get(winner).peekACard().getName());
 
+			// System.out.print("Common Pile: " + commonPile);
+			
 			for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 				if (players.get(i).checkCards()) {
 					commonPile.add(players.get(i).popACard());
 				}
 			}
-
-			// System.out.print("Common Pile: " + commonPile);
 			
 			int commonSize = commonPile.size();
 			for (int i = 0; i < commonSize; i++) { // pushes all of the common pile cards to the winners hand
 				players.get(winner).pushToDeck(commonPile.remove(0));
 			}
+			
+			roundSelector = winner;
 
 			/*
 			 * If there IS a draw, the commonPile is given all player cards from the round.
@@ -377,7 +376,9 @@ public class Game {
 					commonPile.add(players.get(i).popACard());
 				}
 			}
-			System.out.println(" common pile now has " + commonPile.size() + " cards.\r\n");
+			System.out.println("This round was a draw!\r\n");
+			System.out.println("The common pile now has " + commonPile.size() + " cards.\r\n");
+			drawCounter ++;
 			
 			if (test) {
 				log += "\n----------COMMON PILE----------\n" + commonPile + "\n----------COMMON PILE END----------\n";
@@ -385,7 +386,7 @@ public class Game {
 			
 		}
 
-		selector = winner;
+		roundSelector = winner;
 		
 		if (test) {
 			log += printPlayerCards();
