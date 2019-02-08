@@ -298,14 +298,15 @@ public class Game {
 		/*
 		 * This for loop is where the cards are compared. Firstly, the system skips over
 		 * the 'selector' player. It then skips any players in the players list who have
-		 * no cards left. Then it's a simple comparative 
+		 * no cards left.
 		 */
 		
 		//int drawingPlayer;
 		// int chosenAttribute = activePlayersCard.attributes[comparator];
 
 		Card highestCard = activePlayersCard; // placeholder for highest card, assuming that the activePlayer has the defacto highest card
-
+		
+		// checks to see if any cards are higher than the active players card
 		for (int i = 0; i < players.size(); i++) {
 			// loops to find the highest card by comparing the defacto highest card (that of the active player) with
 			// the card of player[i]
@@ -317,10 +318,10 @@ public class Game {
 			} else if (highestCard.getAttributes()[comparator] < otherPlayersCard.getAttributes()[comparator]) {				
 				highestCard = otherPlayersCard;
 				winner = i;
-				
 			}
 		}
 		
+		// checks to see if that highest card is also a draw
 		for (int i = 0; i < players.size(); i++) {
 			// compares the highest card chosen above with all of the players cards again
 			// in order to see if there's a draw.
@@ -332,7 +333,7 @@ public class Game {
 			} else if (highestCard.getAttributes()[comparator] == otherPlayersCard.getAttributes()[comparator]) {				
 				ifTheresADraw = true;
 				winner = roundSelector;
-			}
+			} 
 			
 		}
 
