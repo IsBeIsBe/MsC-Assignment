@@ -1,0 +1,15 @@
+.jumbotron{
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #2F4F4F;
+  text-decoration-color: white;
+}
+.jumbotron h1{
+  color: white;
+}
+
+.panel{
+  overflow:hidden;
+  padding-top:2px;
+  padding-right:2px;
+}
