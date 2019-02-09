@@ -1,0 +1,414 @@
+package commandline;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+public class NewGame {
+
+	// TestLogWriter thisLogWriter = new TestLogWriter(null);
+	boolean test = false;
+	String log = "\n----------WELCOME TO LOG MODE----------\n";
+
+	int rounds;
+	boolean aiWon;
+	int selector;
+	boolean draw;
+	boolean winner;
+	int roundWinner;
+	Card choosingCard;
+	int chosenAttribute;
+
+	ArrayList<Card> deck = new ArrayList<>();
+	ArrayList<Player> players = new ArrayList<>();
+	ArrayList<Card> commonPile = new ArrayList<>();
+	Card[] cardsInPlay = new Card[5];
+	int[] gameStats = new int[7];
+	boolean hasSomeoneWon = false;
+	int drawCounter;
+	String[] attributeNames;
+	int numberOfAIPlayers = 4;
+	
+	
+	public NewGame(ArrayList<Card> inputDeck, String[] names, boolean logMode) {
+		this.deck = inputDeck;
+		this.attributeNames = names;
+		this.test = logMode;
+	}
+	
+	/**
+	 * Trying to break this into something modular the API can speak to - each method has a return value necessary for the
+	 * online mode to transport something via JSON
+	 */
+	public void playGame() {
+
+		allocateCards();
+		selector = whoPlaysFirst();
+		
+		while (!winner) {
+			
+			if (test) {
+
+				log += "\n----------START OF ROUND " + rounds + "----------\n";
+			}
+			
+			System.out.println("\n----------START OF ROUND " + rounds + "----------\n");
+		
+			chosenAttribute = players.get(selector).selectAttribute();
+			System.out.println(logCardsInPlay());
+			collectCardsInPlay();
+			roundWinner = checkWhoWins(cardsInPlay, chosenAttribute);
+			draw = checkForDraws(cardsInPlay, roundWinner, chosenAttribute);
+			if (draw){
+				allCardsToCommonPile();
+			} else {
+				allCardsToWinner(cardsInPlay, roundWinner);
+				selector = roundWinner;
+				
+			}
+			System.out.println(loggingCardAllocation());
+			winner = checkForOutRightWinner();
+		}
+		
+		endGameMethod();
+		
+	}
+	
+	
+	/**
+	 * The only void method so far, I think this will have to be incorporated into another 'startAGame' method for the API
+	 * to work as intended
+	 */
+	public void allocateCards() {
+		createPlayers(numberOfAIPlayers);
+		if (test) {
+			log += "\n----------DECK AS READ----------\n" + deck + "\n-----------END OF DECK AS READ----------";
+		}
+		shuffleDeck();
+		dealCards();
+		
+		System.out.println(loggingCardAllocation());
+		
+		if (test && rounds == 1) {
+			
+			
+			
+			log += "\n----------CARD ALLOCATION----------" + loggingCardAllocation() + "----------END OF CARD ALLOCATION----------\n";
+		}
+		
+	}
+	
+	public ArrayList<Player> createPlayers(int numberOfAIPlayers) {
+
+		players.add(new HumanPlayer("Human Player"));
+
+		for (int i = 0; i < numberOfAIPlayers; i++) {
+			String nameTemp = "AI Player " + (i + 1);
+			players.add(new AIPlayer(nameTemp));
+		}
+		return players;
+	}
+	
+	public void shuffleDeck() {
+
+		Collections.shuffle(deck);
+		
+		// logging shuffled deck
+		
+		if (test) {
+			log += "\n----------SHUFFLING DECK----------\n" + deck + "\n-----------END OF SHUFFLING DECK----------";
+		}
+	}
+	
+	/**
+	 * This method deals the cards in the original 'deck' list evenly, accommodating
+	 * for a number of players that does not divide the number of Cards evenly.
+	 */
+	public void dealCards() {
+
+		int i = 0;
+		int j = 0;
+		int k = (deck.size() / players.size() - 1);
+
+		for (i = 0; i < deck.size(); i++) {
+
+			players.get(j).pushToDeck(deck.get(i));
+
+			if (i == k) {
+				j++;
+			}
+			if (i == 1 + (k * 2)) {
+				j++;
+			}
+			if (i == 2 + (k * 3)) {
+				j++;
+			}
+			if (i == 3 + (k * 4)) {
+				j++;
+			}
+		}
+	}
+	
+	/**
+	 * This method randomly generates an int between 0 and 4 to determine the first
+	 * player. In the event of the user being able to select how many players they
+	 * would like to face, this code will need to be adjusted.
+	 * 
+	 * @return the int associated with the first player.
+	 */
+	public int whoPlaysFirst() {
+		Random rand = new Random();
+		int playerID = rand.nextInt(4);
+		return playerID;
+
+	}
+	
+	public void collectCardsInPlay() {
+		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
+			if (!players.get(i).deckEmptyCheck()) {
+				cardsInPlay[i] = players.get(i).popACard();
+			} else if (players.get(i).deckEmptyCheck()) {
+				i++;
+			}
+		}
+		
+		String attributeSelection =	players.get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute + 1] 
+				+ " from " + players.get(selector).peekACard().getName() + " with a value of " + 
+				players.get(selector).peekACard().attributes[chosenAttribute] + "\r\n";
+		
+		System.out.println(attributeSelection);
+		if (test) {
+			
+				log += "\n-----------CARDS IN PLAY-----\n" + logCardsInPlay() + "\n-----------CARDS IN PLAY END----------\n";
+				log += "\n-----------ATTRIBUTE SELECTION-----\n" + attributeSelection + "\n-----------ATTRIBUTE SELECTION END----------\n";
+			}
+		
+	}
+	
+	/**
+	 * This method takes the array of cards in play and sees which is the largest int based on the 'chosen attribute'.
+	 * 
+	 * It returns the int value of the position of the winning card in the array, which should be the same as the int 
+	 * value of the position of the player who it belongs to in the players array list. 
+	 * 
+	 * @param thisCommonPile
+	 * @param chosenAttribute
+	 * @return
+	 */
+	public int checkWhoWins(Card[] thisCardsInPlay, int chosenAttribute) {
+		int thisWinner = 0;
+		int biggest = 0;
+		for (int i = 0; i < thisCardsInPlay.length; i++) {
+			if (players.get(i).deckEmptyCheck() ) {
+				i++;
+			} else if (thisCardsInPlay[i].attributes[chosenAttribute] > biggest) {
+				biggest = thisCardsInPlay[i].attributes[chosenAttribute];
+				thisWinner = i;
+			}
+		}
+		
+		return thisWinner;
+	}
+	
+	
+	/**
+	 * This method extracts the value of the winning attribute based on the winner decided in 'checkWhoWins' and uses 
+	 * that to cycle through the cardsInPlay array. If any are found to be of the same value, it declares a draw by 
+	 * returning a 'true' value. Otherwise, it returns false. 
+	 * 
+	 * @param thisCommonPile
+	 * @param roundWinner
+	 * @param attribute
+	 * @return
+	 */
+	public boolean checkForDraws(Card[] thisCardsInPlay, int roundWinner, int attribute) {
+		boolean checkForDraws = false;
+		int comparator = thisCardsInPlay[roundWinner].attributes[attribute];
+		for (int i = 0; i < thisCardsInPlay.length; i++) {
+			if (i == roundWinner || players.get(i).deckEmptyCheck()) {
+				i++;
+			} else if (thisCardsInPlay[i].attributes[attribute] == comparator) {
+				checkForDraws = true;
+			}
+		}
+		
+		return checkForDraws;
+	}
+	
+	
+	/**
+	 * This method collects the cards from the cardsInPlay array and adds them to the commonPile, resetting the cardsInPlay
+	 * values to null for the next round in the event of players being removed from the game. 
+	 * 
+	 * @param thisCommonPile
+	 */
+	public void allCardsToCommonPile() {
+		
+		for (int i = 0; i < cardsInPlay.length; i++) {
+			if (cardsInPlay[i] == null) {
+				i++;
+			} else {
+				commonPile.add(cardsInPlay[i]);
+				cardsInPlay[i] = null;
+			}
+		}
+		System.out.println("The common pile now has " + commonPile.size() + " cards:\r\n");
+		System.out.println(commonPile);
+		
+		
+		if (test) {
+			log += "\n----------COMMON PILE----------\n" + commonPile + "\n----------COMMON PILE END----------\n";
+		}
+	}
+	
+	/**
+	 * This method adds the cards from the cardsInPlay array to the winning player's hand.
+	 * 
+	 * @param thisCommonPile
+	 * @param roundWinner
+	 */
+	public void allCardsToWinner(Card[] thisCommonPile, int roundWinner) {
+		String winnerDeclaration = "Player " + players.get(roundWinner).getPlayerName() + " has won with their card "
+				+ thisCommonPile[roundWinner].getName() + " which has a " + attributeNames[chosenAttribute + 1] 
+						+ " of " + thisCommonPile[roundWinner].attributes[chosenAttribute];
+		
+		System.out.println(winnerDeclaration);
+		
+		if (test) {
+			log += "\n---------- WINNER ----------\n" + winnerDeclaration + "\n---------- WINNER ----------\n";
+
+		}
+		
+		players.get(roundWinner).winsRound();
+		
+		for (int i = 0; i < cardsInPlay.length; i++) {
+			if (cardsInPlay[i] == null) {
+				i++;
+			} else {
+				players.get(roundWinner).pushToDeck(cardsInPlay[i]);
+				cardsInPlay[i] = null;
+			}
+		}
+		
+		if (!commonPile.isEmpty()) {
+			int commonSize = commonPile.size();
+			for (int i = 0; i < commonSize; i++) { // pushes all of the common pile cards to the winners hand
+				players.get(roundWinner).pushToDeck(commonPile.remove(0));
+			}
+		}
+		
+	}
+	
+	
+	/**
+	 * This method cycles through the arrayList of players and confirms whether they still have cards to play, incrementing
+	 * a counter if they do. If the value of the counter is found to be 1, it returns a 'true', indicating an outright winner
+	 * has been found in order to break from the 'while' loop. 
+	 * @return
+	 */
+	public boolean checkForOutRightWinner() {
+		boolean outrightWinner = false;
+		int numOfPlayers = 0;
+		for (int i = 0; i < players.size(); i++) {
+			if (!players.get(i).deckEmptyCheck()) {
+				numOfPlayers++;
+			}
+		}
+		if (numOfPlayers == 1) {
+			outrightWinner = true;
+		}
+		return outrightWinner;
+	}
+	
+	public String loggingCardAllocation() {
+
+		String loggingCardAllocation = "";
+
+		for (int i = 0; i < players.size(); i++) {
+
+			loggingCardAllocation += "\n" + players.get(i).getPlayerName() + ": \n" + players.get(i).getHand();
+
+		}
+
+		return loggingCardAllocation;
+
+	}
+	
+	public String logCardsInPlay() {
+		String logInfo = "";
+		for (int i = 0; i < players.size(); i++) {
+			if (!players.get(i).deckEmptyCheck()) {
+				 logInfo += "\nCard in play for " + players.get(i).getPlayerName() + ": " + players.get(i).peekACard() + "\n";
+			}
+		}
+		return logInfo;
+	}
+	
+	public void displayRoundStartInfo() {
+		
+		System.out.println("Round " + rounds + "\r\n");
+		
+		if (!players.get(0).deckEmptyCheck()) {
+			
+			String roundStartInfo = "You drew " + players.get(0).peekACard().getName() + ":\r\n" + "> " + attributeNames[1]
+					+ " " + players.get(0).peekACard().getAttributes()[0] + "\r\n" + "> " + attributeNames[2] + " "
+					+ players.get(0).peekACard().getAttributes()[1] + "\r\n" + "> " + attributeNames[3] + " "
+					+ players.get(0).peekACard().getAttributes()[2] + "\r\n" + "> " + attributeNames[4] + " "
+					+ players.get(0).peekACard().getAttributes()[3] + "\r\n" + "> " + attributeNames[5] + " "
+					+ players.get(0).peekACard().getAttributes()[4];
+			
+			System.out.println(roundStartInfo);
+			
+/*			if (test && rounds == 1) {
+				
+				log += "\n----------CARD ALLOCATION----------" + roundStartInfo + "----------END OF CARD ALLOCATION----------\n";
+			}*/
+			
+			System.out.println("\r\nThere are " + players.get(0).getHand().size() + " cards in your hand\r\n");
+		}
+	}
+	
+	public void endGameMethod() {
+		int winner = 7;
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).checkCards()) {
+				winner = i;
+			}
+		}
+		System.out.println(players.get(winner).getPlayerName() + " has won after " + rounds + " rounds\r\n");
+		
+		if (test) {
+			log += "\n----------WINNER DECLARED----------\n" + players.get(winner).getPlayerName() + " has won after " + rounds
+					+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
+		}
+		// The final scores of the game are printed for the user to examine.
+		System.out.println("Final scores: ");
+		for (int i = 0; i < players.size(); i++) {
+			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
+		}
+
+		// The next lines collect the data required for the database.
+		int scoreOne = players.get(0).getScore();
+		int scoreTwo = players.get(1).getScore();
+		int scoreThree = players.get(2).getScore();
+		int scoreFour = players.get(3).getScore();
+		int scoreFive = players.get(4).getScore();
+
+		gameStats[0] = scoreOne;
+		gameStats[1] = scoreTwo;
+		gameStats[2] = scoreThree;
+		gameStats[3] = scoreFour;
+		gameStats[4] = scoreFive;
+		gameStats[5] = rounds;
+		gameStats[6] = drawCounter;
+
+		// endOfGame(gameStats);
+
+		System.out.println("GAME OVER");
+		if (test) {
+			TestLogWriter thisLogWriter = new TestLogWriter(log);
+			thisLogWriter.WriteLogFile();
+		}
+		
+	}
+}

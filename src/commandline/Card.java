@@ -28,7 +28,7 @@ public class Card {
 	 * The toString is formatted to make reading the Test Log and related files easier. 
 	 */
 	public String toString() {
-		return "\nCard [Name = " + name + "; Attributes = " + Arrays.toString(attributes) + "]";
+		return "Card [Name = " + name + "; Attributes = " + Arrays.toString(attributes) + "]\n";
 	}
 
 	public int[] getAttributes() {

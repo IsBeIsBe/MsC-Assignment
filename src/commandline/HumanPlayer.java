@@ -34,11 +34,11 @@ public class HumanPlayer extends Player{
 	 * 
 	 *    --------maybe a chance to use an interface?
 	 */
-	protected int selectAttribute(Card testCard) {
+	protected int selectAttribute() {
 
 		
-		System.out.println("Please select an attribute from the Card\n");
-		System.out.println(testCard);		
+		System.out.println("Please select an attribute from the " + peekACard().getName() + "\n");
+		System.out.println(peekACard());		
 		while(true) {
 			try {
 				int selection = askUserForInputSelection();

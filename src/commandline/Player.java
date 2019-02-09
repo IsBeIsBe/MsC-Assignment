@@ -120,6 +120,6 @@ public abstract class Player {
 	 * The method for selecting which attribute to play from the 'peeked' at card is kept abstract, in order to write 
 	 * different methods for the AI and human variations on our players. 
 	 */
-	protected abstract int selectAttribute(Card testCard);
+	protected abstract int selectAttribute();
 }
 
