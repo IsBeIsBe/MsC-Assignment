@@ -167,7 +167,18 @@ public class NewGame {
 
 	}
 	
+	/**
+	 * This method collects the cards in play into an array (cardsInPlay) in order to make choosing a winner and testing
+	 * for draws easier. It also seemed like a good place print out what the selector had chosen to play, though this should 
+	 * probably be moved somewhere easier to identify.
+	 */
 	public void collectCardsInPlay() {
+		
+		String attributeSelection =	players.get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute + 1] 
+				+ " from " + players.get(selector).peekACard().getName() + " with a value of " + 
+				players.get(selector).peekACard().attributes[chosenAttribute] + "\r\n";
+		
+		
 		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
 			if (!players.get(i).deckEmptyCheck()) {
 				cardsInPlay[i] = players.get(i).popACard();
@@ -176,9 +187,7 @@ public class NewGame {
 			}
 		}
 		
-		String attributeSelection =	players.get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute + 1] 
-				+ " from " + players.get(selector).peekACard().getName() + " with a value of " + 
-				players.get(selector).peekACard().attributes[chosenAttribute] + "\r\n";
+
 		
 		System.out.println(attributeSelection);
 		if (test) {
@@ -273,6 +282,7 @@ public class NewGame {
 	 * @param roundWinner
 	 */
 	public void allCardsToWinner(Card[] thisCommonPile, int roundWinner) {
+		
 		String winnerDeclaration = "Player " + players.get(roundWinner).getPlayerName() + " has won with their card "
 				+ thisCommonPile[roundWinner].getName() + " which has a " + attributeNames[chosenAttribute + 1] 
 						+ " of " + thisCommonPile[roundWinner].attributes[chosenAttribute];
@@ -325,6 +335,11 @@ public class NewGame {
 		return outrightWinner;
 	}
 	
+	/**
+	 * This method keeps track of what cards each player is holding by reading through their deck. While conceived for the log 
+	 * file, it's been useful to keep track of everyone's status in between rounds to ensure the logic is functioning properly. 
+	 * @return
+	 */
 	public String loggingCardAllocation() {
 
 		String loggingCardAllocation = "";
@@ -339,6 +354,11 @@ public class NewGame {
 
 	}
 	
+	/**
+	 * Again, this method was originally made to the specification of the logger, but keeping tack of which cards each player is 
+	 * playing has also been useful for debugging. 
+	 * @return
+	 */
 	public String logCardsInPlay() {
 		String logInfo = "";
 		for (int i = 0; i < players.size(); i++) {
@@ -349,6 +369,10 @@ public class NewGame {
 		return logInfo;
 	}
 	
+	/**
+	 * This is information the user might find useful at the start of each round. It might be better refactored to return a 
+	 * string for the API to use, but we can deal with that later. 
+	 */
 	public void displayRoundStartInfo() {
 		
 		System.out.println("Round " + rounds + "\r\n");
@@ -373,6 +397,11 @@ public class NewGame {
 		}
 	}
 	
+	/**
+	 * This game collects all the loose aspects of the system associated with ending the game: declaring the winner, logging the 
+	 * final scores, creating the gameStats array for the database, sending that array to the database, and sending the completed
+	 * log file to the filewriter if the game is in log mode. 
+	 */
 	public void endGameMethod() {
 		int winner = 7;
 		for (int i = 0; i < players.size(); i++) {
