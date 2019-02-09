@@ -58,13 +58,13 @@ public class NewGame {
 			System.out.println("\n----------START OF ROUND " + rounds + "----------\n");
 		
 			chosenAttribute = players.get(selector).selectAttribute();
-			System.out.println(logCardsInPlay());
 			collectCardsInPlay();
-			roundWinner = checkWhoWins(cardsInPlay, chosenAttribute);
-			draw = checkForDraws(cardsInPlay, roundWinner, chosenAttribute);
+			System.out.println(logCardsInPlay());
+			roundWinner = checkWhoWins();
+			draw = checkForDraws();
 			if (draw){
 				allCardsToCommonPile();
-			} else {
+			} else if (!draw) {
 				allCardsToWinner(cardsInPlay, roundWinner);
 				selector = roundWinner;
 				
@@ -174,18 +174,30 @@ public class NewGame {
 	 */
 	public void collectCardsInPlay() {
 		
-		String attributeSelection =	players.get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute + 1] 
+		String attributeSelection =	players.get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute] 
 				+ " from " + players.get(selector).peekACard().getName() + " with a value of " + 
 				players.get(selector).peekACard().attributes[chosenAttribute] + "\r\n";
 		
 		
-		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
-			if (!players.get(i).deckEmptyCheck()) {
-				cardsInPlay[i] = players.get(i).popACard();
-			} else if (players.get(i).deckEmptyCheck()) {
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).deckEmptyCheck()) {
 				i++;
+			} else {
+				cardsInPlay[i] = players.get(i).popACard();
 			}
 		}
+		
+		
+/*		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
+			if (!players.get(i).deckEmptyCheck()) {
+				cardsInPlay[i] = players.get(i).popACard();
+			} else {
+				if (players.get(i).deckEmptyCheck()) {
+			
+				i++;
+				}
+			}
+		}*/
 		
 
 		
@@ -208,19 +220,24 @@ public class NewGame {
 	 * @param chosenAttribute
 	 * @return
 	 */
-	public int checkWhoWins(Card[] thisCardsInPlay, int chosenAttribute) {
-		int thisWinner = 0;
-		int biggest = 0;
-		for (int i = 0; i < thisCardsInPlay.length; i++) {
+	public int checkWhoWins() {
+		
+		int comparator = cardsInPlay[selector].getAttributes()[chosenAttribute];
+		
+		for (int i = 0; i <cardsInPlay.length; i++) {
 			if (players.get(i).deckEmptyCheck() ) {
 				i++;
-			} else if (thisCardsInPlay[i].attributes[chosenAttribute] > biggest) {
-				biggest = thisCardsInPlay[i].attributes[chosenAttribute];
-				thisWinner = i;
+			} else {
+				if (cardsInPlay[i].getAttributes()[chosenAttribute] > comparator) {
+			
+				comparator = cardsInPlay[i].getAttributes()[chosenAttribute];
+				
+				roundWinner = i;
+				}
 			}
 		}
-		
-		return thisWinner;
+		System.out.println("The winning number was:" + comparator + " and it belongs to " + players.get(roundWinner).getPlayerName());
+		return roundWinner;
 	}
 	
 	
@@ -234,15 +251,19 @@ public class NewGame {
 	 * @param attribute
 	 * @return
 	 */
-	public boolean checkForDraws(Card[] thisCardsInPlay, int roundWinner, int attribute) {
+	public boolean checkForDraws() {
 		boolean checkForDraws = false;
-		int comparator = thisCardsInPlay[roundWinner].attributes[attribute];
-		for (int i = 0; i < thisCardsInPlay.length; i++) {
+		int comparator = cardsInPlay[roundWinner].getAttributes()[chosenAttribute];
+		for (int i = 0; i < cardsInPlay.length; i++) {
 			if (i == roundWinner || players.get(i).deckEmptyCheck()) {
 				i++;
-			} else if (thisCardsInPlay[i].attributes[attribute] == comparator) {
+			} else {
+				if (cardsInPlay[i].getAttributes()[chosenAttribute] == comparator) {
+			
 				checkForDraws = true;
+				System.out.println("There was a draw! \n");
 				draws++;
+				}
 			}
 		}
 		
@@ -346,7 +367,8 @@ public class NewGame {
 
 		for (int i = 0; i < players.size(); i++) {
 
-			loggingCardAllocation += "\n" + players.get(i).getPlayerName() + ": \n" + players.get(i).getHand();
+			loggingCardAllocation += "\n" + players.get(i).getPlayerName() + ": \n" + players.get(i).getHand() 
+					+ "\n" + "Total Cards: " + players.get(i).playerDeck.size();
 
 		}
 
@@ -361,9 +383,12 @@ public class NewGame {
 	 */
 	public String logCardsInPlay() {
 		String logInfo = "";
-		for (int i = 0; i < players.size(); i++) {
-			if (!players.get(i).deckEmptyCheck()) {
-				 logInfo += "\nCard in play for " + players.get(i).getPlayerName() + ": " + players.get(i).peekACard() + "\n";
+		for (int i = 0; i < cardsInPlay.length; i++) {
+			if (cardsInPlay[i] == null) {
+				logInfo += players.get(i).getPlayerName() + " is no longer in play!\n";
+			}
+			else {
+				logInfo += players.get(i).getPlayerName() + ": " + cardsInPlay[i] + "\n";
 			}
 		}
 		return logInfo;
@@ -416,9 +441,9 @@ public class NewGame {
 					+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
 		}
 		// The final scores of the game are printed for the user to examine.
-		finalScores += "Final scores: ";
+		finalScores += "Final scores: \n";
 		for (int i = 0; i < players.size(); i++) {
-			finalScores += players.get(i).getPlayerName() + ": " + players.get(i).getScore();
+			finalScores += players.get(i).getPlayerName() + ": " + players.get(i).getScore() + "\n";
 		}
 		System.out.println(finalScores);
 		if (draws > 0) {
@@ -500,7 +525,7 @@ public class NewGame {
 	 */
 	public int findWinnerOfRound() {
 		collectCardsInPlay();
-		roundWinner = checkWhoWins(cardsInPlay, chosenAttribute);
+		roundWinner = checkWhoWins();
 		return roundWinner;
 	}
 	/**
@@ -518,7 +543,7 @@ public class NewGame {
 	 * webpage if there was a draw or not. 
 	 */
 	public boolean drawDecisions() {
-		draw = checkForDraws(cardsInPlay, roundWinner, chosenAttribute);
+		draw = checkForDraws();
 		if (draw){
 			allCardsToCommonPile();
 		} else {

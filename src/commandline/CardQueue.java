@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Queue;
 
 public class CardQueue implements Queue {
+	
+	
 
 	@Override
 	public boolean addAll(Collection arg0) {
