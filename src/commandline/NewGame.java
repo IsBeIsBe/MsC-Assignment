@@ -57,6 +57,7 @@ public class NewGame {
 			
 			System.out.println("\n----------START OF ROUND " + rounds + "----------\n");
 		
+			
 			chosenAttribute = players.get(selector).selectAttribute();
 			collectCardsInPlay();
 			System.out.println(logCardsInPlay());
@@ -65,13 +66,18 @@ public class NewGame {
 			if (draw){
 				allCardsToCommonPile();
 			} else if (!draw) {
-				allCardsToWinner(cardsInPlay, roundWinner);
+				allCardsToWinner();
 				selector = roundWinner;
 				
 			}
 			System.out.println(loggingCardAllocation());
 			winner = checkForOutRightWinner();
 			rounds++;
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		endGameMethod();
@@ -302,11 +308,11 @@ public class NewGame {
 	 * @param thisCommonPile
 	 * @param roundWinner
 	 */
-	public void allCardsToWinner(Card[] thisCommonPile, int roundWinner) {
+	public void allCardsToWinner() {
 		
 		String winnerDeclaration = "Player " + players.get(roundWinner).getPlayerName() + " has won with their card "
-				+ thisCommonPile[roundWinner].getName() + " which has a " + attributeNames[chosenAttribute + 1] 
-						+ " of " + thisCommonPile[roundWinner].attributes[chosenAttribute];
+				+ cardsInPlay[roundWinner].getName() + " which has a " + attributeNames[chosenAttribute] 
+						+ " of " + cardsInPlay[roundWinner].attributes[chosenAttribute];
 		
 		System.out.println(winnerDeclaration);
 		
@@ -547,7 +553,7 @@ public class NewGame {
 		if (draw){
 			allCardsToCommonPile();
 		} else {
-			allCardsToWinner(cardsInPlay, roundWinner);
+			allCardsToWinner();
 			selector = roundWinner;
 			
 		}
