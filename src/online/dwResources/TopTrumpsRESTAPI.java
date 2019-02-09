@@ -13,11 +13,14 @@ import javax.ws.rs.core.MediaType;
 
 import online.configuration.TopTrumpsJSONConfiguration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import commandline.DatabaseInteraction;
 import commandline.FileReaderClass;
 import commandline.Game;
+import commandline.NewGame;
 
 @Path("/toptrumps") // Resources specified here should be hosted at http://localhost:7777/toptrumps
 @Produces(MediaType.APPLICATION_JSON) // This resource returns JSON content
@@ -37,6 +40,7 @@ public class TopTrumpsRESTAPI {
 	/** A Jackson Object writer. It allows us to turn Java objects
 	 * into JSON strings easily. */
 	ObjectWriter oWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
+	NewGame theGame;
 	
 	/**
 	 * Contructor method for the REST API. This is called first. It provides
@@ -48,6 +52,145 @@ public class TopTrumpsRESTAPI {
 		// ----------------------------------------------------
 		// Add relevant initalization here
 		// ----------------------------------------------------
+		FileReaderClass fr = new FileReaderClass();
+		fr.getCardsFromFile();
+		boolean writeGameLogsToFile = false;
+		theGame = new NewGame(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
+		
+	}
+	
+	
+	/**
+	 * This is the method which initialises the game, shuffling the deck and allocating cards. 
+	 * 
+	 * It returns the integer value of the player in the arraylist theGame.players who is to play first. 
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@GET
+	@Path("/startAndSelect")
+	public String startAndSelectFirstPlayer() throws IOException{
+		int firstPlayerIndex = theGame.startAndSelectFirstPlayer();
+		
+		String firstPlayerIndexAsJSON = oWriter.writeValueAsString(firstPlayerIndex);
+		
+		return firstPlayerIndexAsJSON;
+	}
+	
+	/**
+	 * This method takes in the 'selector' value and uses that as an index on the players list to call the select attribute 
+	 * method.
+	 * 
+	 * I think this may have to be re-thought when it comes to input from the human player. 
+	 * 
+	 * @param selector
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Path("/chosenAttribute")
+	public String getChosenAttribute(int selector) throws IOException{
+		int attribute = theGame.returnChosenAttribute(selector);
+		
+		String attributeAsJSON = oWriter.writeValueAsString(attribute);
+		
+		return attributeAsJSON;
+	}
+	
+	
+	/**
+	 * This method calls the condensed version of checking for a winner. 
+	 * 
+	 * NOTE: This does not account for draws, and will have to be used in conjunction with the checkForDraws method.
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Path("/findWinner")
+	public String findWinnerOfRound() throws IOException{
+		int winnerOfRound = theGame.findWinnerOfRound();
+		
+		String winnerAsJSON = oWriter.writeValueAsString(winnerOfRound);
+		
+		return winnerAsJSON;
+	}
+	
+	
+	/**
+	 * This method checks for draws. Either way, the card allocation should have been updated accordingly via the 
+	 * drawDecisions method, so the return value should be used print if there was a draw or not. 
+	 * 
+	 * If there was not, the value of the findWinnerOfRound method can be used to declare the winner.
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Path("/checkForDraws")
+	public String wasThereADraw() throws IOException{
+		boolean draw = theGame.drawDecisions();
+		
+		String drawAsJSON = oWriter.writeValueAsString(draw);
+		
+		return drawAsJSON;
+	}
+	
+	
+	/**
+	 * This returns true if there is an overall winner for the game. It should be used at the end of the 'round' loop.
+	 * 
+	 * It increments the theGame.rounds variable. 
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Path("/winnerCheck")
+	public String checkOverallWinner() throws IOException {
+		boolean overallWinner = theGame.checkForOutRightWinner();
+		
+		String winnerASJSON = oWriter.writeValueAsString(overallWinner);
+		
+		return winnerASJSON;
+	}
+	
+	/**
+	 * This method allows us to call the endGameMethod from the API, creating and setting the gameStats array, as well as 
+	 * creating the final scores String. This string is returned for ease of writing it to the webpage. 
+	 * 
+	 * Declaring who won will have to be done separately, probably by finding the last value of theGame.roundWinner. 
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Path("/endGame")
+	public String endOfGame() throws IOException {
+		theGame.endGameMethod();
+		String finalMessage = theGame.finalScores;
+		
+		String finalsAsJSON = oWriter.writeValueAsString(finalMessage);
+		
+		return finalsAsJSON;
+	}
+	
+	/**
+	 * This method will be altered to sync with the DatabaseInteraction class's printGameStats method. 
+	 * 
+	 * Because this requires library computers etc it is currently linked up to a simple String method 
+	 * from the same class to test that it is working as intended. 
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@GET
+	@Path("/printGameStats")
+	public String printGameStatsOnline() throws JsonProcessingException {
+		String results = "";
+		DatabaseInteraction db = new DatabaseInteraction();
+		
+		results += db.onlineTest();		
+		String resultsAsJSON = oWriter.writeValueAsString(results);
+		
+		return resultsAsJSON;
 	}
 	
 	// ----------------------------------------------------

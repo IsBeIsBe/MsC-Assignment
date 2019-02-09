@@ -14,10 +14,13 @@ public class NewGame {
 	boolean aiWon;
 	int selector;
 	boolean draw;
+	int draws;
 	boolean winner;
 	int roundWinner;
 	Card choosingCard;
 	int chosenAttribute;
+	String winnerMessage;
+	public String finalScores;
 
 	ArrayList<Card> deck = new ArrayList<>();
 	ArrayList<Player> players = new ArrayList<>();
@@ -44,7 +47,7 @@ public class NewGame {
 
 		allocateCards();
 		selector = whoPlaysFirst();
-		
+		rounds = 1;
 		while (!winner) {
 			
 			if (test) {
@@ -68,6 +71,7 @@ public class NewGame {
 			}
 			System.out.println(loggingCardAllocation());
 			winner = checkForOutRightWinner();
+			rounds++;
 		}
 		
 		endGameMethod();
@@ -229,6 +233,7 @@ public class NewGame {
 				i++;
 			} else if (thisCardsInPlay[i].attributes[attribute] == comparator) {
 				checkForDraws = true;
+				draws++;
 			}
 		}
 		
@@ -375,16 +380,20 @@ public class NewGame {
 				winner = i;
 			}
 		}
-		System.out.println(players.get(winner).getPlayerName() + " has won after " + rounds + " rounds\r\n");
+		winnerMessage = players.get(winner).getPlayerName() + " has won after " + rounds + " rounds\r\n";
 		
 		if (test) {
 			log += "\n----------WINNER DECLARED----------\n" + players.get(winner).getPlayerName() + " has won after " + rounds
 					+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
 		}
 		// The final scores of the game are printed for the user to examine.
-		System.out.println("Final scores: ");
+		finalScores += "Final scores: ";
 		for (int i = 0; i < players.size(); i++) {
-			System.out.println(players.get(i).getPlayerName() + ": " + players.get(i).getScore());
+			finalScores += players.get(i).getPlayerName() + ": " + players.get(i).getScore();
+		}
+		System.out.println(finalScores);
+		if (draws > 0) {
+			System.out.println("There were " + draws + " draws.");
 		}
 
 		// The next lines collect the data required for the database.
@@ -411,4 +420,96 @@ public class NewGame {
 		}
 		
 	}
+
+
+
+
+/*
+ * Below this point are methods specific to the API - grouping together select methods to return values more suited 
+ * to the onine version and its requirements. It may be the case that these are refactored into the command line 
+ * version later.
+ * 
+ * Most of the methods above should be re-usable for the API as well, especially things like displayRoundStartInfo and
+ * endGameMethod, without having to alter them. 
+ */
+	
+	/**
+	 * This method initialises the game, shuffles the deck and selects who plays first. 
+	 * 
+	 * It links to the startAndSelectFirstPlayer() method in the API
+	 * @return
+	 */
+	public int startAndSelectFirstPlayer() {
+		allocateCards();
+		selector = whoPlaysFirst();
+		rounds = 1;
+		
+		return selector;
+	}
+
+	/**
+	 * This calls the select attribute method from the player. While it should work for the AI player, the method may 
+	 * need to be re-thought for collecting input from the human player. 
+	 * 
+	 * It links to the getChosenAttribute method in the API
+	 * @return
+	 */
+	public int returnChosenAttribute(int selector) {
+		setChosenAttribute(players.get(selector).selectAttribute());
+		
+		return chosenAttribute;
+	}
+
+	
+	/**
+	 * This method finds the integer value of the winner of each round (relative to their index in the players array list).
+	 * It also collects the active cards in the cardsInPlay array (we'll have to check that is accessible,it should be if it's 
+	 * global scope?)
+	 * It also relies upon the chosenAttribute value, hence the setChosenAttribute method below, to ensure this is the same 
+	 * as the one foud in getChosenAttribute.
+	 * @return
+	 */
+	public int findWinnerOfRound() {
+		collectCardsInPlay();
+		roundWinner = checkWhoWins(cardsInPlay, chosenAttribute);
+		return roundWinner;
+	}
+	/**
+	 * This method sets the value of the chosenAttribute value. It will be called from the getChosenAttribute but could also be 
+	 * called from the API if needs be. 
+	 * @param value
+	 */
+	public void setChosenAttribute(int value) {
+		this.chosenAttribute = value;
+	}
+	
+	/**
+	 * This method condenses the aspect of the system checking for draws. It returns whether there has been a draw, but also 
+	 * hopefully has updated the variables accordingly already, so the return value should just be used to declare in the 
+	 * webpage if there was a draw or not. 
+	 */
+	public boolean drawDecisions() {
+		draw = checkForDraws(cardsInPlay, roundWinner, chosenAttribute);
+		if (draw){
+			allCardsToCommonPile();
+		} else {
+			allCardsToWinner(cardsInPlay, roundWinner);
+			selector = roundWinner;
+			
+		}
+		
+		return draw;
+	}
+	
+	/**
+	 * This method is maybe a bit pointless but just condenses the check for a winner with incrementing the rounds. 
+	 * The value it returns can be used to break the game loop, same as above in the playGame() method. 
+	 * @return
+	 */
+	public boolean isThereAWinner() {
+		winner = checkForOutRightWinner();
+		rounds++;
+		return winner;
+	}
+	
 }
