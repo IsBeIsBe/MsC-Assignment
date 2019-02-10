@@ -276,7 +276,7 @@ public class Game {
 
 		Card firstCard = players.get(roundSelector).peekACard(); // top card of hand
 
-		int comparator = players.get(roundSelector).selectAttribute(firstCard); // position of highest attribute
+		int comparator = players.get(roundSelector).selectAttribute(); // position of highest attribute
 
 		String attributeSelection = 
 				players.get(roundSelector).getPlayerName() + " has chosen " + attributeNames[comparator + 1] + " from "

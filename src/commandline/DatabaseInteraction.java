@@ -233,4 +233,9 @@ public class DatabaseInteraction {
 		}
 		return winnerResult;
 	}
+	
+	public String onlineTest() {
+		String testResult = "Successful Test!";
+		return testResult;
+	}
 }
