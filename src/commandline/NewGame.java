@@ -49,8 +49,7 @@ public class NewGame {
 		selector = whoPlaysFirst();
 		rounds = 1;
 		while (!winner) {
-			
-			checkAllPlayersForCards();
+			rounds++;
 			if (test) {
 
 				log += "\n----------START OF ROUND " + rounds + "----------\n";
@@ -73,7 +72,7 @@ public class NewGame {
 			}
 			System.out.println(loggingCardAllocation());
 			winner = checkForOutRightWinner();
-			rounds++;
+			checkAllPlayersForCards();
 		
 		}
 		
