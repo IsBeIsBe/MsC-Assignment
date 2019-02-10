@@ -70,18 +70,18 @@ public abstract class Player {
 	 * boolean 'deckIsEmpty' accordingly. This is used when deciding which players are still in the game
 	 * and for determining if there is an overall winner. 
 	 */
-	public boolean deckEmptyCheck() {
+	public void deckEmptyCheck() {
 
-		
-		boolean deckIsEmpty = false;
 		
 		if (playerDeck.isEmpty()) {
 			
-			deckIsEmpty = true;
+			this.hasCards = false;
 			
 		}
 		
-		return deckIsEmpty;
+		else {
+			this.hasCards = true;
+		}
 		
 	}
 	public boolean checkCards() {

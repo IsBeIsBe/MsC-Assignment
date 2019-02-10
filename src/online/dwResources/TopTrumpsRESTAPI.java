@@ -208,12 +208,7 @@ public class TopTrumpsRESTAPI {
 	public String helloJSONList() throws IOException {
 		
 		
-		//Added in just now
-		FileReaderClass fr = new FileReaderClass();
-		fr.getCardsFromFile();
-		//Game theGame = new Game(fr.getDeck(), fr.getAttributeNames());
-		//theGame.playGame();
-		
+
 		
 		List<String> listOfWords = new ArrayList<String>();
 		listOfWords.add("Hello");

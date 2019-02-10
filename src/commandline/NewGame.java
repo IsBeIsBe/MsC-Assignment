@@ -27,7 +27,7 @@ public class NewGame {
 	ArrayList<Card> commonPile = new ArrayList<>();
 	Card[] cardsInPlay = new Card[5];
 	int[] gameStats = new int[7];
-	boolean hasSomeoneWon = false;
+	//boolean hasSomeoneWon = false;
 	int drawCounter;
 	String[] attributeNames;
 	int numberOfAIPlayers = 4;
@@ -50,6 +50,7 @@ public class NewGame {
 		rounds = 1;
 		while (!winner) {
 			
+			checkAllPlayersForCards();
 			if (test) {
 
 				log += "\n----------START OF ROUND " + rounds + "----------\n";
@@ -73,11 +74,7 @@ public class NewGame {
 			System.out.println(loggingCardAllocation());
 			winner = checkForOutRightWinner();
 			rounds++;
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		
 		}
 		
 		endGameMethod();
@@ -186,25 +183,14 @@ public class NewGame {
 		
 		
 		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).deckEmptyCheck()) {
+			if (!players.get(i).checkCards()) {
 				i++;
 			} else {
 				cardsInPlay[i] = players.get(i).popACard();
 			}
 		}
 		
-		
-/*		for (int i = 0; i < players.size(); i++) { // adds the played cards of all the players to the common pile
-			if (!players.get(i).deckEmptyCheck()) {
-				cardsInPlay[i] = players.get(i).popACard();
-			} else {
-				if (players.get(i).deckEmptyCheck()) {
-			
-				i++;
-				}
-			}
-		}*/
-		
+
 
 		
 		System.out.println(attributeSelection);
@@ -229,19 +215,18 @@ public class NewGame {
 	public int checkWhoWins() {
 		
 		int comparator = cardsInPlay[selector].getAttributes()[chosenAttribute];
-		
+		roundWinner = selector;
 		for (int i = 0; i <cardsInPlay.length; i++) {
-			if (players.get(i).deckEmptyCheck() ) {
+			if (!players.get(i).checkCards() ) {
 				i++;
-			} else {
-				if (cardsInPlay[i].getAttributes()[chosenAttribute] > comparator) {
+			} else if (cardsInPlay[i].getAttributes()[chosenAttribute] > comparator) {
 			
 				comparator = cardsInPlay[i].getAttributes()[chosenAttribute];
 				
 				roundWinner = i;
 				}
 			}
-		}
+		
 		System.out.println("The winning number was:" + comparator + " and it belongs to " + players.get(roundWinner).getPlayerName());
 		return roundWinner;
 	}
@@ -261,17 +246,16 @@ public class NewGame {
 		boolean checkForDraws = false;
 		int comparator = cardsInPlay[roundWinner].getAttributes()[chosenAttribute];
 		for (int i = 0; i < cardsInPlay.length; i++) {
-			if (i == roundWinner || players.get(i).deckEmptyCheck()) {
+			if (i == roundWinner || !players.get(i).checkCards()) {
 				i++;
-			} else {
-				if (cardsInPlay[i].getAttributes()[chosenAttribute] == comparator) {
+			} else if (cardsInPlay[i].getAttributes()[chosenAttribute] == comparator) {
 			
 				checkForDraws = true;
 				System.out.println("There was a draw! \n");
 				draws++;
 				}
 			}
-		}
+		
 		
 		return checkForDraws;
 	}
@@ -350,10 +334,10 @@ public class NewGame {
 	 */
 	public boolean checkForOutRightWinner() {
 		boolean outrightWinner = false;
-		int numOfPlayers = 0;
+		int numOfPlayers = 5;
 		for (int i = 0; i < players.size(); i++) {
-			if (!players.get(i).deckEmptyCheck()) {
-				numOfPlayers++;
+			if (!players.get(i).checkCards()) {
+				numOfPlayers--;
 			}
 		}
 		if (numOfPlayers == 1) {
@@ -408,7 +392,7 @@ public class NewGame {
 		
 		System.out.println("Round " + rounds + "\r\n");
 		
-		if (!players.get(0).deckEmptyCheck()) {
+		if (!players.get(0).checkCards()) {
 			
 			String roundStartInfo = "You drew " + players.get(0).peekACard().getName() + ":\r\n" + "> " + attributeNames[1]
 					+ " " + players.get(0).peekACard().getAttributes()[0] + "\r\n" + "> " + attributeNames[2] + " "
@@ -427,6 +411,18 @@ public class NewGame {
 			System.out.println("\r\nThere are " + players.get(0).getHand().size() + " cards in your hand\r\n");
 		}
 	}
+	
+	public void checkAllPlayersForCards(){
+		for (int i = 0; i < players.size(); i++) {
+			players.get(i).deckEmptyCheck();
+			if (players.get(i).checkCards()) {
+				System.out.println(players.get(i).getPlayerName() + " still has cards!");
+			} else {
+				System.out.println(players.get(i).getPlayerName()+ " is no longer in play!");
+			}
+		}
+	}
+
 	
 	/**
 	 * This game collects all the loose aspects of the system associated with ending the game: declaring the winner, logging the 
