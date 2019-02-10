@@ -184,7 +184,7 @@ public class NewGame {
 		
 		for (int i = 0; i < players.size(); i++) {
 			if (!players.get(i).checkCards()) {
-				i++;
+				System.out.println(players.get(i).getPlayerName() + " has no cards!");
 			} else {
 				cardsInPlay[i] = players.get(i).popACard();
 			}
@@ -218,7 +218,7 @@ public class NewGame {
 		roundWinner = selector;
 		for (int i = 0; i <cardsInPlay.length; i++) {
 			if (!players.get(i).checkCards() ) {
-				i++;
+				
 			} else if (cardsInPlay[i].getAttributes()[chosenAttribute] > comparator) {
 			
 				comparator = cardsInPlay[i].getAttributes()[chosenAttribute];
@@ -247,7 +247,7 @@ public class NewGame {
 		int comparator = cardsInPlay[roundWinner].getAttributes()[chosenAttribute];
 		for (int i = 0; i < cardsInPlay.length; i++) {
 			if (i == roundWinner || !players.get(i).checkCards()) {
-				i++;
+				
 			} else if (cardsInPlay[i].getAttributes()[chosenAttribute] == comparator) {
 			
 				checkForDraws = true;
@@ -271,7 +271,7 @@ public class NewGame {
 		
 		for (int i = 0; i < cardsInPlay.length; i++) {
 			if (cardsInPlay[i] == null) {
-				i++;
+			
 			} else {
 				commonPile.add(cardsInPlay[i]);
 				cardsInPlay[i] = null;
@@ -309,7 +309,7 @@ public class NewGame {
 		
 		for (int i = 0; i < cardsInPlay.length; i++) {
 			if (cardsInPlay[i] == null) {
-				i++;
+				
 			} else {
 				players.get(roundWinner).pushToDeck(cardsInPlay[i]);
 				cardsInPlay[i] = null;
