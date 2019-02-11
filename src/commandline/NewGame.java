@@ -566,5 +566,23 @@ public class NewGame {
 		rounds++;
 		return winner;
 	}
+
+	public String getPlayerCardForAPI(int player) {
+		
+		String card = players.get(player).peekACard().toStringAPI();
+		return card;
+		
+	}
 	
+	
+	public String getSelector() {
+		
+		String selector = String.valueOf(this.selector);
+		
+		return selector;
+	}
+	
+	public void setSelector(int selectorValue) {
+		this.selector = selectorValue;
+	}
 }

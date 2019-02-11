@@ -66,5 +66,16 @@ public class Card {
 		return new Card(name, b, names );
 	}
 
+	
+	public String toStringAPI() {
+		
+		String card = name;
+		for (int i = 0; i < 5; i++) {
+			card += "," + attributes[i];
+
+		}
+		return card;		
+		
+	}
 
 }

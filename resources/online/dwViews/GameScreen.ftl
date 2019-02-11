@@ -7,47 +7,183 @@
     	<!-- Import JQuery, as it provides functions you will probably find useful (see https://jquery.com/) -->
     	<script src="https://code.jquery.com/jquery-2.1.1.js"></script>
     	<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-    	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/flick/jquery-ui.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/flick/jquery-ui.css">
+		<link rel="stylesheet" href="https://raw.githack.com/IsBeIsBe/MsC-Assignment/master/resources/online/dwViews/toptrumpsCSS.css">
 
-		<!-- Optional Styling of the Website, for the demo I used Bootstrap (see https://getbootstrap.com/docs/4.0/getting-started/introduction/) -->
-		<link rel="stylesheet" href="http://dcs.gla.ac.uk/~richardm/TREC_IS/bootstrap.min.css">
-    	<script src="http://dcs.gla.ac.uk/~richardm/vex.combined.min.js"></script>
-    	<script>vex.defaultOptions.className = 'vex-theme-os';</script>
-    	<link rel="stylesheet" href="http://dcs.gla.ac.uk/~richardm/assets/stylesheets/vex.css"/>
-    	<link rel="stylesheet" href="http://dcs.gla.ac.uk/~richardm/assets/stylesheets/vex-theme-os.css"/>
-    	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 	</head>
 
-    <body onload="initalize()"> <!-- Call the initalize method when the page loads -->
+    <body onload="initalize()">
     	
-    	<div class="container">
+	<div class="container">
 
-			<!-- Add your HTML Here -->
+		You made it to the Game Screen!
+
+	<div>
+		<a href="http://localhost:7777/toptrumps/">Go Back</a>
+	</div>
 		
-		</div>
+	<div>
+		<button onclick="playGame()">Play Game</button>
+	</div>
+	
+	<div>
+		<p id="playerIndex"></p>
+	</div>
+	
+	<div>
+		<p id="test"></p>
+	</div>
+		
+	<div class="card" style="background-color:pink"
+		<div class="cardInfo">
+		
+			<p id="cardName"></p>
+			
+	        <img id="sandwich" src="https://raw.githack.com/IsBeIsBe/MsC-Assignment/master/resources/online/dwViews/oscar.jpg"
+            width="200" height="200">
+	        
+	        <div class="radio-labels">
+            <div class="this-label">
+                <label for="Size">Size</label>
+                <input type="radio" id="Size" name="choices" value="Size">
+                <label for="Size" id="attribute1"></label>
+            </div>
+            <br>
+	        
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Rarity">Rarity</label>
+                <input type="radio" id="Rarity" name="choices" value="Rarity">
+                <label for="Rarity" id="attribute2"></label>
+            </div>
+            <br>
+            
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Good Temper">Good Temper</label>
+                <input type="radio" id="Good Temper" name="choices" value="Good Temper">
+                <label for="Good Temper" id="attribute3"></label>
+            </div>
+            <br>
+	        
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Cuteness">Cuteness</label>
+                <input type="radio" id="Cuteness" name="choices" value="Cuteness">
+                <label for="Cuteness" id="attribute4"></label>
+            </div>
+            <br>
+            
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Mischief Rating">Mischief Rating</label>
+                <input type="radio" id="Mischief Rating" name="choices" value="Mischief Rating">
+                <label for="Mischief Rating" id="attribute5"></label>
+            </div>
+            <br>
+         </div>
+
 		
 		<script type="text/javascript">
 		
-			// Method that is called on page load
 			function initalize() {
-			
-				// --------------------------------------------------------------------------
-				// You can call other methods you want to run when the page first loads here
-				// --------------------------------------------------------------------------
 				
-				// For example, lets call our sample methods
-				helloJSONList();
-				helloWord("Student");
+			}
+
+			function playGame() {
+				
+				startUp();
+				getSelector();
+				getCardInfo(selector);
+
+
+			}
+			
+			function startUp() {
+				
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/startAndSelect");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					playerIndex = JSON.parse(responseText);					
+					document.getElementById("playerIndex").innerHTML = "It's Player " + playerIndex + "'s turn to play!";
+					setSelector(playerIndex);
+
+
+				}
+
+				xhr.send();	
+
+			}
+			
+			function getSelector() {
+				
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getSelector");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					selector = JSON.parse(responseText);					
+					document.getElementById("test").innerHTML = selector;
+					
+					
+				}
+				
+				xhr.send();	
+				
 				
 			}
 			
-			// -----------------------------------------
-			// Add your other Javascript methods Here
-			// -----------------------------------------
-		
-			// This is a reusable method for creating a CORS request. Do not edit this.
+			function setSelector(selectorValue) {
+				
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/setSelector"+selector);
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					selectorIs = JSON.parse(responseText);					
+					document.getElementById("test").innerHTML = selectorIs + " IS THE SELECTOR.";
+
+
+				}
+
+				xhr.send();	
+				
+				
+				
+			}
+						
+			
+			function getCardInfo(Player) {
+				
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCard"+Player);
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					playerCard = JSON.parse(responseText);					
+					document.getElementById("cardName").innerHTML = playerCard;
+					
+					
+				}
+				
+				xhr.send();	
+			}
+			
 			function createCORSRequest(method, url) {
   				var xhr = new XMLHttpRequest();
   				if ("withCredentials" in xhr) {

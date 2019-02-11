@@ -78,6 +78,67 @@ public class TopTrumpsRESTAPI {
 		return firstPlayerIndexAsJSON;
 	}
 	
+	@GET
+	@Path("/getCard")
+	public String getCardInfo(@QueryParam("Player") int player) throws IOException {
+		
+		String cardToAPI = theGame.getPlayerCardForAPI(player);
+				
+		String cardAsJSON =	oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		return cardAsJSON;
+		
+	}
+	
+	@GET
+	@Path("/getSelector")
+	/**
+	 * Here is an example of how to read parameters provided in an HTML Get request.
+	 * @param Word - A word
+	 * @return - A String
+	 * @throws IOException
+	 */
+	public String setSelector() throws IOException {
+		
+		String selectorString = theGame.getSelector();
+		
+		
+		
+		return selectorString;
+		
+	}
+	
+	
+	@GET
+	@Path("/setSelector")
+	/**
+	 * Here is an example of how to read parameters provided in an HTML Get request.
+	 * @param Word - A word
+	 * @return - A String
+	 * @throws IOException
+	 */
+	public String setSelector(@QueryParam("selector") int selector) throws IOException {
+		
+		theGame.setSelector(selector);
+		String selectorString = String.valueOf(selector);
+		return selectorString;
+		
+	}
+	
+	
+	@GET
+	@Path("/helloWord")
+	/**
+	 * Here is an example of how to read parameters provided in an HTML Get request.
+	 * @param Word - A word
+	 * @return - A String
+	 * @throws IOException
+	 */
+	public String helloWord(@QueryParam("Word") String Word) throws IOException {
+		return "Hello "+Word;
+	}
+	
 	/**
 	 * This method takes in the 'selector' value and uses that as an index on the players list to call the select attribute 
 	 * method.
@@ -221,16 +282,6 @@ public class TopTrumpsRESTAPI {
 		return listAsJSONString;
 	}
 	
-	@GET
-	@Path("/helloWord")
-	/**
-	 * Here is an example of how to read parameters provided in an HTML Get request.
-	 * @param Word - A word
-	 * @return - A String
-	 * @throws IOException
-	 */
-	public String helloWord(@QueryParam("Word") String Word) throws IOException {
-		return "Hello "+Word;
-	}
+
 	
 }
