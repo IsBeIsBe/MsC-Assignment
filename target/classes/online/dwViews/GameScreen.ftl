@@ -89,6 +89,10 @@
 	</div>
 
 	<div>
+		<button id="attributeButton" onclick="findWinner()">Okay</button>
+	</div>
+
+	<div>
 		<p id="checkingMessage"></p>
 	</div>
 	
@@ -145,7 +149,7 @@
 					var responseText = xhr.response;
 					chosenAttribute = JSON.parse(responseText);
 					document.getElementById("chosenAttribute").innerHTML = chosenAttribute;
-					findWinner();
+					
 
 				}
 				xhr.send();
