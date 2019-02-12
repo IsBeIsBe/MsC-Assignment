@@ -24,7 +24,7 @@
 	</div>
 		
 	<div>
-		<button onclick="playGame()">Play Game</button>
+		<button id=myButton onclick="playGame()">Play Game</button>
 	</div>
 	
 	<div>
@@ -84,7 +84,18 @@
             <br>
          </div>
 
-		
+	<div>
+		<p id="chosenAttribute"></p>
+	</div>
+
+	<div>
+		<p id="checkingMessage"></p>
+	</div>
+	
+	<div>
+		<p id="endOfRoundMessage"></p>
+	</div>
+
 		<script type="text/javascript">
 		
 			function initalize() {
@@ -92,10 +103,11 @@
 			}
 
 			function playGame() {
-				
+			 
+				document.getElementById("myButton").style.visibility = "hidden";
 				startUp();
-				getSelector();
-				getCardInfo(selector);
+				
+				
 
 
 			}
@@ -112,13 +124,60 @@
 					var responseText = xhr.response;
 					playerIndex = JSON.parse(responseText);					
 					document.getElementById("playerIndex").innerHTML = "It's Player " + playerIndex + "'s turn to play!";
-					setSelector(playerIndex);
+					chooseAttribute();
+					getCardInfo();
+
 
 
 				}
 
 				xhr.send();	
 
+			}
+
+			function chooseAttribute() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/chosenAttribute");
+				if(!xhr) {
+					alert("CORS not supported");
+				}
+
+				xhr.onload = function(e) {
+					var responseText = xhr.response;
+					chosenAttribute = JSON.parse(responseText);
+					document.getElementById("chosenAttribute").innerHTML = chosenAttribute;
+					findWinner();
+
+				}
+				xhr.send();
+			}
+			function findWinner() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/findWinner");
+				if(!xhr) {
+					alert("CORS not supported");
+				}
+
+				xhr.onload = function(e) {
+					var responseText = xhr.response;
+					roundMessage = JSON.parse(responseText);
+					document.getElementById("checkingMessage").innerHTML = roundMessage;
+					endtheRound();
+				}
+				xhr.send();
+			}
+
+
+			function endtheRound() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/checkForDraws");
+				if(!xhr) {
+					alert("CORS not supported");
+				}
+
+				xhr.onload = function(e) {
+					var responseText = xhr.response;
+					roundMessage = JSON.parse(responseText);
+					document.getElementById("endOfRoundMessage").innerHTML = roundMessage;
+				}
+				xhr.send();
 			}
 			
 			function getSelector() {
@@ -133,6 +192,7 @@
 					var responseText = xhr.response;
 					selector = JSON.parse(responseText);					
 					document.getElementById("test").innerHTML = selector;
+					return selector;
 					
 					
 				}
@@ -165,9 +225,9 @@
 			}
 						
 			
-			function getCardInfo(Player) {
+			function getCardInfo() {
 				
-				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCard"+Player);
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCard?player"+Player);
 				
 				if (!xhr) {
 					alert("CORS not supported");
@@ -177,6 +237,7 @@
 					var responseText = xhr.response;
 					playerCard = JSON.parse(responseText);					
 					document.getElementById("cardName").innerHTML = playerCard;
+
 					
 					
 				}

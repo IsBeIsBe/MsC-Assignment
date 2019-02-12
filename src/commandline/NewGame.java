@@ -12,7 +12,7 @@ public class NewGame {
 
 	int rounds;
 	boolean aiWon;
-	int selector;
+	public int selector;
 	boolean draw;
 	int draws;
 	boolean winner;
@@ -496,8 +496,8 @@ public class NewGame {
 	 */
 	public int startAndSelectFirstPlayer() {
 		allocateCards();
-		selector = whoPlaysFirst();
-		rounds = 1;
+		this.selector = whoPlaysFirst();
+		this.rounds = 1;
 		
 		return selector;
 	}
@@ -509,10 +509,20 @@ public class NewGame {
 	 * It links to the getChosenAttribute method in the API
 	 * @return
 	 */
-	public int returnChosenAttribute(int selector) {
-		setChosenAttribute(players.get(selector).selectAttribute());
+	public String returnChosenAttribute() {
+		if (selector > 0) {
+			setChosenAttribute(players.get(selector).selectAttribute());
+			//String chosen = String.valueOf(chosenAttribute);
+			String message = players.get(selector).getPlayerName() + " has chosen " + players.get(selector).peekACard().attributeNames[chosenAttribute] +
+					" with a value of " + players.get(selector).peekACard().attributes[chosenAttribute] + " from " + 
+					players.get(selector).peekACard().name ;
+			
+			return message;
+		}
 		
-		return chosenAttribute;
+		else {
+			return "What to do when the player is human?";
+		}
 	}
 
 	
@@ -524,10 +534,10 @@ public class NewGame {
 	 * as the one foud in getChosenAttribute.
 	 * @return
 	 */
-	public int findWinnerOfRound() {
+	public String findWinnerOfRound() {
 		collectCardsInPlay();
-		roundWinner = checkWhoWins();
-		return roundWinner;
+		this.roundWinner = checkWhoWins();
+		return "Checking who won...";
 	}
 	/**
 	 * This method sets the value of the chosenAttribute value. It will be called from the getChosenAttribute but could also be 
@@ -543,17 +553,20 @@ public class NewGame {
 	 * hopefully has updated the variables accordingly already, so the return value should just be used to declare in the 
 	 * webpage if there was a draw or not. 
 	 */
-	public boolean drawDecisions() {
+	public String drawDecisions() {
 		draw = checkForDraws();
+		String message;
 		if (draw){
 			allCardsToCommonPile();
+			message = "There was a draw! All cards have been moved to the common pile!";
 		} else {
 			allCardsToWinner();
 			selector = roundWinner;
+			message = players.get(selector).getPlayerName() + " has won this round!";
 			
 		}
+		return message + " Now let's play again!";
 		
-		return draw;
 	}
 	
 	/**
