@@ -91,6 +91,9 @@
 	<div>
 		<button id="attributeButton" onclick="findWinner()">Okay</button>
 	</div>
+	<script type="text/javascript">
+		document.getElementById("attributeButton").style.visibility = "hidden";
+	</script>
 
 	<div>
 		<p id="checkingMessage"></p>
@@ -99,6 +102,15 @@
 	<div>
 		<p id="endOfRoundMessage"></p>
 	</div>
+
+<!-- After findWinner() - make checkForOverallWinner a method with an if statement, if overall winner end the game, if not, call chooseAttribute etc -->
+	<div>
+		<button id="endRoundButton" onclick="checkForOverallWinner">Okay</button>
+	</div>
+	<script type="text/javascript">
+		document.getElementById("endRoundButton").style.visibility = "hidden";
+	</script>
+
 
 		<script type="text/javascript">
 		
@@ -149,12 +161,13 @@
 					var responseText = xhr.response;
 					chosenAttribute = JSON.parse(responseText);
 					document.getElementById("chosenAttribute").innerHTML = chosenAttribute;
-					
+					document.getElementById("attributeButton").style.visibility = "visible";
 
 				}
 				xhr.send();
 			}
 			function findWinner() {
+				document.getElementById("attributeButton").style.visibility = "hidden";
 				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/findWinner");
 				if(!xhr) {
 					alert("CORS not supported");
@@ -180,6 +193,7 @@
 					var responseText = xhr.response;
 					roundMessage = JSON.parse(responseText);
 					document.getElementById("endOfRoundMessage").innerHTML = roundMessage;
+					document.getElementById("endRoundButton").style.visibility = "visible";
 				}
 				xhr.send();
 			}
