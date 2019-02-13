@@ -26,6 +26,10 @@
 	<div>
 		<button id=myButton onclick="playGame()">Play Game</button>
 	</div>
+
+	<div>
+		<p id="rounds"></p>
+	</div>
 	
 	<div>
 		<p id="playerIndex"></p>
@@ -34,59 +38,6 @@
 	<div>
 		<p id="test"></p>
 	</div>
-		
-	<div class="card" style="background-color:pink"
-		<div class="cardInfo">
-		
-			<p id="cardName"></p>
-			
-	        <img id="sandwich" src="https://raw.githack.com/IsBeIsBe/MsC-Assignment/master/resources/online/dwViews/oscar.jpg"
-            width="200" height="200">
-	        
-	        <div class="radio-labels">
-            <div class="this-label">
-                <label for="Size">Size</label>
-                <input type="radio" id="Size" name="choices" value="Size">
-                <label for="Size" id="attribute1"></label>
-            </div>
-            <br>
-	        
-            <div class="radio-labels">
-            <div class="this-label">
-                <label for="Rarity">Rarity</label>
-                <input type="radio" id="Rarity" name="choices" value="Rarity">
-                <label for="Rarity" id="attribute2"></label>
-            </div>
-            <br>
-            
-            <div class="radio-labels">
-            <div class="this-label">
-                <label for="Good Temper">Good Temper</label>
-                <input type="radio" id="Good Temper" name="choices" value="Good Temper">
-                <label for="Good Temper" id="attribute3"></label>
-            </div>
-            <br>
-	        
-            <div class="radio-labels">
-            <div class="this-label">
-                <label for="Cuteness">Cuteness</label>
-                <input type="radio" id="Cuteness" name="choices" value="Cuteness">
-                <label for="Cuteness" id="attribute4"></label>
-            </div>
-            <br>
-            
-            <div class="radio-labels">
-            <div class="this-label">
-                <label for="Mischief Rating">Mischief Rating</label>
-                <input type="radio" id="Mischief Rating" name="choices" value="Mischief Rating">
-                <label for="Mischief Rating" id="attribute5"></label>
-            </div>
-            <br>
-         </div>
-	</div>
-	<script type = "text/javascript">
-		document.getElementByClass("card").style.visibility = "hidden";
-	</script>
 
 	<div>
 		<p id="chosenAttribute"></p>
@@ -107,9 +58,32 @@
 		<p id="endOfRoundMessage"></p>
 	</div>
 
+	<div>
+		<button id="getCardCountButton" onclick="startNewRound()">Let's Go!</button>
+	</div>
+	<script type="text/javascript">
+		document.getElementById("getCardCountButton").style.visibility = "hidden";
+	</script>
+
+	<div>
+		<p id="humanCardCount"></p>
+		<p id="AI1CardCount"></p>
+		<p id="AI2CardCount"></p>
+		<p id="AI3CardCount"></p>
+		<p id="AI4CardCount"></p>
+	</div>
+	<script type="text/javascript">
+		document.getElementById("humanCardCount").style.visibility = "hidden";
+		document.getElementById("AI1CardCount").style.visibility = "hidden";
+		document.getElementById("AI2CardCount").style.visibility = "hidden";
+		document.getElementById("AI3CardCount").style.visibility = "hidden";
+		document.getElementById("AI4CardCount").style.visibility = "hidden";
+	</script>
+
+
 <!-- After findWinner() - make checkForOverallWinner a method with an if statement, if overall winner end the game, if not, call chooseAttribute etc -->
 	<div>
-		<button id="endRoundButton" onclick="startNewRound()">Okay</button>
+		<button id="endRoundButton" onclick="getCardCounts()">Get Scores!</button>
 	</div>
 	<script type="text/javascript">
 		document.getElementById("endRoundButton").style.visibility = "hidden";
@@ -125,6 +99,7 @@
 			function playGame() {
 			 
 				document.getElementById("myButton").style.visibility = "hidden";
+				getRounds();
 				startUp();
 				
 				
@@ -198,13 +173,69 @@
 				}
 
 				xhr.onload = function(e) {
+					
 					var responseText = xhr.response;
 					roundMessage = JSON.parse(responseText);
 					document.getElementById("endOfRoundMessage").innerHTML = roundMessage;
 					document.getElementById("endOfRoundMessage").style.visibility = "visible";
 					document.getElementById("endRoundButton").style.visibility = "visible";
+					
+					
 				}
 				xhr.send();
+			}
+
+			function getCardCounts(){
+				document.getElementById("getCardCountButton").style.visibility = "hidden";
+				getCardCount(0);
+				getCardCount(1);
+				getCardCOunt(2);
+				getCardCount(3);
+				getCardCount(4);
+				document.getElementById("endRoundButton").style.visibility = "visible";
+			}
+
+			function getCardCount(playerIndex){
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCardCount");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					count = JSON.parse(responseText);					
+					
+					if(playerIndex == 0){
+						document.getElementById("humanCardCount").innerHTML = "Human Player's Card Count: " + count;
+						document.getElementById("humanCardCount").style.visibility = "visible";
+					}
+					
+					if(playerIndex == 1){
+						document.getElementById("AI1CardCount").innerHTML = "AI Player One's Card Count: " + count;
+						document.getElementById("AI1CardCount").style.visibility = "visible";
+					}			
+
+					if(playerIndex == 2){
+						document.getElementById("AI2CardCount").innerHTML = "AI Player Two's Card Count: " + count;
+						document.getElementById("AI2CardCount").style.visibility = "visible";
+					}			
+					
+					if(playerIndex == 3){
+						document.getElementById("AI3CardCount").innerHTML = "AI Player Three's Card Count: " + count;
+						document.getElementById("AI3CardCount").style.visibility = "visible";
+					}	
+
+					if(playerIndex == 4){
+						document.getElementById("AI4CardCount").innerHTML = "AI Player Four's Card Count: " + count;
+						document.getElementById("AI4CardCount").style.visibility = "visible";
+					}	
+					
+				}
+				
+				xhr.send();	
+				
+				
 			}
 
 			function startNewRound() {
@@ -213,6 +244,13 @@
 				document.getElementById("checkingMessage").style.visibility = "hidden";
 				document.getElementById("chosenAttribute").style.visibility = "hidden";
 				document.getElementById("chosenAttribute").style.visibility = "hidden";
+				document.getElementById("humanCardCount").style.visibility = "hidden";
+				document.getElementById("AI1CardCount").style.visibility = "hidden";
+				document.getElementById("AI2CardCount").style.visibility = "hidden";
+				document.getElementById("AI3CardCount").style.visibility = "hidden";
+				document.getElementById("AI4CardCount").style.visibility = "hidden";
+
+
 
 				getSelector();
 
@@ -231,6 +269,7 @@
 					selector = JSON.parse(responseText);					
 					document.getElementById("playerIndex").innerHTML = "It's Player " + selector + "'s turn to play!"
 					document.getElementById("playerIndex").style.visibility = "visible";
+					getRounds();
 					getCardInfo();
 					chooseAttribute();
 					
@@ -241,6 +280,22 @@
 				xhr.send();	
 				
 				
+			}
+
+			function getRounds() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getRoundNum");
+
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					roundNum = JSON.parse(responseText);
+					document.getElementById("rounds").innerHTML = "Round: " + roundNum;
+				}
+
+				xhr.send();
 			}
 			
 			function setSelector(selectorValue) {
@@ -360,6 +415,59 @@
 			}
 
 		</script>
+
+			<div class="card" style="background-color:pink"
+		<div class="cardInfo">
+		
+			<p id="cardName"></p>
+			
+	        <img id="sandwich" src="https://raw.githack.com/IsBeIsBe/MsC-Assignment/master/resources/online/dwViews/oscar.jpg"
+            width="200" height="200">
+	        
+	        <div class="radio-labels">
+            <div class="this-label">
+                <label for="Size">Size</label>
+                <input type="radio" id="Size" name="choices" value="Size">
+                <label for="Size" id="attribute1"></label>
+            </div>
+            <br>
+	        
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Rarity">Rarity</label>
+                <input type="radio" id="Rarity" name="choices" value="Rarity">
+                <label for="Rarity" id="attribute2"></label>
+            </div>
+            <br>
+            
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Good Temper">Good Temper</label>
+                <input type="radio" id="Good Temper" name="choices" value="Good Temper">
+                <label for="Good Temper" id="attribute3"></label>
+            </div>
+            <br>
+	        
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Cuteness">Cuteness</label>
+                <input type="radio" id="Cuteness" name="choices" value="Cuteness">
+                <label for="Cuteness" id="attribute4"></label>
+            </div>
+            <br>
+            
+            <div class="radio-labels">
+            <div class="this-label">
+                <label for="Mischief Rating">Mischief Rating</label>
+                <input type="radio" id="Mischief Rating" name="choices" value="Mischief Rating">
+                <label for="Mischief Rating" id="attribute5"></label>
+            </div>
+            <br>
+         </div>
+	</div>
+	<script type = "text/javascript">
+		document.getElementByClass("card").style.visibility = "hidden";
+	</script>
 		
 		</body>
 </html>

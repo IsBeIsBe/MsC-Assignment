@@ -28,6 +28,9 @@ public abstract class Player {
 		return score;
 	}
 
+	public int getCardCount() {
+		return playerDeck.size();
+	}
 	public void setScore(int score) {
 		this.score = score;
 	}

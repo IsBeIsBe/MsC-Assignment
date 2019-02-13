@@ -565,6 +565,7 @@ public class NewGame {
 			message = players.get(selector).getPlayerName() + " has won this round!";
 			
 		}
+		rounds++;
 		return message + " Now let's play again!";
 		
 	}
@@ -576,7 +577,7 @@ public class NewGame {
 	 */
 	public boolean isThereAWinner() {
 		winner = checkForOutRightWinner();
-		rounds++;
+	
 		return winner;
 	}
 
@@ -585,6 +586,10 @@ public class NewGame {
 		String card = players.get(player).peekACard().toStringAPI();
 		return card;
 		
+	}
+	
+	public String getRounds() {
+		return String.valueOf(this.rounds);
 	}
 	
 	
@@ -597,5 +602,9 @@ public class NewGame {
 	
 	public void setSelector(int selectorValue) {
 		this.selector = selectorValue;
+	}
+	
+	public String getCardCount(int playerIndex) {
+		return String.valueOf(players.get(playerIndex).getCardCount());
 	}
 }

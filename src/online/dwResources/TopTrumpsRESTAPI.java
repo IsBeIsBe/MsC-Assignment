@@ -234,6 +234,12 @@ public class TopTrumpsRESTAPI {
 		return finalsAsJSON;
 	}
 	
+	@GET
+	@Path("/getRoundNum")
+	public String getRoundNum() throws IOException {
+		return theGame.getRounds();
+	}
+	
 	/**
 	 * This method will be altered to sync with the DatabaseInteraction class's printGameStats method. 
 	 * 
@@ -252,6 +258,15 @@ public class TopTrumpsRESTAPI {
 		String resultsAsJSON = oWriter.writeValueAsString(results);
 		
 		return resultsAsJSON;
+	}
+	
+	
+	@GET
+	@Path("/getCardCount")
+	public String getCardCount(@QueryParam("playerIndex") int playerIndex) throws IOException{
+		String count = theGame.getCardCount(playerIndex);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
 	}
 	
 	// ----------------------------------------------------
