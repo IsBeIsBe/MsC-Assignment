@@ -189,14 +189,14 @@
 				document.getElementById("getCardCountButton").style.visibility = "hidden";
 				getCardCount(0);
 				getCardCount(1);
-				getCardCOunt(2);
+				getCardCount(2);
 				getCardCount(3);
 				getCardCount(4);
 				document.getElementById("endRoundButton").style.visibility = "visible";
 			}
 
 			function getCardCount(playerIndex){
-				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCardCount");
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCardCount?playerIndex");
 				
 				if (!xhr) {
 					alert("CORS not supported");
