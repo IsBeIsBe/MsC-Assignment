@@ -46,8 +46,9 @@ public class NewGame {
 	public void playGame() {
 
 		allocateCards();
+		loggingCardAllocation();
 		selector = whoPlaysFirst();
-		rounds = 1;
+		rounds = 0;
 		while (!winner) {
 			rounds++;
 			if (test) {
@@ -359,6 +360,10 @@ public class NewGame {
 			loggingCardAllocation += "\n" + players.get(i).getPlayerName() + ": \n" + players.get(i).getHand() 
 					+ "\n" + "Total Cards: " + players.get(i).playerDeck.size();
 
+		}
+		
+		if (test) {
+			log += loggingCardAllocation;
 		}
 
 		return loggingCardAllocation;

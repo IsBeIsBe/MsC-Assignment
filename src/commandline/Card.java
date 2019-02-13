@@ -33,7 +33,7 @@ public class Card {
 	public String toString() {
 		String card = "Card [Name = " + name + ": Attributes = " + this.attributeNames[0] + "(" + this.attributes[0] +"), "
 		+ this.attributeNames[1] + "(" + this.attributes[1] +"), " + this.attributeNames[2] + "(" + this.attributes[2] +"), " 
-		+ this.attributeNames[3] + "(" + this.attributes[3] +"), " + this.attributeNames[4] + "(" + this.attributes[4] +")]";
+		+ this.attributeNames[3] + "(" + this.attributes[3] +"), " + this.attributeNames[4] + "(" + this.attributes[4] +")]\r\n";
 		
 		return card;
 	}

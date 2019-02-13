@@ -14,16 +14,16 @@ public class TopTrumps {
 		System.out.println("--------------------");
 		
 		// command line switches
-		boolean onlineMode = true;
+		boolean onlineMode = false;
 		boolean commandLineMode = false;
 		boolean printTestLog = false;
 		
 		// check the command line for what switches are active
 		for (String arg : args) {
-/*			
+			
 			if (arg.equalsIgnoreCase("-t")) printTestLog=true;
 			if (arg.equalsIgnoreCase("-c")) commandLineMode=true;
-			if (arg.equalsIgnoreCase("-o")) onlineMode=true;*/
+			if (arg.equalsIgnoreCase("-o")) onlineMode=true;
 			
 		}
 		
