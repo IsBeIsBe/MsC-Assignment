@@ -10,14 +10,17 @@ public class Card {
 
 	String name;
 	int[] attributes = new int[5];
+	String[] attributeNames = new String[5];
+	
 
 	/**
 	 * The constructor is actually accessed through the 'createACard' method, which handles separating the name
 	 * of the card from the rest of the attributes. 
 	 */
-	public Card(String name, int[] attributes) {
+	public Card(String name, int[] attributes, String[] attributeNames) {
 		this.name = name;
 		this.attributes = attributes;
+		this.attributeNames = attributeNames;
 	}
 	
 	public Card() {		
@@ -28,7 +31,11 @@ public class Card {
 	 * The toString is formatted to make reading the Test Log and related files easier. 
 	 */
 	public String toString() {
-		return "\nCard [Name = " + name + "; Attributes = " + Arrays.toString(attributes) + "]";
+		String card = "Card [Name = " + name + ": Attributes = " + this.attributeNames[0] + "(" + this.attributes[0] +"), "
+		+ this.attributeNames[1] + "(" + this.attributes[1] +"), " + this.attributeNames[2] + "(" + this.attributes[2] +"), " 
+		+ this.attributeNames[3] + "(" + this.attributes[3] +"), " + this.attributeNames[4] + "(" + this.attributes[4] +")]\r\n";
+		
+		return card;
 	}
 
 	public int[] getAttributes() {
@@ -47,7 +54,7 @@ public class Card {
 	 * This create a card method recieves the raw data from the Top Trumps deck and creates Card objects by separating the
 	 * attributes from the Card's name. 
 	 */
-	public static Card createCard(String[] a) {
+	public static Card createCard(String[] a, String[] names) {
 
 		int[] b = new int[5];
 		String name = a[0];
@@ -56,8 +63,19 @@ public class Card {
 			b[i] = Integer.parseInt(a[i + 1]);
 		}
 
-		return new Card(name, b);
+		return new Card(name, b, names );
 	}
 
+	
+	public String toStringAPI() {
+		
+		String card = name;
+		for (int i = 0; i < 5; i++) {
+			card += "," + attributes[i];
+
+		}
+		return card;		
+		
+	}
 
 }

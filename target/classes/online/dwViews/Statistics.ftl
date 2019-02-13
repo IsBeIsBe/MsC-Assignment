@@ -7,16 +7,8 @@
     	<!-- Import JQuery, as it provides functions you will probably find useful (see https://jquery.com/) -->
     	<script src="https://code.jquery.com/jquery-2.1.1.js"></script>
     	<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-    	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/flick/jquery-ui.css">
-
-		<!-- Optional Styling of the Website, for the demo I used Bootstrap (see https://getbootstrap.com/docs/4.0/getting-started/introduction/) -->
-		<link rel="stylesheet" href="http://dcs.gla.ac.uk/~richardm/TREC_IS/bootstrap.min.css">
-    	<script src="http://dcs.gla.ac.uk/~richardm/vex.combined.min.js"></script>
-    	<script>vex.defaultOptions.className = 'vex-theme-os';</script>
-    	<link rel="stylesheet" href="http://dcs.gla.ac.uk/~richardm/assets/stylesheets/vex.css"/>
-    	<link rel="stylesheet" href="http://dcs.gla.ac.uk/~richardm/assets/stylesheets/vex-theme-os.css"/>
-    	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/flick/jquery-ui.css">
+		<link rel="stylesheet" href="https://raw.githack.com/IsBeIsBe/MsC-Assignment/master/resources/online/dwViews/toptrumpsCSS.css">
 
 	</head>
 
@@ -24,7 +16,17 @@
     	
     	<div class="container">
 
-			<!-- Add your HTML Here -->
+		<h2>You made it to the Stats Screen!</h2>
+
+		<a href="http://localhost:7777/toptrumps/">Go Back</a>
+
+		<div>
+		Here are your game Stats:
+		</div>
+
+		<div>
+		<p id="stats"></p>
+		</div>
 		
 		</div>
 		
@@ -38,8 +40,8 @@
 				// --------------------------------------------------------------------------
 				
 				// For example, lets call our sample methods
-				helloJSONList();
-				helloWord("Student");
+/*				helloJSONList();
+				helloWord("Student");*/
 				
 			}
 			
@@ -47,6 +49,20 @@
 			// Add your other Javascript methods Here
 			// -----------------------------------------
 		
+			
+			function printGameStats() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/printGameStats");
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					gameStats = JSON.parse(responseText);
+					document.getElementById("stats").innerHTML = gameStats;
+				}
+			}
+			
+			
 			// This is a reusable method for creating a CORS request. Do not edit this.
 			function createCORSRequest(method, url) {
   				var xhr = new XMLHttpRequest();

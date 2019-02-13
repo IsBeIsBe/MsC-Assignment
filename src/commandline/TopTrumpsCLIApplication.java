@@ -15,8 +15,7 @@ public class TopTrumpsCLIApplication {
 	 */
 	public static void main(String[] args) {
 
-	boolean writeGameLogsToFile = false;
-		//	boolean writeGameLogsToFile = false; // Should we write game logs to file?
+		boolean writeGameLogsToFile = false; // Should we write game logs to file?
 		if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
 		
 		// State
@@ -53,7 +52,7 @@ public class TopTrumpsCLIApplication {
 					 */
 						FileReaderClass fr = new FileReaderClass();
 						fr.getCardsFromFile();
-						Game theGame = new Game(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
+						NewGame theGame = new NewGame(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
 						theGame.playGame();
 //					break;
 				}

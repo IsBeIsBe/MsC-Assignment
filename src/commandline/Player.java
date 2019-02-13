@@ -1,6 +1,8 @@
 package commandline;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 /**
  * The abstract class 'Player' establishes the variables and methods that both the human and AI players require
@@ -12,10 +14,12 @@ public abstract class Player {
 	
 	protected int score = 0; // tracks the score
 //	private ArrayList<Card> hand = new ArrayList<>(); // current hand
-	protected Stack<Card> playerDeck = new Stack<>();
+//	protected Stack<Card> playerDeck = new Stack<>();
 //	abstract int selectAttribute();
 	protected String playerName;
 	protected boolean hasCards = true;
+	
+	protected Queue<Card> playerDeck = new LinkedList<>();
 	
 	
 	
@@ -50,14 +54,15 @@ public abstract class Player {
 	 * This is used to add cards to each player's deck. 
 	 */
 	public void pushToDeck(Card card) {
-		playerDeck.push(card);	
+		playerDeck.add(card);
 		
 	}
 	/**
 	 * This is used when taking cards from a player's deck. 
 	 */
 	public Card popACard() {
-		return playerDeck.pop();
+		return playerDeck.remove();
+		
 	}
 	
 	/**
@@ -65,18 +70,18 @@ public abstract class Player {
 	 * boolean 'deckIsEmpty' accordingly. This is used when deciding which players are still in the game
 	 * and for determining if there is an overall winner. 
 	 */
-	public boolean deckEmptyCheck() {
+	public void deckEmptyCheck() {
 
-		
-		boolean deckIsEmpty = false;
 		
 		if (playerDeck.isEmpty()) {
 			
-			deckIsEmpty = true;
+			this.hasCards = false;
 			
 		}
 		
-		return deckIsEmpty;
+		else {
+			this.hasCards = true;
+		}
 		
 	}
 	public boolean checkCards() {
@@ -112,7 +117,7 @@ public abstract class Player {
 		return playerLog;
 	}
 
-	public Stack<Card> getHand(){
+	public Queue<Card> getHand(){
 		return playerDeck;
 	}
 	
@@ -120,6 +125,6 @@ public abstract class Player {
 	 * The method for selecting which attribute to play from the 'peeked' at card is kept abstract, in order to write 
 	 * different methods for the AI and human variations on our players. 
 	 */
-	protected abstract int selectAttribute(Card testCard);
+	protected abstract int selectAttribute();
 }
 
