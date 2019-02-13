@@ -83,6 +83,10 @@
             </div>
             <br>
          </div>
+	</div>
+	<script type = "text/javascript">
+		document.getElementByClass("card").style.visibility = "hidden";
+	</script>
 
 	<div>
 		<p id="chosenAttribute"></p>
@@ -105,7 +109,7 @@
 
 <!-- After findWinner() - make checkForOverallWinner a method with an if statement, if overall winner end the game, if not, call chooseAttribute etc -->
 	<div>
-		<button id="endRoundButton" onclick="checkForOverallWinner">Okay</button>
+		<button id="endRoundButton" onclick="startNewRound()">Okay</button>
 	</div>
 	<script type="text/javascript">
 		document.getElementById("endRoundButton").style.visibility = "hidden";
@@ -140,8 +144,10 @@
 					var responseText = xhr.response;
 					playerIndex = JSON.parse(responseText);					
 					document.getElementById("playerIndex").innerHTML = "It's Player " + playerIndex + "'s turn to play!";
-					chooseAttribute();
+					document.getElementById("playerIndex").style.visibility = "visible";
 					getCardInfo();
+					chooseAttribute();
+					
 
 
 
@@ -161,6 +167,7 @@
 					var responseText = xhr.response;
 					chosenAttribute = JSON.parse(responseText);
 					document.getElementById("chosenAttribute").innerHTML = chosenAttribute;
+					document.getElementById("chosenAttribute").style.visibility = "visible";
 					document.getElementById("attributeButton").style.visibility = "visible";
 
 				}
@@ -177,6 +184,7 @@
 					var responseText = xhr.response;
 					roundMessage = JSON.parse(responseText);
 					document.getElementById("checkingMessage").innerHTML = roundMessage;
+					document.getElementById("checkingMessage").style.visibility = "visible";
 					endtheRound();
 				}
 				xhr.send();
@@ -193,9 +201,21 @@
 					var responseText = xhr.response;
 					roundMessage = JSON.parse(responseText);
 					document.getElementById("endOfRoundMessage").innerHTML = roundMessage;
+					document.getElementById("endOfRoundMessage").style.visibility = "visible";
 					document.getElementById("endRoundButton").style.visibility = "visible";
 				}
 				xhr.send();
+			}
+
+			function startNewRound() {
+				document.getElementById("endRoundButton").style.visibility = "hidden";
+				document.getElementById("endOfRoundMessage").style.visibility = "hidden";
+				document.getElementById("checkingMessage").style.visibility = "hidden";
+				document.getElementById("chosenAttribute").style.visibility = "hidden";
+				document.getElementById("chosenAttribute").style.visibility = "hidden";
+
+				getSelector();
+
 			}
 			
 			function getSelector() {
@@ -209,8 +229,11 @@
 				xhr.onload = function(e){
 					var responseText = xhr.response;
 					selector = JSON.parse(responseText);					
-					document.getElementById("test").innerHTML = selector;
-					return selector;
+					document.getElementById("playerIndex").innerHTML = "It's Player " + selector + "'s turn to play!"
+					document.getElementById("playerIndex").style.visibility = "visible";
+					getCardInfo();
+					chooseAttribute();
+					
 					
 					
 				}
@@ -245,7 +268,7 @@
 			
 			function getCardInfo() {
 				
-				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCard?player"+Player);
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCard?player");
 				
 				if (!xhr) {
 					alert("CORS not supported");
@@ -254,7 +277,7 @@
 				xhr.onload = function(e){
 					var responseText = xhr.response;
 					playerCard = JSON.parse(responseText);					
-					document.getElementById("cardName").innerHTML = playerCard;
+					document.getElementById("cardName").innerHTML = "Your cards is: "+playerCard;
 
 					
 					
