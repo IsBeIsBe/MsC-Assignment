@@ -521,7 +521,7 @@ public class NewGame {
 		}
 		
 		else {
-			return "What to do when the player is human?";
+			return "0";
 		}
 	}
 
@@ -554,22 +554,26 @@ public class NewGame {
 	 * webpage if there was a draw or not. 
 	 */
 	public String drawDecisions() {
-		draw = checkForDraws();
+		this.draw = checkForDraws();
 		String message;
-		if (draw){
-			allCardsToCommonPile();
+		if (this.draw){
+			this.allCardsToCommonPile();
 			message = "There was a draw! All cards have been moved to the common pile!";
 		} else {
-			allCardsToWinner();
-			selector = roundWinner;
+			this.allCardsToWinner();
+			this.selector = this.roundWinner;
 			message = players.get(selector).getPlayerName() + " has won this round!";
 			
 		}
 		rounds++;
 		return message + " Now let's play again!";
-		
 	}
 	
+	public String getCommonPileCount() {
+	
+		return String.valueOf(this.commonPile.size());
+
+	}
 	/**
 	 * This method is maybe a bit pointless but just condenses the check for a winner with incrementing the rounds. 
 	 * The value it returns can be used to break the game loop, same as above in the playGame() method. 

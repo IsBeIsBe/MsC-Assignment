@@ -41,7 +41,8 @@ public class TopTrumpsRESTAPI {
 	 * into JSON strings easily. */
 	ObjectWriter oWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
 	NewGame theGame;
-	
+	FileReaderClass fr;
+	boolean writeGameLogsToFile = false;
 	/**
 	 * Contructor method for the REST API. This is called first. It provides
 	 * a TopTrumpsJSONConfiguration from which you can get the location of
@@ -52,10 +53,10 @@ public class TopTrumpsRESTAPI {
 		// ----------------------------------------------------
 		// Add relevant initalization here
 		// ----------------------------------------------------
-		FileReaderClass fr = new FileReaderClass();
+		fr = new FileReaderClass();
 		fr.getCardsFromFile();
-		boolean writeGameLogsToFile = false;
-		theGame = new NewGame(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
+		//writeGameLogsToFile = false;
+	
 		
 	}
 	
@@ -71,6 +72,7 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/startAndSelect")
 	public String startAndSelectFirstPlayer() throws IOException{
+		theGame = new NewGame(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
 		int firstPlayerIndex = theGame.startAndSelectFirstPlayer();
 		
 		String firstPlayerIndexAsJSON = oWriter.writeValueAsString(firstPlayerIndex);
@@ -210,7 +212,15 @@ public class TopTrumpsRESTAPI {
 	public String checkOverallWinner() throws IOException {
 		boolean overallWinner = theGame.checkForOutRightWinner();
 		
-		String winnerASJSON = oWriter.writeValueAsString(overallWinner);
+		String winnerMessage = "";
+		
+		if (overallWinner == true) {
+			winnerMessage = "winner";
+		} else if (overallWinner == false) {
+			winnerMessage = "noWinner";
+		}
+		
+		String winnerASJSON = oWriter.writeValueAsString(winnerMessage);
 		
 		return winnerASJSON;
 	}
@@ -263,8 +273,48 @@ public class TopTrumpsRESTAPI {
 	
 	@GET
 	@Path("/getCardCount")
-	public String getCardCount(@QueryParam("playerIndex") int playerIndex) throws IOException{
-		String count = theGame.getCardCount(playerIndex);
+	public String getCardCount() throws IOException{
+		String count = theGame.getCardCount(0);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI1")
+	public String getCardCountForAI1() throws IOException {
+		String count = theGame.getCardCount(1);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI2")
+	public String getCardCountForAI2() throws IOException {
+		String count = theGame.getCardCount(2);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI3")
+	public String getCardCountForAI3() throws IOException {
+		String count = theGame.getCardCount(3);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI4")
+	public String getCardCountForAI4() throws IOException {
+		String count = theGame.getCardCount(4);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCommonPile")
+	public String getCommonPileCount() throws IOException {
+		String count = theGame.getCommonPileCount();
 		String countAsJSON = oWriter.writeValueAsString(count);
 		return countAsJSON;
 	}
