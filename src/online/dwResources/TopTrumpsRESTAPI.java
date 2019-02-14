@@ -83,12 +83,18 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/getCard")
 	public String getCardInfo() throws IOException {
-		
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(0).checkCards()) {
 		String cardToAPI = theGame.getPlayerCardForAPI(0);
 				
-		String cardAsJSON =	oWriter.writeValueAsString(cardToAPI);
+		cardAsJSON =	oWriter.writeValueAsString(cardToAPI);
 		System.out.println(cardToAPI);
 		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(0).checkCards()){
+			String noCards = "You have no cards left!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
 		return cardAsJSON;
 		
 	}
@@ -164,8 +170,9 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/size")
 	public String choseSize() throws IOException {
-		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[0];
-		theGame.setChosenAttribute(attributeValue);
+		theGame.setSelector(0);
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(0);
+		theGame.setChosenAttribute(0);
 		String message = "You have chosen Size, with a value of " + attributeValue + "from " + 
 				theGame.getPlayers().get(0).peekACard().getName() ;
 		
@@ -177,8 +184,10 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/rarity")
 	public String choseRarity() throws IOException {
-		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[1];
-		theGame.setChosenAttribute(attributeValue);
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(1);
+		theGame.setChosenAttribute(1);
 		String message = "You have chosen Rarity, with a value of " + attributeValue + "from " + 
 				theGame.getPlayers().get(0).peekACard().getName() ;
 		
@@ -190,8 +199,10 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/temper")
 	public String choseTemper() throws IOException {
-		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[2];
-		theGame.setChosenAttribute(attributeValue);
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(2);
+		theGame.setChosenAttribute(2);
 		String message = "You have chosen Good Temper, with a value of " + attributeValue + "from " + 
 				theGame.getPlayers().get(0).peekACard().getName() ;
 		
@@ -203,8 +214,10 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/cute")
 	public String choseCuteness() throws IOException {
-		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[3];
-		theGame.setChosenAttribute(attributeValue);
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(3);
+		theGame.setChosenAttribute(3);
 		String message = "You have chosen Cuteness, with a value of " + attributeValue + "from " + 
 				theGame.getPlayers().get(0).peekACard().getName() ;
 		
@@ -214,10 +227,12 @@ public class TopTrumpsRESTAPI {
 	}
 	
 	@GET
-	@Path("/michief")
+	@Path("/mischief")
 	public String choseMischief() throws IOException {
-		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[4];
-		theGame.setChosenAttribute(attributeValue);
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(4);
+		theGame.setChosenAttribute(4);
 		String message = "You have chosen Mischief Rating, with a value of " + attributeValue + "from " + 
 				theGame.getPlayers().get(0).peekACard().getName() ;
 		

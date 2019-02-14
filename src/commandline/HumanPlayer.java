@@ -22,7 +22,6 @@ public class HumanPlayer extends Player{
 
 
 
-
 	@Override
 	
 	/**

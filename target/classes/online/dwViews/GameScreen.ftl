@@ -134,6 +134,9 @@
 			} else if (buttonValue === "Click to see final scores!") {
 				endTheGame();
 
+			} else if (buttonValue === "Check for a draw too!"){
+				endTheRound();
+
 			} else if (buttonValue === "Click to decide what to choose!") {
 				document.getElementById("SizeButton").style.visibility = "visible";
        			document.getElementById("RarityButton").style.visibility = "visible";
@@ -163,7 +166,7 @@
 					document.getElementById("gameButton").value = "Click to decide what to choose!";
 					document.getElementById("gameButton").innerHTML = gameButton.value;
 				} else {
-				document.getElementById("gameInfo").innerHTML = "It's Player " + playerIndex + "'s turn to play!";
+				document.getElementById("gameInfo").innerHTML = "It's AIPlayer" + playerIndex + "'s turn to play!";
 				document.getElementById("gameInfo").style.visibility = "visible";
                 document.getElementById("gameButton").value = "Okay! Let's see what they choose!";
 				document.getElementById("gameButton").innerHTML = gameButton.value;
@@ -288,7 +291,7 @@
 
 		function selectedMischief() {
 			hidePlayerButtons();
-			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/michief");
+			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/mischief");
 			if(!xhr) {
 				alert("CORS not supported");
 			}
@@ -318,8 +321,8 @@
 				var responseText = xhr.response;
 				roundMessage = JSON.parse(responseText);
 				document.getElementById("gameInfo").innerHTML = roundMessage;
-			//	document.getElementById("gameButton").style.visibility = "visible";
-				endTheRound();
+				document.getElementById("gameButton").value = "Check for a draw too!";
+				document.getElementById("gameButton").innerHTML = gameButton.value;
 			}
 			xhr.send();
 		}
@@ -371,7 +374,7 @@
 			xhr.onload = function(e){
 				var responseText = xhr.response;
 				commonPileCountValue = JSON.parse(responseText);
-				document.getElementById("commonPileCount").innerHTML = commonPileCountValue;
+				document.getElementById("commonPileCount").innerHTML =  "Common Pile: " + commonPileCountValue;
 				document.getElementById("commonPileCount").style.visibility = "visible";
 			}
 			xhr.send()
@@ -410,15 +413,25 @@
 				
 			xhr.onload = function(e){
 				var responseText = xhr.response;
-				selector = JSON.parse(responseText);					
-				document.getElementById("gameInfo").innerHTML = "It's Player " + selector + "'s turn to play!"
-				document.getElementById("gameButton").value = "Okay! Let's see what they choose!";
+				playerIndex = JSON.parse(responseText);
+
+				if (playerIndex === 0) {
+					document.getElementById("gameInfo").innerHTML = "It's your turn to play!";
+					document.getElementById("gameInfo").style.visibility = "visible";
+					document.getElementById("gameButton").value = "Click to decide what to choose!";
+					document.getElementById("gameButton").innerHTML = gameButton.value;
+				} else {
+				document.getElementById("gameInfo").innerHTML = "It's AI Player " + playerIndex + "'s turn to play!";
+				document.getElementById("gameInfo").style.visibility = "visible";
+                document.getElementById("gameButton").value = "Okay! Let's see what they choose!";
 				document.getElementById("gameButton").innerHTML = gameButton.value;
+
+				}					
+
 				getRounds();
 				getCardInfo();
-				chooseAttribute();
 					
-					
+				
 					
 			}
 				
@@ -437,10 +450,12 @@
 			xhr.onload = function(e){
 			var responseText = xhr.response;
 			count = JSON.parse(responseText);
-
+			if (count == "0"){
+				document.getElementById("humanCardCount").innerHTML = "You are no longer in play!";
+			} else {
 			document.getElementById("humanCardCount").innerHTML = "Human Player's Card Count: " + count;
 			document.getElementById("humanCardCount").style.visibility = "visible";
-
+			}
 			}				
 			xhr.send();	
 		}
@@ -455,13 +470,15 @@
 			xhr.onload = function(e){
 			var responseText = xhr.response;
 			count = JSON.parse(responseText);
-
+			if (count == "0"){
+				document.getElementById("AI1CardCount").innerHTML = "AI Player 1 is no longer in play!";
+			} else {
 			document.getElementById("AI1CardCount").innerHTML = "AI Player One's Card Count: " + count;
 			document.getElementById("AI1CardCount").style.visibility = "visible";
-
+			}
 			}				
 			xhr.send();	
-		}			
+		}		
 		function getCardCountforAI2() {
 				
 			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCardCountForAI2");
@@ -474,12 +491,15 @@
 			var responseText = xhr.response;
 			count = JSON.parse(responseText);
 
-			document.getElementById("AI2CardCount").innerHTML = "AI Player Two's Card Count: " + count;
+			if (count == "0"){
+				document.getElementById("AI2CardCount").innerHTML = "AI Player 2 is no longer in play!";
+			} else {
+			document.getElementById("AI2CardCount").innerHTML = "AI Player 2's Card Count: " + count;
 			document.getElementById("AI2CardCount").style.visibility = "visible";
-
+			}
 			}				
 			xhr.send();	
-		}
+		}	
 
 		function getCardCountforAI3() {
 				
@@ -493,12 +513,15 @@
 			var responseText = xhr.response;
 			count = JSON.parse(responseText);
 
-			document.getElementById("AI3CardCount").innerHTML = "AI Player Three's Card Count: " + count;
+			if (count == "0"){
+				document.getElementById("AI3CardCount").innerHTML = "AI Player 3 is no longer in play!";
+			} else {
+			document.getElementById("AI3CardCount").innerHTML = "AI Player 3's Card Count: " + count;
 			document.getElementById("AI3CardCount").style.visibility = "visible";
-
+			}
 			}				
 			xhr.send();	
-		}
+		}	
 		function getCardCountforAI4() {
 				
 			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCardCountForAI4");
@@ -511,18 +534,26 @@
 			var responseText = xhr.response;
 			count = JSON.parse(responseText);
 
-			document.getElementById("AI4CardCount").innerHTML = "AI Player Four's Card Count: " + count;
+			if (count == "0"){
+				document.getElementById("AI4CardCount").innerHTML = "AI Player 4 is no longer in play!";
+			} else {
+			document.getElementById("AI4CardCount").innerHTML = "AI Player 4's Card Count: " + count;
 			document.getElementById("AI4CardCount").style.visibility = "visible";
+			}
 			}				
 			xhr.send();	
-		}
+		}	
 
 
 			
 
             //not sure if this needs an argument?
 			function getCardInfo() {
-				
+				var humanCardCountValue = (document.getElementById("humanCardCount").getAttribute("innerHTML"));
+
+				if (humanCardCountValue === "You are no longer in play!"){
+					document.getElementById("playerCardInfo").innerHTML = "You have no cards left!";
+				} else {
 				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getCard");
 				
 				if (!xhr) {
@@ -540,6 +571,7 @@
 				}
 				
 				xhr.send();	
+				}
 			}
 
 			function getRounds() {

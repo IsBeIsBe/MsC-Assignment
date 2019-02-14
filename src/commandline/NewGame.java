@@ -510,7 +510,7 @@ public class NewGame {
 	 * @return
 	 */
 	public String returnChosenAttribute() {
-		if (selector > 0) {
+	
 			setChosenAttribute(getPlayers().get(selector).selectAttribute());
 			//String chosen = String.valueOf(chosenAttribute);
 			String message = getPlayers().get(selector).getPlayerName() + " has chosen " + getPlayers().get(selector).peekACard().attributeNames[chosenAttribute] +
@@ -518,11 +518,7 @@ public class NewGame {
 					getPlayers().get(selector).peekACard().name ;
 			
 			return message;
-		}
 		
-		else {
-			return "0";
-		}
 	}
 
 	
@@ -566,6 +562,7 @@ public class NewGame {
 			
 		}
 		rounds++;
+		checkAllPlayersForCards();
 		return message + " Now let's play again!";
 	}
 	

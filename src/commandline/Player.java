@@ -120,6 +120,13 @@ public abstract class Player {
 		return playerLog;
 	}
 
+	
+	public int getAnAttribute(int index) {
+		int attribute = playerDeck.peek().attributes[index];
+		return attribute;
+	}
+	
+	
 	public Queue<Card> getHand(){
 		return playerDeck;
 	}
