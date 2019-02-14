@@ -161,6 +161,70 @@ public class TopTrumpsRESTAPI {
 		return attributeAsJSON;
 	}
 	
+	@GET
+	@Path("/size")
+	public String choseSize() throws IOException {
+		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[0];
+		theGame.setChosenAttribute(attributeValue);
+		String message = "You have chosen Size, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/rarity")
+	public String choseRarity() throws IOException {
+		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[1];
+		theGame.setChosenAttribute(attributeValue);
+		String message = "You have chosen Rarity, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/temper")
+	public String choseTemper() throws IOException {
+		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[2];
+		theGame.setChosenAttribute(attributeValue);
+		String message = "You have chosen Good Temper, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/cute")
+	public String choseCuteness() throws IOException {
+		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[3];
+		theGame.setChosenAttribute(attributeValue);
+		String message = "You have chosen Cuteness, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/michief")
+	public String choseMischief() throws IOException {
+		int attributeValue = theGame.getPlayers().get(0).peekACard().getAttributes()[4];
+		theGame.setChosenAttribute(attributeValue);
+		String message = "You have chosen Mischief Rating, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
 	
 	/**
 	 * This method calls the condensed version of checking for a winner. 

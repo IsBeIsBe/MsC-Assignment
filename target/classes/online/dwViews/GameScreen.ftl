@@ -41,11 +41,23 @@
 
     <div>
         <p id="playerCardInfo"></p>
+		<button id=SizeButton onclick="selectedSize()">Size</button>
+		<button id=RarityButton onclick="selectedRarity()">Rarity</button>
+		<button id=TemperButton onclick="selectedTemper()">Good Temper</button>
+		<button id=CutenessButton onclick="selectedCute()">Cuteness</button>
+		<button id=MischiefButton onclick="selectedMischief()">Mischief Rating</button>
+
         <p id="playerCardCountInfo"></p>
     </div>
     <script type="text/javascript">
         document.getElementById("playerCardInfo").style.visibility = "hidden";
         document.getElementById("playerCardCountInfo").style.visibility = "hidden";
+        document.getElementById("SizeButton").style.visibility = "hidden";
+        document.getElementById("RarityButton").style.visibility = "hidden";
+        document.getElementById("TemperButton").style.visibility = "hidden";
+        document.getElementById("CutenessButton").style.visibility = "hidden";
+        document.getElementById("MischiefButton").style.visibility = "hidden";
+
     </script>
 
 
@@ -122,6 +134,14 @@
 			} else if (buttonValue === "Click to see final scores!") {
 				endTheGame();
 
+			} else if (buttonValue === "Click to decide what to choose!") {
+				document.getElementById("SizeButton").style.visibility = "visible";
+       			document.getElementById("RarityButton").style.visibility = "visible";
+        		document.getElementById("TemperButton").style.visibility = "visible";
+        		document.getElementById("CutenessButton").style.visibility = "visible";
+        		document.getElementById("MischiefButton").style.visibility = "visible";
+				document.getElementById("gameInfo").style.visibility = "hidden";
+				document.getElementById("gameButton").style.visibility = "hidden";
 			}
 
 		}
@@ -136,11 +156,19 @@
 				
 			xhr.onload = function(e){
 				var responseText = xhr.response;
-				playerIndex = JSON.parse(responseText);					
+				playerIndex = JSON.parse(responseText);	
+				if (playerIndex === 0) {
+					document.getElementById("gameInfo").innerHTML = "It's your turn to play!";
+					document.getElementById("gameInfo").style.visibility = "visible";
+					document.getElementById("gameButton").value = "Click to decide what to choose!";
+					document.getElementById("gameButton").innerHTML = gameButton.value;
+				} else {
 				document.getElementById("gameInfo").innerHTML = "It's Player " + playerIndex + "'s turn to play!";
 				document.getElementById("gameInfo").style.visibility = "visible";
                 document.getElementById("gameButton").value = "Okay! Let's see what they choose!";
 				document.getElementById("gameButton").innerHTML = gameButton.value;
+
+				}				
 				getCardInfo();
 
 			}
@@ -161,6 +189,119 @@
 			//	document.getElementById("chosenAttribute").style.visibility = "visible";
 				document.getElementById("gameButton").value = "Okay! Let's see who won!";
 				document.getElementById("gameButton").innerHTML = gameButton.value;
+
+			}
+			xhr.send();
+		}
+
+		function hidePlayerButtons() {
+			document.getElementById("SizeButton").style.visibility = "hidden";
+        	document.getElementById("RarityButton").style.visibility = "hidden";
+        	document.getElementById("TemperButton").style.visibility = "hidden";
+       		document.getElementById("CutenessButton").style.visibility = "hidden";
+        	document.getElementById("MischiefButton").style.visibility = "hidden";
+		}
+
+		function selectedSize() {
+			hidePlayerButtons();
+			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/size");
+			if(!xhr) {
+				alert("CORS not supported");
+			}
+
+			xhr.onload = function(e) {
+				var responseText = xhr.response;
+				chosenAttribute = JSON.parse(responseText);
+				document.getElementById("gameInfo").innerHTML = chosenAttribute;
+			//	document.getElementById("chosenAttribute").style.visibility = "visible";
+				document.getElementById("gameButton").value = "Okay! Let's see who won!";
+				document.getElementById("gameButton").innerHTML = gameButton.value;
+				document.getElementById("gameInfo").style.visibility = "visible";
+				document.getElementById("gameButton").style.visibility = "visible";
+
+			}
+			xhr.send();
+		}
+
+		function selectedRarity() {
+			hidePlayerButtons();
+			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/rarity");
+			if(!xhr) {
+				alert("CORS not supported");
+			}
+
+			xhr.onload = function(e) {
+				var responseText = xhr.response;
+				chosenAttribute = JSON.parse(responseText);
+				document.getElementById("gameInfo").innerHTML = chosenAttribute;
+			//	document.getElementById("chosenAttribute").style.visibility = "visible";
+				document.getElementById("gameButton").value = "Okay! Let's see who won!";
+				document.getElementById("gameButton").innerHTML = gameButton.value;
+				document.getElementById("gameInfo").style.visibility = "visible";
+				document.getElementById("gameButton").style.visibility = "visible";
+
+			}
+			xhr.send();
+		}
+
+		function selectedTemper() {
+			hidePlayerButtons();
+			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/temper");
+			if(!xhr) {
+				alert("CORS not supported");
+			}
+
+			xhr.onload = function(e) {
+				var responseText = xhr.response;
+				chosenAttribute = JSON.parse(responseText);
+				document.getElementById("gameInfo").innerHTML = chosenAttribute;
+			//	document.getElementById("chosenAttribute").style.visibility = "visible";
+				document.getElementById("gameButton").value = "Okay! Let's see who won!";
+				document.getElementById("gameButton").innerHTML = gameButton.value;
+				document.getElementById("gameInfo").style.visibility = "visible";
+				document.getElementById("gameButton").style.visibility = "visible";
+
+			}
+			xhr.send();
+		}
+
+		function selectedCute() {
+			hidePlayerButtons();
+			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/cute");
+			if(!xhr) {
+				alert("CORS not supported");
+			}
+
+			xhr.onload = function(e) {
+				var responseText = xhr.response;
+				chosenAttribute = JSON.parse(responseText);
+				document.getElementById("gameInfo").innerHTML = chosenAttribute;
+			//	document.getElementById("chosenAttribute").style.visibility = "visible";
+				document.getElementById("gameButton").value = "Okay! Let's see who won!";
+				document.getElementById("gameButton").innerHTML = gameButton.value;
+				document.getElementById("gameInfo").style.visibility = "visible";
+				document.getElementById("gameButton").style.visibility = "visible";
+
+			}
+			xhr.send();
+		}
+
+		function selectedMischief() {
+			hidePlayerButtons();
+			var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/michief");
+			if(!xhr) {
+				alert("CORS not supported");
+			}
+
+			xhr.onload = function(e) {
+				var responseText = xhr.response;
+				chosenAttribute = JSON.parse(responseText);
+				document.getElementById("gameInfo").innerHTML = chosenAttribute;
+			//	document.getElementById("chosenAttribute").style.visibility = "visible";
+				document.getElementById("gameButton").value = "Okay! Let's see who won!";
+				document.getElementById("gameButton").innerHTML = gameButton.value;
+				document.getElementById("gameInfo").style.visibility = "visible";
+				document.getElementById("gameButton").style.visibility = "visible";
 
 			}
 			xhr.send();
@@ -247,13 +388,11 @@
 				winnerCheck = JSON.parse(responseText);
 
 				if (winnerCheck === "winner") {
-					alert("winner?");
 					document.getElementById("gameInfo").innerHTML = "The Game has Ended!";
 					document.getElementById("gameButton").value = "Click to see final scores!";
 					document.getElementById("gameButton").innerHTML = gameButton.value;
 
 				} else if (winnerCheck === "noWinner"){
-					alert("no winner");
 					getSelector();
 				}
 			}
