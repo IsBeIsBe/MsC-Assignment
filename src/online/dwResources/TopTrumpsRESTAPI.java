@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import commandline.DatabaseInteraction;
 import commandline.FileReaderClass;
-import commandline.Game;
 import commandline.NewGame;
 
 @Path("/toptrumps") // Resources specified here should be hosted at http://localhost:7777/toptrumps
@@ -41,7 +40,8 @@ public class TopTrumpsRESTAPI {
 	 * into JSON strings easily. */
 	ObjectWriter oWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
 	NewGame theGame;
-	
+	FileReaderClass fr;
+	boolean writeGameLogsToFile = false;
 	/**
 	 * Contructor method for the REST API. This is called first. It provides
 	 * a TopTrumpsJSONConfiguration from which you can get the location of
@@ -52,10 +52,10 @@ public class TopTrumpsRESTAPI {
 		// ----------------------------------------------------
 		// Add relevant initalization here
 		// ----------------------------------------------------
-		FileReaderClass fr = new FileReaderClass();
+		fr = new FileReaderClass();
 		fr.getCardsFromFile();
-		boolean writeGameLogsToFile = false;
-		theGame = new NewGame(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
+		//writeGameLogsToFile = false;
+	
 		
 	}
 	
@@ -71,6 +71,7 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/startAndSelect")
 	public String startAndSelectFirstPlayer() throws IOException{
+		theGame = new NewGame(fr.getDeck(), fr.getAttributeNames(), writeGameLogsToFile);
 		int firstPlayerIndex = theGame.startAndSelectFirstPlayer();
 		
 		String firstPlayerIndexAsJSON = oWriter.writeValueAsString(firstPlayerIndex);
@@ -80,17 +81,94 @@ public class TopTrumpsRESTAPI {
 	
 	@GET
 	@Path("/getCard")
-	public String getCardInfo(@QueryParam("Player") int player) throws IOException {
-		
-		String cardToAPI = theGame.getPlayerCardForAPI(player);
+	public String getCardInfo() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(0).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(0);
 				
-		String cardAsJSON =	oWriter.writeValueAsString(cardToAPI);
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
 		System.out.println(cardToAPI);
 		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(0).checkCards()){
+			String noCards = "You have no cards left!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
 		return cardAsJSON;
 		
 	}
 	
+	@GET
+	@Path("/getAI1Card")
+	public String getAI1Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(1).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(1);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(1).checkCards()){
+			String noCards = "AI Player 1 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
+	
+	@GET
+	@Path("/getAI2Card")
+	public String getAI2Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(2).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(2);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(2).checkCards()){
+			String noCards = "AI Player 2 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
+	
+	@GET
+	@Path("/getAI3Card")
+	public String getAI3Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(3).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(3);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(3).checkCards()){
+			String noCards = "AI Player 3 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
+	
+	@GET
+	@Path("/getAI4Card")
+	public String getAI4Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(4).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(4);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(4).checkCards()){
+			String noCards = "AI Player 4 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
 	@GET
 	@Path("/getSelector")
 	/**
@@ -99,7 +177,7 @@ public class TopTrumpsRESTAPI {
 	 * @return - A String
 	 * @throws IOException
 	 */
-	public String setSelector() throws IOException {
+	public String getSelector() throws IOException {
 		
 		String selectorString = theGame.getSelector();
 		
@@ -151,14 +229,87 @@ public class TopTrumpsRESTAPI {
 	 */
 	@GET
 	@Path("/chosenAttribute")
-	public String getChosenAttribute(int selector) throws IOException{
-		int attribute = theGame.returnChosenAttribute(selector);
+	public String getChosenAttribute() throws IOException{
+		String attribute = theGame.returnChosenAttribute();
 		
 		String attributeAsJSON = oWriter.writeValueAsString(attribute);
 		
 		return attributeAsJSON;
 	}
 	
+	@GET
+	@Path("/size")
+	public String choseSize() throws IOException {
+		theGame.setSelector(0);
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(0);
+		theGame.setChosenAttribute(0);
+		String message = "You have chosen Size, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/rarity")
+	public String choseRarity() throws IOException {
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(1);
+		theGame.setChosenAttribute(1);
+		String message = "You have chosen Rarity, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/temper")
+	public String choseTemper() throws IOException {
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(2);
+		theGame.setChosenAttribute(2);
+		String message = "You have chosen Good Temper, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/cute")
+	public String choseCuteness() throws IOException {
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(3);
+		theGame.setChosenAttribute(3);
+		String message = "You have chosen Cuteness, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
+	
+	@GET
+	@Path("/mischief")
+	public String choseMischief() throws IOException {
+		theGame.setSelector(0);
+
+		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(4);
+		theGame.setChosenAttribute(4);
+		String message = "You have chosen Mischief Rating, with a value of " + attributeValue + "from " + 
+				theGame.getPlayers().get(0).peekACard().getName() ;
+		
+		String messageAsJSON = oWriter.writeValueAsString(message);
+		
+		return messageAsJSON;
+	}
 	
 	/**
 	 * This method calls the condensed version of checking for a winner. 
@@ -170,9 +321,9 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/findWinner")
 	public String findWinnerOfRound() throws IOException{
-		int winnerOfRound = theGame.findWinnerOfRound();
+		String winnerMessage = theGame.findWinnerOfRound();
 		
-		String winnerAsJSON = oWriter.writeValueAsString(winnerOfRound);
+		String winnerAsJSON = oWriter.writeValueAsString(winnerMessage);
 		
 		return winnerAsJSON;
 	}
@@ -189,7 +340,7 @@ public class TopTrumpsRESTAPI {
 	@GET
 	@Path("/checkForDraws")
 	public String wasThereADraw() throws IOException{
-		boolean draw = theGame.drawDecisions();
+		String draw = theGame.drawDecisions();
 		
 		String drawAsJSON = oWriter.writeValueAsString(draw);
 		
@@ -210,7 +361,15 @@ public class TopTrumpsRESTAPI {
 	public String checkOverallWinner() throws IOException {
 		boolean overallWinner = theGame.checkForOutRightWinner();
 		
-		String winnerASJSON = oWriter.writeValueAsString(overallWinner);
+		String winnerMessage = "";
+		
+		if (overallWinner == true) {
+			winnerMessage = "winner";
+		} else if (overallWinner == false) {
+			winnerMessage = "noWinner";
+		}
+		
+		String winnerASJSON = oWriter.writeValueAsString(winnerMessage);
 		
 		return winnerASJSON;
 	}
@@ -234,6 +393,12 @@ public class TopTrumpsRESTAPI {
 		return finalsAsJSON;
 	}
 	
+	@GET
+	@Path("/getRoundNum")
+	public String getRoundNum() throws IOException {
+		return theGame.getRounds();
+	}
+	
 	/**
 	 * This method will be altered to sync with the DatabaseInteraction class's printGameStats method. 
 	 * 
@@ -248,10 +413,59 @@ public class TopTrumpsRESTAPI {
 		String results = "";
 		DatabaseInteraction db = new DatabaseInteraction();
 		
-		results += db.onlineTest();		
+		results = db.getGameStats();		
 		String resultsAsJSON = oWriter.writeValueAsString(results);
 		
 		return resultsAsJSON;
+	}
+	
+	
+	@GET
+	@Path("/getCardCount")
+	public String getCardCount() throws IOException{
+		String count = theGame.getCardCount(0);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI1")
+	public String getCardCountForAI1() throws IOException {
+		String count = theGame.getCardCount(1);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI2")
+	public String getCardCountForAI2() throws IOException {
+		String count = theGame.getCardCount(2);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI3")
+	public String getCardCountForAI3() throws IOException {
+		String count = theGame.getCardCount(3);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCardCountForAI4")
+	public String getCardCountForAI4() throws IOException {
+		String count = theGame.getCardCount(4);
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
+	}
+	
+	@GET
+	@Path("/getCommonPile")
+	public String getCommonPileCount() throws IOException {
+		String count = theGame.getCommonPileCount();
+		String countAsJSON = oWriter.writeValueAsString(count);
+		return countAsJSON;
 	}
 	
 	// ----------------------------------------------------
