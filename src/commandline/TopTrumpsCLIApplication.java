@@ -95,7 +95,7 @@ public class TopTrumpsCLIApplication {
 		  DatabaseInteraction db = new DatabaseInteraction();
 
 		    String gameStats = db.getGameStats(); 
-		System.out.println = gameStats;
+		System.out.println(gameStats);
 
 		}
 
