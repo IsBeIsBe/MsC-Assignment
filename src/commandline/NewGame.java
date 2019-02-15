@@ -12,7 +12,7 @@ public class NewGame {
 
 	int rounds;
 	boolean aiWon;
-	int selector;
+	public int selector;
 	boolean draw;
 	int draws;
 	boolean winner;
@@ -23,7 +23,7 @@ public class NewGame {
 	public String finalScores;
 
 	ArrayList<Card> deck = new ArrayList<>();
-	ArrayList<Player> players = new ArrayList<>();
+	private ArrayList<Player> players = new ArrayList<>();
 	ArrayList<Card> commonPile = new ArrayList<>();
 	Card[] cardsInPlay = new Card[5];
 	int[] gameStats = new int[7];
@@ -46,9 +46,8 @@ public class NewGame {
 	public void playGame() {
 
 		allocateCards();
-		loggingCardAllocation();
 		selector = whoPlaysFirst();
-		rounds = 0;
+		rounds = 1;
 		while (!winner) {
 			rounds++;
 			if (test) {
@@ -59,7 +58,7 @@ public class NewGame {
 			System.out.println("\n----------START OF ROUND " + rounds + "----------\n");
 		
 			
-			chosenAttribute = players.get(selector).selectAttribute();
+			chosenAttribute = getPlayers().get(selector).selectAttribute();
 			collectCardsInPlay();
 			System.out.println(logCardsInPlay());
 			roundWinner = checkWhoWins();
@@ -107,13 +106,13 @@ public class NewGame {
 	
 	public ArrayList<Player> createPlayers(int numberOfAIPlayers) {
 
-		players.add(new HumanPlayer("Human Player"));
+		getPlayers().add(new HumanPlayer("Human Player"));
 
 		for (int i = 0; i < numberOfAIPlayers; i++) {
 			String nameTemp = "AI Player " + (i + 1);
-			players.add(new AIPlayer(nameTemp));
+			getPlayers().add(new AIPlayer(nameTemp));
 		}
-		return players;
+		return getPlayers();
 	}
 	
 	public void shuffleDeck() {
@@ -135,11 +134,11 @@ public class NewGame {
 
 		int i = 0;
 		int j = 0;
-		int k = (deck.size() / players.size() - 1);
+		int k = (deck.size() / getPlayers().size() - 1);
 
 		for (i = 0; i < deck.size(); i++) {
 
-			players.get(j).pushToDeck(deck.get(i));
+			getPlayers().get(j).pushToDeck(deck.get(i));
 
 			if (i == k) {
 				j++;
@@ -177,16 +176,16 @@ public class NewGame {
 	 */
 	public void collectCardsInPlay() {
 		
-		String attributeSelection =	players.get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute] 
-				+ " from " + players.get(selector).peekACard().getName() + " with a value of " + 
-				players.get(selector).peekACard().attributes[chosenAttribute] + "\r\n";
+		String attributeSelection =	getPlayers().get(selector).getPlayerName() + " has chosen " + attributeNames[chosenAttribute] 
+				+ " from " + getPlayers().get(selector).peekACard().getName() + " with a value of " + 
+				getPlayers().get(selector).peekACard().attributes[chosenAttribute] + "\r\n";
 		
 		
-		for (int i = 0; i < players.size(); i++) {
-			if (!players.get(i).checkCards()) {
-				System.out.println(players.get(i).getPlayerName() + " has no cards!");
+		for (int i = 0; i < getPlayers().size(); i++) {
+			if (!getPlayers().get(i).checkCards()) {
+				System.out.println(getPlayers().get(i).getPlayerName() + " has no cards!");
 			} else {
-				cardsInPlay[i] = players.get(i).popACard();
+				cardsInPlay[i] = getPlayers().get(i).popACard();
 			}
 		}
 		
@@ -217,7 +216,7 @@ public class NewGame {
 		int comparator = cardsInPlay[selector].getAttributes()[chosenAttribute];
 		roundWinner = selector;
 		for (int i = 0; i <cardsInPlay.length; i++) {
-			if (!players.get(i).checkCards() ) {
+			if (!getPlayers().get(i).checkCards() ) {
 				
 			} else if (cardsInPlay[i].getAttributes()[chosenAttribute] > comparator) {
 			
@@ -227,7 +226,7 @@ public class NewGame {
 				}
 			}
 		
-		System.out.println("The winning number was:" + comparator + " and it belongs to " + players.get(roundWinner).getPlayerName());
+		System.out.println("The winning number was:" + comparator + " and it belongs to " + getPlayers().get(roundWinner).getPlayerName());
 		return roundWinner;
 	}
 	
@@ -246,7 +245,7 @@ public class NewGame {
 		boolean checkForDraws = false;
 		int comparator = cardsInPlay[roundWinner].getAttributes()[chosenAttribute];
 		for (int i = 0; i < cardsInPlay.length; i++) {
-			if (i == roundWinner || !players.get(i).checkCards()) {
+			if (i == roundWinner || !getPlayers().get(i).checkCards()) {
 				
 			} else if (cardsInPlay[i].getAttributes()[chosenAttribute] == comparator) {
 			
@@ -294,7 +293,7 @@ public class NewGame {
 	 */
 	public void allCardsToWinner() {
 		
-		String winnerDeclaration = "Player " + players.get(roundWinner).getPlayerName() + " has won with their card "
+		String winnerDeclaration = "Player " + getPlayers().get(roundWinner).getPlayerName() + " has won with their card "
 				+ cardsInPlay[roundWinner].getName() + " which has a " + attributeNames[chosenAttribute] 
 						+ " of " + cardsInPlay[roundWinner].attributes[chosenAttribute];
 		
@@ -305,13 +304,13 @@ public class NewGame {
 
 		}
 		
-		players.get(roundWinner).winsRound();
+		getPlayers().get(roundWinner).winsRound();
 		
 		for (int i = 0; i < cardsInPlay.length; i++) {
 			if (cardsInPlay[i] == null) {
 				
 			} else {
-				players.get(roundWinner).pushToDeck(cardsInPlay[i]);
+				getPlayers().get(roundWinner).pushToDeck(cardsInPlay[i]);
 				cardsInPlay[i] = null;
 			}
 		}
@@ -319,7 +318,7 @@ public class NewGame {
 		if (!commonPile.isEmpty()) {
 			int commonSize = commonPile.size();
 			for (int i = 0; i < commonSize; i++) { // pushes all of the common pile cards to the winners hand
-				players.get(roundWinner).pushToDeck(commonPile.remove(0));
+				getPlayers().get(roundWinner).pushToDeck(commonPile.remove(0));
 			}
 		}
 		
@@ -335,8 +334,8 @@ public class NewGame {
 	public boolean checkForOutRightWinner() {
 		boolean outrightWinner = false;
 		int numOfPlayers = 5;
-		for (int i = 0; i < players.size(); i++) {
-			if (!players.get(i).checkCards()) {
+		for (int i = 0; i < getPlayers().size(); i++) {
+			if (!getPlayers().get(i).checkCards()) {
 				numOfPlayers--;
 			}
 		}
@@ -355,15 +354,11 @@ public class NewGame {
 
 		String loggingCardAllocation = "";
 
-		for (int i = 0; i < players.size(); i++) {
+		for (int i = 0; i < getPlayers().size(); i++) {
 
-			loggingCardAllocation += "\n" + players.get(i).getPlayerName() + ": \n" + players.get(i).getHand() 
-					+ "\n" + "Total Cards: " + players.get(i).playerDeck.size();
+			loggingCardAllocation += "\n" + getPlayers().get(i).getPlayerName() + ": \n" + getPlayers().get(i).getHand() 
+					+ "\n" + "Total Cards: " + getPlayers().get(i).playerDeck.size();
 
-		}
-		
-		if (test) {
-			log += loggingCardAllocation;
 		}
 
 		return loggingCardAllocation;
@@ -379,10 +374,10 @@ public class NewGame {
 		String logInfo = "";
 		for (int i = 0; i < cardsInPlay.length; i++) {
 			if (cardsInPlay[i] == null) {
-				logInfo += players.get(i).getPlayerName() + " is no longer in play!\n";
+				logInfo += getPlayers().get(i).getPlayerName() + " is no longer in play!\n";
 			}
 			else {
-				logInfo += players.get(i).getPlayerName() + ": " + cardsInPlay[i] + "\n";
+				logInfo += getPlayers().get(i).getPlayerName() + ": " + cardsInPlay[i] + "\n";
 			}
 		}
 		return logInfo;
@@ -396,14 +391,14 @@ public class NewGame {
 		
 		System.out.println("Round " + rounds + "\r\n");
 		
-		if (!players.get(0).checkCards()) {
+		if (!getPlayers().get(0).checkCards()) {
 			
-			String roundStartInfo = "You drew " + players.get(0).peekACard().getName() + ":\r\n" + "> " + attributeNames[1]
-					+ " " + players.get(0).peekACard().getAttributes()[0] + "\r\n" + "> " + attributeNames[2] + " "
-					+ players.get(0).peekACard().getAttributes()[1] + "\r\n" + "> " + attributeNames[3] + " "
-					+ players.get(0).peekACard().getAttributes()[2] + "\r\n" + "> " + attributeNames[4] + " "
-					+ players.get(0).peekACard().getAttributes()[3] + "\r\n" + "> " + attributeNames[5] + " "
-					+ players.get(0).peekACard().getAttributes()[4];
+			String roundStartInfo = "You drew " + getPlayers().get(0).peekACard().getName() + ":\r\n" + "> " + attributeNames[1]
+					+ " " + getPlayers().get(0).peekACard().getAttributes()[0] + "\r\n" + "> " + attributeNames[2] + " "
+					+ getPlayers().get(0).peekACard().getAttributes()[1] + "\r\n" + "> " + attributeNames[3] + " "
+					+ getPlayers().get(0).peekACard().getAttributes()[2] + "\r\n" + "> " + attributeNames[4] + " "
+					+ getPlayers().get(0).peekACard().getAttributes()[3] + "\r\n" + "> " + attributeNames[5] + " "
+					+ getPlayers().get(0).peekACard().getAttributes()[4];
 			
 			System.out.println(roundStartInfo);
 			
@@ -412,17 +407,17 @@ public class NewGame {
 				log += "\n----------CARD ALLOCATION----------" + roundStartInfo + "----------END OF CARD ALLOCATION----------\n";
 			}*/
 			
-			System.out.println("\r\nThere are " + players.get(0).getHand().size() + " cards in your hand\r\n");
+			System.out.println("\r\nThere are " + getPlayers().get(0).getHand().size() + " cards in your hand\r\n");
 		}
 	}
 	
 	public void checkAllPlayersForCards(){
-		for (int i = 0; i < players.size(); i++) {
-			players.get(i).deckEmptyCheck();
-			if (players.get(i).checkCards()) {
-				System.out.println(players.get(i).getPlayerName() + " still has cards!");
+		for (int i = 0; i < getPlayers().size(); i++) {
+			getPlayers().get(i).deckEmptyCheck();
+			if (getPlayers().get(i).checkCards()) {
+				System.out.println(getPlayers().get(i).getPlayerName() + " still has cards!");
 			} else {
-				System.out.println(players.get(i).getPlayerName()+ " is no longer in play!");
+				System.out.println(getPlayers().get(i).getPlayerName()+ " is no longer in play!");
 			}
 		}
 	}
@@ -435,21 +430,21 @@ public class NewGame {
 	 */
 	public void endGameMethod() {
 		int winner = 7;
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).checkCards()) {
+		for (int i = 0; i < getPlayers().size(); i++) {
+			if (getPlayers().get(i).checkCards()) {
 				winner = i;
 			}
 		}
-		winnerMessage = players.get(winner).getPlayerName() + " has won after " + rounds + " rounds\r\n";
+		winnerMessage = getPlayers().get(winner).getPlayerName() + " has won after " + rounds + " rounds\r\n";
 		
 		if (test) {
-			log += "\n----------WINNER DECLARED----------\n" + players.get(winner).getPlayerName() + " has won after " + rounds
+			log += "\n----------WINNER DECLARED----------\n" + getPlayers().get(winner).getPlayerName() + " has won after " + rounds
 					+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
 		}
 		// The final scores of the game are printed for the user to examine.
-		finalScores += "Final scores: \n";
-		for (int i = 0; i < players.size(); i++) {
-			finalScores += players.get(i).getPlayerName() + ": " + players.get(i).getScore() + "\n";
+		finalScores = "Final scores: \n";
+		for (int i = 0; i < getPlayers().size(); i++) {
+			finalScores += getPlayers().get(i).getPlayerName() + ": " + getPlayers().get(i).getScore() + "\n";
 		}
 		System.out.println(finalScores);
 		if (draws > 0) {
@@ -457,11 +452,11 @@ public class NewGame {
 		}
 
 		// The next lines collect the data required for the database.
-		int scoreOne = players.get(0).getScore();
-		int scoreTwo = players.get(1).getScore();
-		int scoreThree = players.get(2).getScore();
-		int scoreFour = players.get(3).getScore();
-		int scoreFive = players.get(4).getScore();
+		int scoreOne = getPlayers().get(0).getScore();
+		int scoreTwo = getPlayers().get(1).getScore();
+		int scoreThree = getPlayers().get(2).getScore();
+		int scoreFour = getPlayers().get(3).getScore();
+		int scoreFive = getPlayers().get(4).getScore();
 
 		gameStats[0] = scoreOne;
 		gameStats[1] = scoreTwo;
@@ -501,8 +496,8 @@ public class NewGame {
 	 */
 	public int startAndSelectFirstPlayer() {
 		allocateCards();
-		selector = whoPlaysFirst();
-		rounds = 1;
+		this.selector = whoPlaysFirst();
+		this.rounds = 1;
 		
 		return selector;
 	}
@@ -514,10 +509,16 @@ public class NewGame {
 	 * It links to the getChosenAttribute method in the API
 	 * @return
 	 */
-	public int returnChosenAttribute(int selector) {
-		setChosenAttribute(players.get(selector).selectAttribute());
+	public String returnChosenAttribute() {
+	
+			setChosenAttribute(getPlayers().get(selector).selectAttribute());
+			//String chosen = String.valueOf(chosenAttribute);
+			String message = getPlayers().get(selector).getPlayerName() + " has chosen " + getPlayers().get(selector).peekACard().attributeNames[chosenAttribute] +
+					" with a value of " + getPlayers().get(selector).peekACard().attributes[chosenAttribute] + " from " + 
+					getPlayers().get(selector).peekACard().name ;
+			
+			return message;
 		
-		return chosenAttribute;
 	}
 
 	
@@ -529,10 +530,10 @@ public class NewGame {
 	 * as the one foud in getChosenAttribute.
 	 * @return
 	 */
-	public int findWinnerOfRound() {
+	public String findWinnerOfRound() {
 		collectCardsInPlay();
-		roundWinner = checkWhoWins();
-		return roundWinner;
+		this.roundWinner = checkWhoWins();
+		return "Checking who won...";
 	}
 	/**
 	 * This method sets the value of the chosenAttribute value. It will be called from the getChosenAttribute but could also be 
@@ -548,19 +549,28 @@ public class NewGame {
 	 * hopefully has updated the variables accordingly already, so the return value should just be used to declare in the 
 	 * webpage if there was a draw or not. 
 	 */
-	public boolean drawDecisions() {
-		draw = checkForDraws();
-		if (draw){
-			allCardsToCommonPile();
+	public String drawDecisions() {
+		this.draw = checkForDraws();
+		String message;
+		if (this.draw){
+			this.allCardsToCommonPile();
+			message = "There was a draw! All cards have been moved to the common pile!";
 		} else {
-			allCardsToWinner();
-			selector = roundWinner;
+			this.allCardsToWinner();
+			this.selector = this.roundWinner;
+			message = getPlayers().get(selector).getPlayerName() + " has won this round!";
 			
 		}
-		
-		return draw;
+		rounds++;
+		checkAllPlayersForCards();
+		return message + " Now let's play again!";
 	}
 	
+	public String getCommonPileCount() {
+	
+		return String.valueOf(this.commonPile.size());
+
+	}
 	/**
 	 * This method is maybe a bit pointless but just condenses the check for a winner with incrementing the rounds. 
 	 * The value it returns can be used to break the game loop, same as above in the playGame() method. 
@@ -568,15 +578,19 @@ public class NewGame {
 	 */
 	public boolean isThereAWinner() {
 		winner = checkForOutRightWinner();
-		rounds++;
+	
 		return winner;
 	}
 
 	public String getPlayerCardForAPI(int player) {
 		
-		String card = players.get(player).peekACard().toStringAPI();
+		String card = getPlayers().get(player).peekACard().toStringAPI();
 		return card;
 		
+	}
+	
+	public String getRounds() {
+		return String.valueOf(this.rounds);
 	}
 	
 	
@@ -589,5 +603,17 @@ public class NewGame {
 	
 	public void setSelector(int selectorValue) {
 		this.selector = selectorValue;
+	}
+	
+	public String getCardCount(int playerIndex) {
+		return String.valueOf(getPlayers().get(playerIndex).getCardCount());
+	}
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
 	}
 }
