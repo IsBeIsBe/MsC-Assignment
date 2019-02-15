@@ -365,6 +365,7 @@ public class TopTrumpsRESTAPI {
 		
 		if (overallWinner == true) {
 			winnerMessage = "winner";
+		
 		} else if (overallWinner == false) {
 			winnerMessage = "noWinner";
 		}
