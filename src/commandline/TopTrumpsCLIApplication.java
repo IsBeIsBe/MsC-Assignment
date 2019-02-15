@@ -15,8 +15,9 @@ public class TopTrumpsCLIApplication {
 	 */
 	public static void main(String[] args) {
 
-		boolean writeGameLogsToFile = false; // Should we write game logs to file?
-		if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
+	boolean writeGameLogsToFile = false;
+		//	boolean writeGameLogsToFile = false; // Should we write game logs to file?
+		//if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
 		
 		// State
 		boolean userWantsToQuit = false; // flag to check whether the user wants to quit the application
@@ -93,14 +94,9 @@ public class TopTrumpsCLIApplication {
 	public static void printGameStatistics() {
 		  DatabaseInteraction db = new DatabaseInteraction();
 
-		    db.getGameStats(); 
+		    String gameStats = db.getGameStats(); 
+		System.out.println = gameStats;
 
-		    System.out.println("Game Statistics: \n" +
-		    "Number of Games: " + db.getGamesPlayed() + "\n" +
-		    "Number of Human Wins: " + db.getHumanWins() + "\n" +
-		    "Number of AI Wins: " + db.getCompWins() + "\n" +
-		    "Average Number of Draws: " + db.getAvgDraws() + "\n" +
-		    "Longest Game: " + db.getLongestRound() + " rounds.");
 		}
 
 }
