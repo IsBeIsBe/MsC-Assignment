@@ -468,7 +468,7 @@ public class NewGame {
 		gameStats[5] = rounds;
 		gameStats[6] = drawCounter;
 
-		// endOfGame(gameStats);
+		endOfGame(gameStats);
 
 		System.out.println("GAME OVER");
 		if (test) {
@@ -478,7 +478,28 @@ public class NewGame {
 		
 	}
 
+	public void endOfGame(int[] gameStats) {
+		DatabaseInteraction.insertGameStats(gameStats);
+		}
+	
+/*	public void gatherScores() {
+		// The next lines collect the data required for the database.
+		int scoreOne = getPlayers().get(0).getScore();
+		int scoreTwo = getPlayers().get(1).getScore();
+		int scoreThree = getPlayers().get(2).getScore();
+		int scoreFour = getPlayers().get(3).getScore();
+		int scoreFive = getPlayers().get(4).getScore();
 
+		gameStats[0] = scoreOne;
+		gameStats[1] = scoreTwo;
+		gameStats[2] = scoreThree;
+		gameStats[3] = scoreFour;
+		gameStats[4] = scoreFive;
+		gameStats[5] = rounds;
+		gameStats[6] = drawCounter;
+
+		endOfGame(gameStats);
+	}*/
 
 
 /*
@@ -489,6 +510,7 @@ public class NewGame {
  * Most of the methods above should be re-usable for the API as well, especially things like displayRoundStartInfo and
  * endGameMethod, without having to alter them. 
  */
+	
 	
 	/**
 	 * This method initialises the game, shuffles the deck and selects who plays first. 
