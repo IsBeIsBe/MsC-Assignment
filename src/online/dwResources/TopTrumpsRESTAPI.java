@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import commandline.DatabaseInteraction;
 import commandline.FileReaderClass;
-import commandline.Game;
 import commandline.NewGame;
 
 @Path("/toptrumps") // Resources specified here should be hosted at http://localhost:7777/toptrumps
@@ -87,7 +86,7 @@ public class TopTrumpsRESTAPI {
 		if (theGame.getPlayers().get(0).checkCards()) {
 		String cardToAPI = theGame.getPlayerCardForAPI(0);
 				
-		cardAsJSON =	oWriter.writeValueAsString(cardToAPI);
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
 		System.out.println(cardToAPI);
 		System.out.println(cardAsJSON);
 		
@@ -99,6 +98,77 @@ public class TopTrumpsRESTAPI {
 		
 	}
 	
+	@GET
+	@Path("/getAI1Card")
+	public String getAI1Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(1).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(1);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(1).checkCards()){
+			String noCards = "AI Player 1 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
+	
+	@GET
+	@Path("/getAI2Card")
+	public String getAI2Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(2).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(2);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(2).checkCards()){
+			String noCards = "AI Player 2 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
+	
+	@GET
+	@Path("/getAI3Card")
+	public String getAI3Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(3).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(3);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(3).checkCards()){
+			String noCards = "AI Player 3 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
+	
+	@GET
+	@Path("/getAI4Card")
+	public String getAI4Card() throws IOException {
+		String cardAsJSON = "";
+		if (theGame.getPlayers().get(4).checkCards()) {
+		String cardToAPI = theGame.getPlayerCardForAPI(4);
+				
+		cardAsJSON = oWriter.writeValueAsString(cardToAPI);
+		System.out.println(cardToAPI);
+		System.out.println(cardAsJSON);
+		
+		} else if (!theGame.getPlayers().get(4).checkCards()){
+			String noCards = "AI Player 4 is out of the Game!";
+			cardAsJSON = oWriter.writeValueAsString(noCards);
+		}
+		return cardAsJSON;		
+	}
 	@GET
 	@Path("/getSelector")
 	/**
@@ -343,7 +413,7 @@ public class TopTrumpsRESTAPI {
 		String results = "";
 		DatabaseInteraction db = new DatabaseInteraction();
 		
-		results += db.onlineTest();		
+		results = db.getGameStats();		
 		String resultsAsJSON = oWriter.writeValueAsString(results);
 		
 		return resultsAsJSON;

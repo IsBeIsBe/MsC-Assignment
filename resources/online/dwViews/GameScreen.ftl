@@ -68,6 +68,19 @@
         document.getElementById("gameInfo").style.visibility = "hidden";
     </script>
 
+	<div>
+		<p id="AI1Card"></p>
+		<p id="AI2Card"></p>
+		<p id="AI3Card"></p>
+		<p id="AI4Card"></p>
+	</div>
+	<script type="text/javascript">
+		document.getElementById("AI1Card").style.visibility = "hidden";
+		document.getElementById("AI2Card").style.visibility = "hidden";
+		document.getElementById("AI3Card").style.visibility = "hidden";
+		document.getElementById("AI4Card").style.visibility = "hidden";
+	</script>
+
     <hr />
 
     <div>
@@ -106,8 +119,8 @@
 		function playGame() {
 	//	document.getElementById("myButton").innerHTML = "Okay!";	 
 		document.getElementById("myButton").style.visibility = "hidden";
-		getRounds();
 		startUp();
+		getRounds();
 		}
 
 		function buttonsFunctions() {
@@ -116,12 +129,14 @@
 			//document.getElementById("gameInfo").innerHTML = buttonValue;
 
 			if (buttonValue === "Okay! Let's see what they choose!") {
+				getAICards();
 				chooseAttribute();
 
 			} else if (buttonValue === "Okay! Let's see who won!") {
 				findWinner();
 
 			} else if (buttonValue === "Great! Let's update the scores!") {
+				hideAICards();
 				getCardCounts();
 
 			} else if (buttonValue === "Play next Round") {
@@ -135,6 +150,7 @@
 				endTheGame();
 
 			} else if (buttonValue === "Check for a draw too!"){
+				showAICards();
 				endTheRound();
 
 			} else if (buttonValue === "Click to decide what to choose!") {
@@ -544,8 +560,105 @@
 			xhr.send();	
 		}	
 
+		function getAICards() {
+			showAI1Card();
+			showAI2Card();
+			showAI3Card();
+			showAI4Card();
+		}
 
-			
+		function showAICards() {
+			document.getElementById("AI1Card").style.visibility = "visible";
+			document.getElementById("AI2Card").style.visibility = "visible";
+			document.getElementById("AI3Card").style.visibility = "visible";
+			document.getElementById("AI4Card").style.visibility = "visible";
+
+		}
+
+		function hideAICards(){
+			document.getElementById("AI1Card").innerHTML = "";
+			document.getElementById("AI2Card").innerHTML = "";
+			document.getElementById("AI3Card").innerHTML = "";
+			document.getElementById("AI4Card").innerHTML = "";
+
+			document.getElementById("AI1Card").style.visibility = "hidden";
+			document.getElementById("AI2Card").style.visibility = "hidden";
+			document.getElementById("AI3Card").style.visibility = "hidden";
+			document.getElementById("AI4Card").style.visibility = "hidden";
+
+		}
+
+		function showAI1Card() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getAI1Card");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					AI1playerCard = JSON.parse(responseText);					
+					document.getElementById("AI1Card").innerHTML = "AI Player 1's card was: "+ AI1playerCard;
+					
+				}
+				
+				xhr.send();	
+				
+		}
+
+		function showAI2Card() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getAI2Card");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					AI2playerCard = JSON.parse(responseText);					
+					document.getElementById("AI2Card").innerHTML = "AI Player 2's card was: "+ AI2playerCard;
+					
+				}
+				
+				xhr.send();	
+				
+		}
+
+		function showAI3Card() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getAI3Card");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					AI3playerCard = JSON.parse(responseText);					
+					document.getElementById("AI3Card").innerHTML = "AI Player 3's card was: "+ AI3playerCard;
+					
+				}
+				
+				xhr.send();	
+				
+		}
+
+		function showAI4Card() {
+				var xhr = createCORSRequest('GET', "http://localhost:7777/toptrumps/getAI4Card");
+				
+				if (!xhr) {
+					alert("CORS not supported");
+				}
+				
+				xhr.onload = function(e){
+					var responseText = xhr.response;
+					AI4playerCard = JSON.parse(responseText);					
+					document.getElementById("AI4Card").innerHTML = "AI Player 4's card was: "+ AI4playerCard;
+					
+				}
+				
+				xhr.send();	
+				
+		}		
 
             //not sure if this needs an argument?
 			function getCardInfo() {
@@ -603,6 +716,7 @@
 					finalScores = JSON.parse(responseText);
 					document.getElementById("gameInfo").innerHTML = finalScores;
 					document.getElementById("gameButton").getAttribute.value = "Click to Play Again!";
+					document.getElementById("gameButton").innerHTML = gameButton.value;
 				}
 
 				xhr.send();

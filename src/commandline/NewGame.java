@@ -442,7 +442,7 @@ public class NewGame {
 					+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
 		}
 		// The final scores of the game are printed for the user to examine.
-		finalScores += "Final scores: \n";
+		finalScores = "Final scores: \n";
 		for (int i = 0; i < getPlayers().size(); i++) {
 			finalScores += getPlayers().get(i).getPlayerName() + ": " + getPlayers().get(i).getScore() + "\n";
 		}

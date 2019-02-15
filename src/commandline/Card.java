@@ -69,9 +69,9 @@ public class Card {
 	
 	public String toStringAPI() {
 		
-		String card = name;
+		String card = "Name: " + name;
 		for (int i = 0; i < 5; i++) {
-			card += "," + attributes[i];
+			card += ", " + attributeNames[i] + ": " + attributes[i];
 
 		}
 		return card;		

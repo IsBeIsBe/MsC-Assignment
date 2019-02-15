@@ -99,15 +99,15 @@ public class DatabaseInteraction {
 	 * from the number of games to find the number of human wins. The average number
 	 * of draws and largest number of rounds are calculated using SQL queries.
 	 */
-	public void getGameStats() {
-
+	public String getGameStats() {
+		String gameStats = "";
 		try {
 
 			Class.forName(JDBC_DRIVER);
 		} catch (ClassNotFoundException e) {
 			System.out.println("Game stats - Could not find JDBC Driver");
 			e.printStackTrace();
-			return;
+			
 		}
 
 		System.out.println("Game stats - Driver found");
@@ -122,7 +122,7 @@ public class DatabaseInteraction {
 		} catch (SQLException e) {
 			System.out.println("Game stats - Connection Failed");
 			e.printStackTrace();
-			return;
+			
 		}
 
 		if (connection != null) {
@@ -163,19 +163,29 @@ public class DatabaseInteraction {
 				while (rsMaxRounds.next()) {
 					this.longestRound = rsMaxRounds.getInt(1);
 				}
-
 				// close all result sets
 				rsGamesPlayed.close();
 
 				rsHumanWinner.close();
 				rsAvgDraws.close();
 				rsMaxRounds.close();
-
+				gameStats = collateStats();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-
+		return gameStats;
+	}
+	
+	public String collateStats() {
+	    String gameStats = "Game Statistics: \n" +
+	    "Number of Games: " + getGamesPlayed() + "\n" +
+	    "Number of Human Wins: " + getHumanWins() + "\n" +
+	    "Number of AI Wins: " + getCompWins() + "\n" +
+	    "Average Number of Draws: " + getAvgDraws() + "\n" +
+	    "Longest Game: " + getLongestRound() + " rounds.";
+	    
+	    return gameStats;
 	}
 
 	public int getGamesPlayed() {
