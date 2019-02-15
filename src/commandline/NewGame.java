@@ -226,7 +226,7 @@ public class NewGame {
 				}
 			}
 		
-		System.out.println("The winning number was:" + comparator + " and it belongs to " + getPlayers().get(roundWinner).getPlayerName());
+		//System.out.println("The winning number was:" + comparator + " and it belongs to " + getPlayers().get(roundWinner).getPlayerName());
 		return roundWinner;
 	}
 	
