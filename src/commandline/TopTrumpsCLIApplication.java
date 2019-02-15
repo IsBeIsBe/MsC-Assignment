@@ -16,8 +16,8 @@ public class TopTrumpsCLIApplication {
 	public static void main(String[] args) {
 
 	boolean writeGameLogsToFile = false;
-		//	boolean writeGameLogsToFile = false; // Should we write game logs to file?
-		//if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
+		//boolean writeGameLogsToFile = false; // Should we write game logs to file?
+		if (args[0].equalsIgnoreCase("true")) writeGameLogsToFile=true; // Command line selection
 		
 		// State
 		boolean userWantsToQuit = false; // flag to check whether the user wants to quit the application
@@ -72,8 +72,13 @@ public class TopTrumpsCLIApplication {
 	public static int askUserForInputSelection() throws WrongInputException{
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
+		String[] quit = new String[] {"q","Q"};
 		int input = 0;
-		try {
+		
+		if (inputString.contains(quit[0]) || inputString.contains(quit[1])) {
+			System.out.println("Quitting...");
+			System.exit(0);
+		}		try {
 			input = Integer.parseInt(inputString);
 		} catch(NumberFormatException e) {
 			throw new WrongInputException();

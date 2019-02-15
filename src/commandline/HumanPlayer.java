@@ -64,7 +64,14 @@ public class HumanPlayer extends Player{
 
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
+		String[] quit = new String[] {"q","Q"};
+
 		int input = 0;
+		if (inputString.contains(quit[0]) || inputString.contains(quit[1])) {
+			System.out.println("Quitting...");
+			System.exit(0);
+		}
+		
 		try {
 			input = Integer.parseInt(inputString);
 		} catch(NumberFormatException e) {

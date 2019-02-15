@@ -44,10 +44,9 @@ public class NewGame {
 	 * online mode to transport something via JSON
 	 */
 	public void playGame() {
-
+		rounds = 0;
 		allocateCards();
 		selector = whoPlaysFirst();
-		rounds = 1;
 		while (!winner) {
 			rounds++;
 			if (test) {
@@ -70,7 +69,9 @@ public class NewGame {
 				selector = roundWinner;
 				
 			}
-			System.out.println(loggingCardAllocation());
+			if (test) {
+				log += loggingCardAllocation();
+			}
 			winner = checkForOutRightWinner();
 			checkAllPlayersForCards();
 		
@@ -95,7 +96,7 @@ public class NewGame {
 		
 		System.out.println(loggingCardAllocation());
 		
-		if (test && rounds == 1) {
+		if (test && rounds == 0) {
 			
 			
 			
@@ -281,7 +282,8 @@ public class NewGame {
 		
 		
 		if (test) {
-			log += "\n----------COMMON PILE----------\n" + commonPile + "\n----------COMMON PILE END----------\n";
+			log +=  "\n----------ROUND WAS A DRAW----------\n"+
+		"\n----------COMMON PILE----------\n" + commonPile + "\n----------COMMON PILE END----------\n";
 		}
 	}
 	
