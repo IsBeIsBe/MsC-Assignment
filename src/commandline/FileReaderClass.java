@@ -50,7 +50,7 @@ public class FileReaderClass {
 				names += attributeNames[i] + ", ";
 			}
 			
-			System.out.println(names);
+			//System.out.println(names);
 
 			while (s.hasNextLine()) {
 				line = s.nextLine();
