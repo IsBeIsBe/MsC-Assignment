@@ -74,5 +74,51 @@ class PlayerTest {
 		assertEquals(testPlayer.hasCards, true);
 	}
 	
+	@Test 
+	void popCardTest() {
+		
+		String testName = "testName";
+		int[] testIntArray = {1,2,3,4,5};
+		String[] testAttributes = {"a","b","c","e","f"};
+		
+		Card testCard = new Card(testName, testIntArray, testAttributes);
+		
+		Queue<Card> testDeck = new LinkedList<>();
+		
+		
+		testDeck.add(testCard); 
+		
+		testDeck.remove(testCard);
+		
+		
+		assertEquals (true, testDeck.isEmpty());
+		
+		
+		
+	}
+	
+	@Test 
+	void peekCardTest() {
+		
+		String testName = "testName";
+		int[] testIntArray = {1,2,3,4,5};
+		String[] testAttributes = {"a","b","c","e","f"};
+		
+		 
+		
+		Card testCard = new Card(testName, testIntArray, testAttributes);
+		
+		Queue<Card> testDeck = new LinkedList<>();
+		
+		
+		testDeck.add(testCard); 
+		
+		
+		
+		
+		assertEquals(testCard, testDeck.peek());		
+		
+	}
+	
 	
 }
