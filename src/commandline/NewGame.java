@@ -417,7 +417,8 @@ public class NewGame {
 		for (int i = 0; i < getPlayers().size(); i++) {
 			getPlayers().get(i).deckEmptyCheck();
 			if (getPlayers().get(i).checkCards()) {
-				System.out.println(getPlayers().get(i).getPlayerName() + " still has cards!");
+				System.out.println(getPlayers().get(i).getPlayerName() + " still has " + getPlayers().get(i).playerDeck.size()
+						+ " cards!");
 			} else {
 				System.out.println(getPlayers().get(i).getPlayerName()+ " is no longer in play!");
 			}
