@@ -714,7 +714,7 @@
 				xhr.onload = function(e){
 					var responseText = xhr.response;
 					finalScores = JSON.parse(responseText);
-					document.getElementById("gameInfo").innerHTML = finalScores;
+					document.getElementById("gameInfo").innerHTML = finalScores + "Your scores have been inserted into the database!";
 					document.getElementById("gameButton").getAttribute.value = "Click to Play Again!";
 					document.getElementById("gameButton").innerHTML = gameButton.value;
 				}

@@ -79,6 +79,10 @@ public class TopTrumpsRESTAPI {
 		return firstPlayerIndexAsJSON;
 	}
 	
+	/**
+	 * This method returns the attributes and their values associated with the top card in the human player's 
+	 * deck. 
+	 */
 	@GET
 	@Path("/getCard")
 	public String getCardInfo() throws IOException {
@@ -97,7 +101,13 @@ public class TopTrumpsRESTAPI {
 		return cardAsJSON;
 		
 	}
-	
+	/**
+	 * The following four methods return the attributes and values associated with the AI Player's top card. 
+	 * 
+	 * As explained in the GameScreen ftl file, we had difficulty implementing methods which took arguments and 
+	 * so relied upon hard coded methods such as these to display every piece of necessary information rather than 
+	 * use more general methods as we had initially hoped.  
+	 */
 	@GET
 	@Path("/getAI1Card")
 	public String getAI1Card() throws IOException {
@@ -171,58 +181,18 @@ public class TopTrumpsRESTAPI {
 	}
 	@GET
 	@Path("/getSelector")
-	/**
-	 * Here is an example of how to read parameters provided in an HTML Get request.
-	 * @param Word - A word
-	 * @return - A String
-	 * @throws IOException
-	 */
 	public String getSelector() throws IOException {
 		
 		String selectorString = theGame.getSelector();
 		
-		
-		
 		return selectorString;
 		
 	}
-	
-	
-	@GET
-	@Path("/setSelector")
-	/**
-	 * Here is an example of how to read parameters provided in an HTML Get request.
-	 * @param Word - A word
-	 * @return - A String
-	 * @throws IOException
-	 */
-	public String setSelector(@QueryParam("selector") int selector) throws IOException {
-		
-		theGame.setSelector(selector);
-		String selectorString = String.valueOf(selector);
-		return selectorString;
-		
-	}
-	
-	
-	@GET
-	@Path("/helloWord")
-	/**
-	 * Here is an example of how to read parameters provided in an HTML Get request.
-	 * @param Word - A word
-	 * @return - A String
-	 * @throws IOException
-	 */
-	public String helloWord(@QueryParam("Word") String Word) throws IOException {
-		return "Hello "+Word;
-	}
+
 	
 	/**
-	 * This method takes in the 'selector' value and uses that as an index on the players list to call the select attribute 
-	 * method.
-	 * 
-	 * I think this may have to be re-thought when it comes to input from the human player. 
-	 * 
+	 * This method returns the index of the attribute chosen by the AI player when it is their turn 
+	 * to play. 
 	 * @param selector
 	 * @return
 	 * @throws IOException
@@ -237,8 +207,16 @@ public class TopTrumpsRESTAPI {
 		return attributeAsJSON;
 	}
 	
+
 	@GET
 	@Path("/size")
+	/**
+	 * The following five methods each indicate to the game object what the user has selected when it their turn 
+	 * to play. Similar to the methods regarding the AI cards and scores, a method had ot be written for each selection
+	 * as we had difficulty writing more general ones. 
+	 * @return
+	 * @throws IOException
+	 */
 	public String choseSize() throws IOException {
 		theGame.setSelector(0);
 		int attributeValue = theGame.getPlayers().get(0).getAnAttribute(0);
@@ -314,7 +292,7 @@ public class TopTrumpsRESTAPI {
 	/**
 	 * This method calls the condensed version of checking for a winner. 
 	 * 
-	 * NOTE: This does not account for draws, and will have to be used in conjunction with the checkForDraws method.
+	 * NOTE: This does not account for draws, and has to be used in conjunction with the checkForDraws method.
 	 * @return
 	 * @throws IOException
 	 */
@@ -330,8 +308,8 @@ public class TopTrumpsRESTAPI {
 	
 	
 	/**
-	 * This method checks for draws. Either way, the card allocation should have been updated accordingly via the 
-	 * drawDecisions method, so the return value should be used print if there was a draw or not. 
+	 * This method checks for draws. The card allocation is updated accordingly via the 
+	 * drawDecisions method, and so the return value is used to print if there was a draw or not. 
 	 * 
 	 * If there was not, the value of the findWinnerOfRound method can be used to declare the winner.
 	 * @return
@@ -349,9 +327,8 @@ public class TopTrumpsRESTAPI {
 	
 	
 	/**
-	 * This returns true if there is an overall winner for the game. It should be used at the end of the 'round' loop.
-	 * 
-	 * It increments the theGame.rounds variable. 
+	 * This returns true if there is an overall winner for the game. It is used to exit the loop at the 
+	 * end of a game.  
 	 * 
 	 * @return
 	 * @throws IOException
@@ -377,9 +354,7 @@ public class TopTrumpsRESTAPI {
 	
 	/**
 	 * This method allows us to call the endGameMethod from the API, creating and setting the gameStats array, as well as 
-	 * creating the final scores String. This string is returned for ease of writing it to the webpage. 
-	 * 
-	 * Declaring who won will have to be done separately, probably by finding the last value of theGame.roundWinner. 
+	 * creating the final scores String. This string is returned for ease of writing it to the webpage.  
 	 * @return
 	 * @throws IOException
 	 */
@@ -393,7 +368,11 @@ public class TopTrumpsRESTAPI {
 		
 		return finalsAsJSON;
 	}
-	
+	/**
+	 * This method returns the number of the round currently in play. 
+	 * @return
+	 * @throws IOException
+	 */
 	@GET
 	@Path("/getRoundNum")
 	public String getRoundNum() throws IOException {
@@ -401,10 +380,8 @@ public class TopTrumpsRESTAPI {
 	}
 	
 	/**
-	 * This method will be altered to sync with the DatabaseInteraction class's printGameStats method. 
-	 * 
-	 * Because this requires library computers etc it is currently linked up to a simple String method 
-	 * from the same class to test that it is working as intended. 
+	 * This method is for printing the game statistics from the database to the statistics screen. Although it is 
+	 * non-functional, we have been unable to find the problem and so have included it to show our process. 
 	 * @return
 	 * @throws JsonProcessingException
 	 */
@@ -420,7 +397,12 @@ public class TopTrumpsRESTAPI {
 		return resultsAsJSON;
 	}
 	
-	
+	/**
+	 * These methods return the size of the player deck for each player, used for displaying the current state of the 
+	 * game. 
+	 * @return
+	 * @throws IOException
+	 */
 	@GET
 	@Path("/getCardCount")
 	public String getCardCount() throws IOException{
@@ -460,7 +442,9 @@ public class TopTrumpsRESTAPI {
 		String countAsJSON = oWriter.writeValueAsString(count);
 		return countAsJSON;
 	}
-	
+	/**
+	 * This method displays the size of the common pile in the event of a draw or even successive draws. 
+	 */
 	@GET
 	@Path("/getCommonPile")
 	public String getCommonPileCount() throws IOException {
@@ -468,35 +452,6 @@ public class TopTrumpsRESTAPI {
 		String countAsJSON = oWriter.writeValueAsString(count);
 		return countAsJSON;
 	}
-	
-	// ----------------------------------------------------
-	// Add relevant API methods here
-	// ----------------------------------------------------
-	
-	@GET
-	@Path("/helloJSONList")
-	/**
-	 * Here is an example of a simple REST get request that returns a String.
-	 * We also illustrate here how we can convert Java objects to JSON strings.
-	 * @return - List of words as JSON
-	 * @throws IOException
-	 */
-	public String helloJSONList() throws IOException {
-		
-		
-
-		
-		List<String> listOfWords = new ArrayList<String>();
-		listOfWords.add("Hello");
-		listOfWords.add("World!");
-		
-		// We can turn arbatory Java objects directly into JSON strings using
-		// Jackson seralization, assuming that the Java objects are not too complex.
-		String listAsJSONString = oWriter.writeValueAsString(listOfWords);
-		
-		return listAsJSONString;
-	}
-	
 
 	
 }

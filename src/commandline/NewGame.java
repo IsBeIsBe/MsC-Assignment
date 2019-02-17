@@ -482,25 +482,6 @@ public class NewGame {
 	public void endOfGame(int[] gameStats) {
 		DatabaseInteraction.insertGameStats(gameStats);
 		}
-	
-/*	public void gatherScores() {
-		// The next lines collect the data required for the database.
-		int scoreOne = getPlayers().get(0).getScore();
-		int scoreTwo = getPlayers().get(1).getScore();
-		int scoreThree = getPlayers().get(2).getScore();
-		int scoreFour = getPlayers().get(3).getScore();
-		int scoreFive = getPlayers().get(4).getScore();
-
-		gameStats[0] = scoreOne;
-		gameStats[1] = scoreTwo;
-		gameStats[2] = scoreThree;
-		gameStats[3] = scoreFour;
-		gameStats[4] = scoreFive;
-		gameStats[5] = rounds;
-		gameStats[6] = drawCounter;
-
-		endOfGame(gameStats);
-	}*/
 
 
 /*
@@ -591,34 +572,48 @@ public class NewGame {
 		return message + " Now let's play again!";
 	}
 	
+	/**
+	 * This method simply returns the size of the common pile, to be used in the event of a draw. 
+	 * @return
+	 */
 	public String getCommonPileCount() {
 	
 		return String.valueOf(this.commonPile.size());
 
 	}
-	/**
-	 * This method is maybe a bit pointless but just condenses the check for a winner with incrementing the rounds. 
-	 * The value it returns can be used to break the game loop, same as above in the playGame() method. 
-	 * @return
-	 */
+
 	public boolean isThereAWinner() {
 		winner = checkForOutRightWinner();
 	
 		return winner;
 	}
 
+	/**
+	 * Whereas the API and GameScreen each had to rely upon multiple, hard-coded methods, here we were able to implement 
+	 * methods such as the one below, which were flexible enough to be used multiple times and for each player based 
+	 * on their input. This one returns a string variation on the contents of each card designed for output on the 
+	 * GameScreen view. 
+	 * @param player
+	 * @return
+	 */
 	public String getPlayerCardForAPI(int player) {
 		
 		String card = getPlayers().get(player).peekACard().toStringAPI();
 		return card;
 		
 	}
-	
+	/**
+	 * This method simply returns which round is currently being played. 
+	 * @return
+	 */
 	public String getRounds() {
 		return String.valueOf(this.rounds);
 	}
-	
-	
+		/**
+	 * This method simply returns who the current 'selector' for the round is - i.e. the player selecting which 
+	 * attribute will be compared. 
+	 * @return
+	 */	
 	public String getSelector() {
 		
 		String selector = String.valueOf(this.selector);
@@ -630,6 +625,9 @@ public class NewGame {
 		this.selector = selectorValue;
 	}
 	
+	/**
+	 * This method returns the number of cards in a player's deck. 
+	 */
 	public String getCardCount(int playerIndex) {
 		return String.valueOf(getPlayers().get(playerIndex).getCardCount());
 	}
