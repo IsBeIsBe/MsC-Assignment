@@ -32,7 +32,7 @@ public class HumanPlayer extends Player{
 	 * It uses a while loop in the same format as that found in TopTrumpsCLIApplication to gather the input
 	 * from the user. 
 	 * 
-	 *    --------maybe a chance to use an interface?
+	 * 
 	 */
 	protected int selectAttribute() {
 
@@ -64,7 +64,7 @@ public class HumanPlayer extends Player{
 
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
-		String[] quit = new String[] {"q","Q"};
+		String[] quit = new String[] {"q","Q"};  // player is able to quit when either q or Q is pressed
 
 		int input = 0;
 		if (inputString.contains(quit[0]) || inputString.contains(quit[1])) {

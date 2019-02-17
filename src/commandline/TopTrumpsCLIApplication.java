@@ -70,6 +70,10 @@ public class TopTrumpsCLIApplication {
 	}
 	
 	public static int askUserForInputSelection() throws WrongInputException{
+
+		/**
+		 * ensures that the user can only input valid options. Throws WrongInputException when a wrong input is detected
+		 */
 		Scanner scanner = new Scanner(System.in);
 		String inputString = scanner.next();
 		String[] quit = new String[] {"q","Q"};

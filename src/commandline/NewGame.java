@@ -47,8 +47,8 @@ public class NewGame {
 		rounds = 0;
 		allocateCards();
 		selector = whoPlaysFirst();
-		while (!winner) {
-			rounds++;
+		while (!winner) { // loops until a winner is declared in the checkForOutRightWinner() method
+			rounds++; 
 			if (test) {
 
 				log += "\n----------START OF ROUND " + rounds + "----------\n";
@@ -83,8 +83,8 @@ public class NewGame {
 	
 	
 	/**
-	 * The only void method so far, I think this will have to be incorporated into another 'startAGame' method for the API
-	 * to work as intended
+	 * Method to that collects the shuffle and deal functions together. This helps in terms of logging and cleanliness
+	 * 
 	 */
 	public void allocateCards() {
 		createPlayers(numberOfAIPlayers);
@@ -104,7 +104,9 @@ public class NewGame {
 		}
 		
 	}
-	
+	/**
+	 * Method to create the arraylist of AI players, naming them in the process
+	 */
 	public ArrayList<Player> createPlayers(int numberOfAIPlayers) {
 
 		getPlayers().add(new HumanPlayer("Human Player"));
@@ -116,6 +118,9 @@ public class NewGame {
 		return getPlayers();
 	}
 	
+	/**
+	 * Method which shuffles the deck using the Collections method to shuffle.
+	 */
 	public void shuffleDeck() {
 
 		Collections.shuffle(deck);
@@ -183,9 +188,9 @@ public class NewGame {
 		
 		
 		for (int i = 0; i < getPlayers().size(); i++) {
-			if (!getPlayers().get(i).checkCards()) {
+			if (!getPlayers().get(i).checkCards()) { // if player has no cards, display this
 				System.out.println(getPlayers().get(i).getPlayerName() + " has no cards!");
-			} else {
+			} else {  //  else, pop a card
 				cardsInPlay[i] = getPlayers().get(i).popACard();
 			}
 		}
@@ -214,7 +219,7 @@ public class NewGame {
 	 */
 	public int checkWhoWins() {
 		
-		int comparator = cardsInPlay[selector].getAttributes()[chosenAttribute];
+		int comparator = cardsInPlay[selector].getAttributes()[chosenAttribute]; // the int comparator is the higest value
 		roundWinner = selector;
 		for (int i = 0; i <cardsInPlay.length; i++) {
 			if (!getPlayers().get(i).checkCards() ) {
@@ -269,7 +274,7 @@ public class NewGame {
 	 */
 	public void allCardsToCommonPile() {
 		
-		for (int i = 0; i < cardsInPlay.length; i++) {
+		for (int i = 0; i < cardsInPlay.length; i++) { // cycles the players, taking the top card from each in turn
 			if (cardsInPlay[i] == null) {
 			
 			} else {
@@ -308,7 +313,7 @@ public class NewGame {
 		
 		getPlayers().get(roundWinner).winsRound();
 		
-		for (int i = 0; i < cardsInPlay.length; i++) {
+		for (int i = 0; i < cardsInPlay.length; i++) { // cycles the length of the cardsInPlay pile and pushes these to winner
 			if (cardsInPlay[i] == null) {
 				
 			} else {
@@ -368,7 +373,7 @@ public class NewGame {
 	}
 	
 	/**
-	 * Again, this method was originally made to the specification of the logger, but keeping tack of which cards each player is 
+	 * This method was originally made to the specification of the logger, but keeping tack of which cards each player is 
 	 * playing has also been useful for debugging. 
 	 * @return
 	 */
@@ -386,8 +391,8 @@ public class NewGame {
 	}
 	
 	/**
-	 * This is information the user might find useful at the start of each round. It might be better refactored to return a 
-	 * string for the API to use, but we can deal with that later. 
+	 * This is information the user might find useful at the start of each round. 
+	 *  
 	 */
 	public void displayRoundStartInfo() {
 		
@@ -413,6 +418,9 @@ public class NewGame {
 		}
 	}
 	
+	/**
+	 * Method to check whether the players have cards. If the player has no cards, this information is printed to the console
+	 */
 	public void checkAllPlayersForCards(){
 		for (int i = 0; i < getPlayers().size(); i++) {
 			getPlayers().get(i).deckEmptyCheck();
@@ -433,7 +441,7 @@ public class NewGame {
 	 */
 	public void endGameMethod() {
 		int winner = 7;
-		for (int i = 0; i < getPlayers().size(); i++) {
+		for (int i = 0; i < getPlayers().size(); i++) { // determines the location of the winner by checking the players hand
 			if (getPlayers().get(i).checkCards()) {
 				winner = i;
 			}
@@ -444,6 +452,7 @@ public class NewGame {
 			log += "\n----------WINNER DECLARED----------\n" + getPlayers().get(winner).getPlayerName() + " has won after " + rounds
 					+ " rounds\r\n" + "\n-----------WINNER DECLARED END----------\n";
 		}
+		
 		// The final scores of the game are printed for the user to examine.
 		finalScores = "Final scores: \n";
 		for (int i = 0; i < getPlayers().size(); i++) {

@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class TestLogWriter {
+	/**
+	 * Test log class. Takes the log information which is scattered around the other classes and nested within if statements.
+	 * This is then written to a new file called "Lot.txt"
+	 */
 	
 	FileWriter logWriter;
 	BufferedWriter thisBufWriter; 
