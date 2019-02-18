@@ -45,7 +45,7 @@ public class TopTrumpsCLIApplication {
 					if (selection == 1) {
 						printGameStatistics();
 //						System.out.print("Print Game Stats");
-						break;
+						
 				
 					} else if (selection == 2) {
 					/*
@@ -62,7 +62,7 @@ public class TopTrumpsCLIApplication {
 			} 
 
 			}
-			userWantsToQuit=true; // use this when the user wants to exit the game
+			//userWantsToQuit=true; // use this when the user wants to exit the game
 			
 		}
 
