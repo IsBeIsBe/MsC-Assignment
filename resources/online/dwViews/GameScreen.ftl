@@ -1,7 +1,14 @@
 <html>
-<!-- 13/02 Have refactored GameScreen to include just one message and button that is re-written a lot, hopefully making things easier to follo -->
-<!-- Still need to include javascript method buttons() for declaring what methods are called based upon the String in "buttonValue" -->
-<!-- workiing in costa so also haven't been able to test any of this, but most of it is copy and pasted in -->
+<!-- The game screen uses a simple layout of a minimal number of points where text and buttons appear. These change 
+throughout each round, displaying the information relevant ot the player and prompting them the press a button to 
+continue - usually the 'gameButton' object but also the various buttons associated with the user selecting an attribute. 
+Unforutnately, as we were still learning JavaScript and using the API, the methods associated with each button press are 
+rudimentary and occasionally quite repetitive. While we were able to pass information back up to the views via the API, we 
+had difficulty passing parameters down the API from the user input. As a result of this individual methods had ot be written
+for the user selecting each attribute, and for the game showing the cards and scores of each player - each method was hard 
+coded to only correspond to one player/attribute, rather than have one method which could take different arguments. This has 
+resulted in a lengthy and often difficult to follow document. With more time, we expect we could have drastically reduced
+the functions used, and incuded more CSS and aesthetic elements to imporve the look of the final document. --> 
 	<head>
 		<!-- Web page title -->
     	<title>Top Trumps</title>
